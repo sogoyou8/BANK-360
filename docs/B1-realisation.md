@@ -10,13 +10,17 @@
 4. Base SQLite locale avec 1 table Silver, 7 vues Gold et table de traçabilité.
 5. Exports CSV UTF-8 BOM (import Power BI), rapport qualité JSON et manifeste d'empreintes SHA-256.
 6. Recalcul indépendant des totaux Python et SQL ; vérifications d'agrégation, de grain et d'idempotence.
-7. Tests automatiques (12 tests positifs/négatifs), exécution synthétique réussie.
+7. Tests automatiques (16 tests positifs/négatifs), exécution synthétique réussie.
+
+## Validation officielle B1 — GitHub Actions
+
+**PASS le 28 octobre 2026** — [exécution avec le jeu UCI officiel](https://github.com/sogoyou8/BANK-360/actions/runs/40661255296). L'archive XLS d'origine a été téléchargée et traitée dans le runner GitHub, distinct de la session locale bloquée pour le réseau. **30 000 clients**, **6 636 défauts historiques** (22,12 %), contrôles SQL (13/13) et provenance officielle vérifiés. L'artefact de qualité GitHub Actions contient le rapport de traitement ; il n'inclut pas les données individuelles brutes.
 
 ## Limitations d'environnement et seuils de validation
 
 La session de préparation ne possède pas de résolution DNS / accès de téléchargement direct et ne permet pas d'installer de nouvelles bibliothèques. Les fichiers source UCI d'origine et CSV miroir ne peuvent pas y être acquis. L'archive livrée contient **le pipeline réellement exécuté sur fixture synthétique**, et non les 30 000 lignes historiques. L'import d'origine `xls` est implémenté mais non testé dans cette session (dépendance `xlrd` indisponible).
 
-**Conclusion de recette B1 :** implémentation et tests hors-réseau **PASS** ; validation sur jeu original UCI 30k **NON EFFECTUÉE**. Ne pas annoncer « B1 homologuée sur 30k » avant succès de `python -m bank360 run --source official` suivi de `validate`.
+**Conclusion de recette B1 :** implémentation et tests hors réseau **PASS** ; validation sur l'archive officielle UCI (30 000 dossiers) **PASS via GitHub Actions**. La présente session locale n'a toujours pas téléchargé cette archive, mais la validation a été exécutée et archivée par le runner CI GitHub.
 
 ## Garanties d'intégrité
 
@@ -48,7 +52,7 @@ La session de préparation ne possède pas de résolution DNS / accès de télé
 - 13 contrôles SQL à zéro ; 16 tests automatiques réussis.
 - Ces valeurs n'apparaissent **pas** dans le reporting professionnel UCI ; leur seul but est de prouver la cohérence du code.
 
-## Pour terminer l'homologation sur données réelles (Windows)
+## Reproduire facultativement l'homologation sur Windows
 
 ```powershell
 python -m pip install -r requirements-uci.txt
