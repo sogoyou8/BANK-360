@@ -6,12 +6,20 @@
 
 - [x] **B0** : cadrage, inventaire des sources, règles métier et architecture
 - [x] **B1 — Implémentation** : ETL Python, schéma SQL, vues Gold, exports Power BI, 16 tests automatisés, démonstration contrôlée
-- [ ] **B1 — Homologation sur les 30 000 dossiers UCI** : le téléchargement de la source complète est bloqué dans l'environnement de préparation. Exécuter `run` avec un accès Internet pour terminer cette validation.
+- [x] **B1 — Homologation sur les 30 000 dossiers UCI** : validation officielle réussie via GitHub Actions, le 28 octobre 2026.
 - [ ] B2 : rapport Power BI et indicateurs sectoriels EBA
 - [ ] B3 : analyse et scoring expérimental de défaut
 - [ ] B4 : fraude PaySim
 - [ ] B5 : cockpit Web
 - [ ] B6 : finalisation et portfolio
+
+### Recette B1 sur données historiques réelles
+
+- **Statut : PASS** — [GitHub Actions : import de l'archive officielle UCI](https://github.com/sogoyou8/BANK-360/actions/runs/40661255296).
+- **30 000 dossiers clients** importés, **6 636 défauts historiques** (22,12 % dans cet échantillon).
+- **13 contrôles SQL réussis** ; 16 tests Python exécutés sur données synthétiques, également réussis.
+- Les exports et le rapport qualité du traitement réel sont disponibles comme *artifact* de l'exécution GitHub Actions (conservation temporaire). Aucune donnée client UCI réelle n'est commise dans le dépôt.
+- Les données concernent Taïwan en 2005 ; ce taux ne décrit **ni** le marché français actuel **ni** le ratio réglementaire de créances non performantes.
 
 Le code est opérationnel avec CSV au schéma UCI (Python 3.10+ / SQLite 3, **aucune installation Python externe pour le CSV**). Le ZIP et le XLS officiels nécessitent les dépendances `requirements-uci.txt`. SQLite est utilisé en B1 à la place de DuckDB pour permettre une exécution sans installation ni serveur. Les CSV sont prêts à être importés dans Power BI.
 
@@ -66,7 +74,7 @@ Le processus **n'écrase aucun livrable existant en cas d'échec des contrôles 
 - `sql/02_gold_views.sql` : vues analytiques et agrégats reproductibles
 - `sql/03_integrity_checks.sql` : 13 tests SQL devant tous retourner zéro
 - `bank360/` : acquisition, parsing CSV/XLS, contrôles, réconciliation Python↔SQL, CLI
-- `tests/test_pipeline.py` : 12 tests d'intégration sans réseau
+- `tests/test_pipeline.py` : 16 tests d'intégration sans réseau
 - `docs/B1-realisation.md` : méthodes, limites, reproductibilité et statut
 - `powerbi/README.md` : guide de préparation pour B2
 
@@ -87,6 +95,6 @@ python -m bank360 validate --db examples/demo-output/data/bank360.sqlite
 2. Taux de défaut UCI ≠ ratio réglementaire NPL ; `LIMIT_BAL` ≠ encours de crédits.
 3. Population Taiwan 2005 ≠ clientèle française 2026 ; ne pas extrapoler.
 4. Aucune décision d'octroi/refus de crédit ; finalité démonstrative exclusivement.
-5. Aucun déploiement ni publication sans validation explicite ultérieure.
+5. Le code est visible sur ce dépôt GitHub public ; aucun déploiement applicatif n'a été effectué.
 
 **Source originale / attribution** : I-Cheng Yeh (2009), *Default of Credit Card Clients*, UCI Machine Learning Repository, DOI [10.24432/C55S3H](https://doi.org/10.24432/C55S3H), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Les noms de colonnes, vues et agrégations constituent des adaptations attribuées à BANK 360.
