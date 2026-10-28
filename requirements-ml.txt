@@ -1,0 +1,3 @@
+# B3 experiments — CPU only; no runtime scoring service.
+numpy>=1.26,<3
+scikit-learn>=1.4,<1.9
