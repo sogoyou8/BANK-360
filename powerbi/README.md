@@ -39,6 +39,27 @@ Les CSV regroupés ont une licence d'adaptation conforme à la source avec attri
 
 **Limite :** il n'existe pas ici de moteur Power BI Desktop pour enregistrer un fichier `.pbix` ou vérifier le rendu DAX/visuel interactif natif. Le PBIP livré est à ouvrir dans Desktop pour la recette de rendu, pas un PBIX déjà homologué.
 
-## Résultat réel vérifié (28 octobre 2026)
+## Statut de vérification GitHub au 28 octobre 2026
 
-Les [tests B2](https://github.com/sogoyou8/BANK-360/actions/runs/40662864649) et [l'agrégation officielle](https://github.com/sogoyou8/BANK-360/actions/runs/40662864723) ont réussi (196 groupes de crédit et 1 176 groupes mensuels). Il reste à ouvrir le PBIP dans Power BI Desktop pour vérifier les visuels, les interactions et sauvegarder le modèle. Aucun PBIX vérifié dans Desktop n'a été produit ici.
+- [Test natif PBIP (statique) PASS](https://github.com/sogoyou8/BANK-360/actions/runs/40662864649).
+- [Agrégations UCI source officielle PASS](https://github.com/sogoyou8/BANK-360/actions/runs/40662864723) : 196 segments, 1 176 segment-mois.
+- **Power BI Desktop non ouvert ici** : la validation graphique et fonctionnelle du PBIP reste explicitement non vérifiée.
+
+## Réparation R2.1 — pages blanches lors de la première ouverture
+
+Le 28 octobre, Power BI Desktop chargeait bien les six tables mais affichait
+un canevas blanc sans onglets. Le fichier PBIR `definition/report.json`
+ne renseignait pas `themeCollection`, requis par son schéma officiel.
+Le générateur B2 et un test de non-régression ont été corrigés.
+Cette correction est **validée statiquement** ; le rendu dans Power BI Desktop
+reste à confirmer depuis Windows.
+
+**Après récupération de la version corrigée :** fermer Power BI Desktop,
+extraire le projet dans un **nouveau dossier** (ne pas superposer l'ancien),
+puis ouvrir `powerbi/BANK-360/BANK-360.pbip`. Ne pas recopier les anciens
+fichiers locaux `.Report/definition/` sur cette version. Les autorisations
+d'accès Web restent « Anonyme ».
+
+En cas de pages encore absentes, essayer d'ouvrir directement
+`powerbi/BANK-360/BANK-360.Report/definition.pbir` (ouvre le rapport et
+son modèle avec référence `byPath`), puis capturer l'éventuelle erreur.
