@@ -34,3 +34,10 @@ Le B2 comporte uniquement le portefeuille UCI350. Ajouter des ratios EBA dans la
 6. Contrôler contrastes, libellés, débordements, interactions et enregistrer une copie PBIX si désiré.
 
 **Clôture B2 = CI vert + recette visuelle Desktop.** Ne pas annoncer 100 % uniquement sur la base des tests statiques.
+
+## Résultats GitHub vérifiés (28 octobre 2026)
+
+- [Rapport PBIP/PBIR : tests B2 PASS](https://github.com/sogoyou8/BANK-360/actions/runs/40662864649).
+- [Source UCI officielle, agrégation et intégration B2 PASS](https://github.com/sogoyou8/BANK-360/actions/runs/40662864723).
+- 196 groupes de crédit et 1 176 groupes de paiements-mois ; 30 000 dossiers, 6 636 défauts ; période 2005.
+- La validation graphique sur Power BI Desktop Windows n'a pas pu être effectuée dans cet environnement.
