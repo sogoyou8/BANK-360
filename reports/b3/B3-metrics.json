@@ -1,0 +1,235 @@
+{
+  "project": "BANK 360",
+  "phase": "B3",
+  "status": "PASS",
+  "use": "historical research / portfolio only — NOT operational credit scoring",
+  "dataset": {
+    "name": "UCI350 / Taiwan 2005",
+    "source_sha256": "56c885f84457f6680f8438f02bfcdac9579323d8a94465ee5f26e32baa727602",
+    "source_uri": "https://archive.ics.uci.edu/static/public/350/default+of+credit+card+clients.zip",
+    "population": 30000,
+    "defaults": 6636,
+    "overall_rate": 0.2212
+  },
+  "protocol": {
+    "seed": 42,
+    "split": "60/20/20 stratified one record per client; no temporal holdout available",
+    "train_n": 18000,
+    "validation_n": 6000,
+    "test_n": 6000,
+    "train_defaults": 3982,
+    "validation_defaults": 1327,
+    "test_defaults": 1327,
+    "features": [
+      "limit_bal_ntd",
+      "pay_status_2005_09",
+      "pay_status_2005_08",
+      "pay_status_2005_07",
+      "pay_status_2005_06",
+      "pay_status_2005_05",
+      "pay_status_2005_04",
+      "bill_amt_2005_09_ntd",
+      "bill_amt_2005_08_ntd",
+      "bill_amt_2005_07_ntd",
+      "bill_amt_2005_06_ntd",
+      "bill_amt_2005_05_ntd",
+      "bill_amt_2005_04_ntd",
+      "pay_amt_2005_09_ntd",
+      "pay_amt_2005_08_ntd",
+      "pay_amt_2005_07_ntd",
+      "pay_amt_2005_06_ntd",
+      "pay_amt_2005_05_ntd",
+      "pay_amt_2005_04_ntd"
+    ],
+    "excluded_predictors": [
+      "age_years",
+      "credit_client_id",
+      "default_next_month",
+      "education_code",
+      "marriage_code",
+      "sex_code"
+    ],
+    "selection": "maximum validation average precision among logistic and histogram GB; Brier tie-break",
+    "operating_point": "validation F2 threshold for illustration only; NOT a credit decision rule",
+    "threshold": 0.13,
+    "validation_f2": 0.6408957911321179
+  },
+  "validation_metrics": {
+    "baseline_prevalence": {
+      "roc_auc": 0.5,
+      "pr_auc": 0.22116666666666668,
+      "brier": 0.172251975308642,
+      "log_loss": 0.5283806202351554,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f2": 0.0,
+      "confusion": {
+        "tn": 4673,
+        "fp": 0,
+        "fn": 1327,
+        "tp": 0
+      }
+    },
+    "logistic_regression": {
+      "roc_auc": 0.7504929390423041,
+      "pr_auc": 0.5139312597933994,
+      "brier": 0.14126857983051522,
+      "log_loss": 0.4528290178175336,
+      "precision": 0.6952965235173824,
+      "recall": 0.2562170308967596,
+      "f2": 0.2932551319648094,
+      "confusion": {
+        "tn": 4524,
+        "fp": 149,
+        "fn": 987,
+        "tp": 340
+      }
+    },
+    "hist_gradient_boosting": {
+      "roc_auc": 0.7915015003053505,
+      "pr_auc": 0.5716414204805043,
+      "brier": 0.1318005875571881,
+      "log_loss": 0.4213614639604397,
+      "precision": 0.6927536231884058,
+      "recall": 0.3602110022607385,
+      "f2": 0.39846615538512836,
+      "confusion": {
+        "tn": 4461,
+        "fp": 212,
+        "fn": 849,
+        "tp": 478
+      }
+    }
+  },
+  "selected_model": "hist_gradient_boosting",
+  "validation_permutation_importance": [
+    {
+      "feature": "pay_status_2005_09",
+      "delta_pr_auc": 0.22534561866492608
+    },
+    {
+      "feature": "bill_amt_2005_09_ntd",
+      "delta_pr_auc": 0.019696417187601678
+    },
+    {
+      "feature": "pay_amt_2005_07_ntd",
+      "delta_pr_auc": 0.009049007010996535
+    },
+    {
+      "feature": "limit_bal_ntd",
+      "delta_pr_auc": 0.008578168437080702
+    },
+    {
+      "feature": "pay_status_2005_08",
+      "delta_pr_auc": 0.00730239838692931
+    },
+    {
+      "feature": "pay_amt_2005_05_ntd",
+      "delta_pr_auc": 0.006123946596449992
+    },
+    {
+      "feature": "pay_amt_2005_08_ntd",
+      "delta_pr_auc": 0.005745367388838241
+    },
+    {
+      "feature": "pay_amt_2005_04_ntd",
+      "delta_pr_auc": 0.005350573744356102
+    },
+    {
+      "feature": "pay_amt_2005_09_ntd",
+      "delta_pr_auc": 0.004590898890116046
+    },
+    {
+      "feature": "pay_status_2005_07",
+      "delta_pr_auc": 0.0037778711274852883
+    },
+    {
+      "feature": "pay_amt_2005_06_ntd",
+      "delta_pr_auc": 0.0032321380347960504
+    },
+    {
+      "feature": "bill_amt_2005_05_ntd",
+      "delta_pr_auc": 0.003171599842461459
+    },
+    {
+      "feature": "pay_status_2005_04",
+      "delta_pr_auc": 0.0023228588863229427
+    },
+    {
+      "feature": "bill_amt_2005_04_ntd",
+      "delta_pr_auc": 0.0022694089066337964
+    },
+    {
+      "feature": "bill_amt_2005_07_ntd",
+      "delta_pr_auc": 0.0022366404003194007
+    },
+    {
+      "feature": "pay_status_2005_05",
+      "delta_pr_auc": 0.00046895472557184625
+    },
+    {
+      "feature": "pay_status_2005_06",
+      "delta_pr_auc": -0.0008775119191505865
+    },
+    {
+      "feature": "bill_amt_2005_08_ntd",
+      "delta_pr_auc": -0.0009908647867336584
+    },
+    {
+      "feature": "bill_amt_2005_06_ntd",
+      "delta_pr_auc": -0.0010757978613571417
+    }
+  ],
+  "holdout_test_metrics": {
+    "roc_auc": 0.7757829252398497,
+    "pr_auc": 0.5485744542015181,
+    "brier": 0.1359207037972323,
+    "log_loss": 0.4324950483876045,
+    "precision": 0.31451612903225806,
+    "recall": 0.8522984174830445,
+    "f2": 0.6351078167115903,
+    "confusion": {
+      "tn": 2208,
+      "fp": 2465,
+      "fn": 196,
+      "tp": 1131
+    }
+  },
+  "holdout_prevalence_baseline": {
+    "roc_auc": 0.5,
+    "pr_auc": 0.22116666666666668,
+    "brier": 0.172251975308642,
+    "log_loss": 0.5283806202351554,
+    "precision": 0.22116666666666668,
+    "recall": 1.0,
+    "f2": 0.5867527414220022,
+    "confusion": {
+      "tn": 0,
+      "fp": 4673,
+      "fn": 0,
+      "tp": 1327
+    }
+  },
+  "holdout_95pct_bootstrap_descriptive_ci": {
+    "roc_auc": {
+      "low": 0.7617495953521576,
+      "high": 0.7905474534157085
+    },
+    "pr_auc": {
+      "low": 0.5250400185318156,
+      "high": 0.5745136766836081
+    },
+    "brier": {
+      "low": 0.13166852317801742,
+      "high": 0.13969543166235845
+    }
+  },
+  "top_10pct_test_defaults_capture": 0.3142426525998493,
+  "limitations": [
+    "Historical Taiwan 2005; not a French bank, no transportability or temporal validation",
+    "Observational labels and incomplete feature provenance; outcomes are not causal",
+    "Sex and age excluded from fit but subgroup differences can persist via proxies",
+    "Subgroup metrics are diagnostic only, not an approval or discrimination assessment",
+    "No individual score exported; no deployment or decisions"
+  ]
+}
