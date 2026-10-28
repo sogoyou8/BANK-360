@@ -101,6 +101,22 @@ class BIProject(unittest.TestCase):
         for period in {x['period'] for x in monthly}:
             self.assertEqual(sum(int(x['client_observations']) for x in monthly if x['period']==period),30000)
         self.assertEqual(sum(int(x['delayed_clients']) for x in monthly if x['period']=='2005-09'),sum(int(x['delayed_count']) for x in segments))
+    def test_r22_quality_and_slicers_contract(self):
+        model=(P/'BANK-360.SemanticModel/definition/tables/Metrics.tmdl').read_text(encoding='utf-8')
+        self.assertIn('SUMX(ALL(Segments),Segments[client_count])=30000', model)
+        self.assertIn('SUMX(ALL(Segments),Segments[default_count])=6636', model)
+        self.assertNotIn('REMOVEFILTERS(', model)
+        found=0
+        for path in (P/'BANK-360.Report/definition/pages').glob('*/visuals/*/visual.json'):
+            visual=json.loads(path.read_text(encoding='utf-8'))['visual']
+            if visual['visualType']!='slicer':
+                continue
+            found+=1
+            self.assertEqual(visual['objects']['data'][0]['properties']['mode']['expr']['Literal']['Value'], "'Dropdown'")
+            self.assertEqual(visual['objects']['items'][0]['properties']['fontColor']['solid']['color']['expr']['Literal']['Value'], "'#EAF1F9'")
+            self.assertEqual(len(visual['query']['queryState']['Values']['projections']),1)
+        self.assertEqual(found,6)
+
     def test_demo_reconciliation_and_no_individual_rows(self):
         # Runs against the B1 *synthetic* database as a negative-scope isolation test.
         p=ROOT/'examples/demo-output/data/bank360.sqlite'
