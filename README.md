@@ -7,7 +7,7 @@
 - [x] **B0** : cadrage, inventaire des sources, règles métier et architecture
 - [x] **B1 — Implémentation** : ETL Python, schéma SQL, vues Gold, exports Power BI, 16 tests automatisés, démonstration contrôlée
 - [x] **B1 — Homologation sur les 30 000 dossiers UCI** : validation officielle réussie via GitHub Actions, le 28 octobre 2026.
-- [x] **B2 — Power BI Credit Risk** : PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels et tests CI réussis. **Recette visuelle Power BI Desktop encore nécessaire** ; indicateurs sectoriels EBA conservés comme chantier indépendant.
+- [x] **B2 — Power BI Credit Risk : TERMINÉ ET RECETTÉ (28/10/2026)**. PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels, CI réussie et validation visuelle/interactive Power BI Desktop sur captures et vidéos. Les indicateurs sectoriels EBA restent un chantier distinct.
 - [ ] B3 : analyse et scoring expérimental de défaut
 - [ ] B4 : fraude PaySim
 - [ ] B5 : cockpit Web
@@ -100,6 +100,8 @@ python -m bank360 validate --db examples/demo-output/data/bank360.sqlite
 **Source originale / attribution** : I-Cheng Yeh (2009), *Default of Credit Card Clients*, UCI Machine Learning Repository, DOI [10.24432/C55S3H](https://doi.org/10.24432/C55S3H), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Les noms de colonnes, vues et agrégations constituent des adaptations attribuées à BANK 360.
 
 ## B2 — Rapport Power BI natif
+
+**Statut final : CLOTURÉ (28/10/2026).** Recette Power BI Desktop réussie sur l'ordinateur utilisateur : 4 pages visibles, 2 contrôles qualité affichés à 1, interactions graphiques et tableaux vérifiées, sélection `18-29` dans le menu Tranche d'âge donnant 9 618 dossiers / 2 197 défauts / 22,8 %. Voir [preuve de recette](docs/B2-validation-finale.md). Le fichier PBIP est versionné ; aucune publication sur Power BI Service ni preuve d'ouverture d'un PBIX exporté n'est revendiquée.
 
 Le projet est dans [`powerbi/BANK-360/BANK-360.pbip`](powerbi/BANK-360/BANK-360.pbip). Voir [`powerbi/README.md`](powerbi/README.md) pour son ouverture et les sources.
 
