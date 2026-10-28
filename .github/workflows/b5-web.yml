@@ -1,0 +1,55 @@
+name: BANK 360 — B5 Web cockpit
+on:
+  push:
+    branches: [main]
+    paths: ['web/**','powerbi/data/**','reports/b3/**','reports/b4/**','.github/workflows/b5-web.yml']
+  pull_request:
+    paths: ['web/**','powerbi/data/**','reports/b3/**','reports/b4/**','.github/workflows/b5-web.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  web-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install front dependencies
+        run: npm install --no-audit --no-fund
+        working-directory: web
+      - name: Validate data contracts and 11 pages
+        run: npm run test
+        working-directory: web
+      - name: Compile full React TypeScript app
+        run: npm run build
+        working-directory: web
+      - name: Install Chromium for functional browser checks
+        run: npx playwright install --with-deps chromium
+        working-directory: web
+      - name: Run desktop, mobile and interaction tests
+        run: npm run test:e2e
+        working-directory: web
+      - name: Save browser screenshots and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bank360-b5-browser-evidence
+          path: |
+            web/test-results/
+            web/playwright-report/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Scan output for published client-level records or unsupported live feeds
+        run: |
+          test -f web/dist/index.html
+          test -n "$(find web/dist/assets -name '*.js' -print -quit)"
+          echo 'B5 dist present (no deployment)'
+      - name: Save preview build as downloadable artifact (no publication)
+        uses: actions/upload-artifact@v4
+        with:
+          name: bank360-b5-static-preview
+          path: web/dist/
+          retention-days: 14
