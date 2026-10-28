@@ -1,20 +1,27 @@
 table Age
 
 	column age_band
+		sortByColumn: order_index
 		dataType: string
 		summarizeBy: none
 		sourceColumn: age_band
+
+	column order_index
+		isHidden
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: order_index
 
 	partition Age = m
 		mode: import
 		source =
 			let
-			    Source = #table(type table [age_band = text], {
-			        {"18-29"},
-			        {"30-39"},
-			        {"40-49"},
-			        {"50-59"},
-			        {"60+"}
+			    Source = #table(type table [age_band = text, order_index = Int64.Type], {
+			        {"18-29",0},
+			        {"30-39",1},
+			        {"40-49",2},
+			        {"50-59",3},
+			        {"60+",4}
 			    })
 			in
 			    Source

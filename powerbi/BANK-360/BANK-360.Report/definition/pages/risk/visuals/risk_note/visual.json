@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "risk_note",
   "position": {
-    "x": 786,
-    "y": 576,
-    "z": 11,
-    "width": 452,
-    "height": 95,
-    "tabOrder": 11
+    "x": 697,
+    "y": 248,
+    "z": 9,
+    "width": 529,
+    "height": 62,
+    "tabOrder": 9
   },
   "visual": {
     "visualType": "textbox",
@@ -60,7 +60,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Les codes -2, -1, 0 et 1+ proviennent de la source UCI. Corrélation descriptive, pas score individuel.",
+                    "value": "Lecture : association descriptive entre statut historique et défaut, sans décision individuelle.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",

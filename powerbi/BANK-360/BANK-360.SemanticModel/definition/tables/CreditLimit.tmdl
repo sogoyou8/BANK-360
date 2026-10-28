@@ -1,20 +1,27 @@
 table CreditLimit
 
 	column credit_limit_band
+		sortByColumn: order_index
 		dataType: string
 		summarizeBy: none
 		sourceColumn: credit_limit_band
+
+	column order_index
+		isHidden
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: order_index
 
 	partition CreditLimit = m
 		mode: import
 		source =
 			let
-			    Source = #table(type table [credit_limit_band = text], {
-			        {"<50k"},
-			        {"50k-99k"},
-			        {"100k-199k"},
-			        {"200k-499k"},
-			        {"500k+"}
+			    Source = #table(type table [credit_limit_band = text, order_index = Int64.Type], {
+			        {"<50k",0},
+			        {"50k-99k",1},
+			        {"100k-199k",2},
+			        {"200k-499k",3},
+			        {"500k+",4}
 			    })
 			in
 			    Source

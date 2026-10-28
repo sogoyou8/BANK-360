@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "overview_limit",
   "position": {
-    "x": 652,
-    "y": 260,
-    "z": 8,
-    "width": 594,
-    "height": 270,
-    "tabOrder": 8
+    "x": 636,
+    "y": 337,
+    "z": 11,
+    "width": 610,
+    "height": 327,
+    "tabOrder": 11
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -49,6 +49,24 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "CreditLimit"
+                  }
+                },
+                "Property": "credit_limit_band"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
     "visualContainerObjects": {
@@ -140,7 +158,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Défaut selon la limite de crédit'"
+                  "Value": "'Taux de défaut · limite de crédit'"
                 }
               }
             },
@@ -195,9 +213,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#A6B6CB'"
+                      "Value": "'#EAF1F9'"
                     }
                   }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
                 }
               }
             },
@@ -222,6 +247,13 @@
                       "Value": "'#A6B6CB'"
                     }
                   }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
                 }
               }
             },

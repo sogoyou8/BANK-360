@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "history_limitfilter",
   "position": {
-    "x": 394,
-    "y": 566,
-    "z": 9,
-    "width": 392,
-    "height": 118,
-    "tabOrder": 9
+    "x": 340,
+    "y": 241,
+    "z": 7,
+    "width": 335,
+    "height": 78,
+    "tabOrder": 7
   },
   "visual": {
     "visualType": "slicer",

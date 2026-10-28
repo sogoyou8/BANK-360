@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "overview_limitFilter",
   "position": {
-    "x": 394,
-    "y": 549,
-    "z": 10,
-    "width": 410,
-    "height": 132,
-    "tabOrder": 10
+    "x": 342,
+    "y": 241,
+    "z": 8,
+    "width": 333,
+    "height": 78,
+    "tabOrder": 8
   },
   "visual": {
     "visualType": "slicer",

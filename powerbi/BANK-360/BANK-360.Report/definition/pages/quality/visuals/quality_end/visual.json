@@ -4,10 +4,10 @@
   "position": {
     "x": 42,
     "y": 562,
-    "z": 7,
+    "z": 12,
     "width": 1180,
-    "height": 83,
-    "tabOrder": 7
+    "height": 81,
+    "tabOrder": 12
   },
   "visual": {
     "visualType": "textbox",
@@ -60,7 +60,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "SOURCE REPRODUCTIBLE : scripts/build-b2-aggregates.py · B1 vérifié par GitHub Actions. Pas de données clients individuelles dans GitHub.",
+                    "value": "Traçabilité : scripts/build-b2-aggregates.py · données agrégées publiques · aucun client individuel publié.\nContrôles = 1 lorsque les 30 000 dossiers et 6 636 défauts sont retrouvés.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "11pt",

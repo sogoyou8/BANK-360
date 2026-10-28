@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "history_caveat",
   "position": {
-    "x": 802,
-    "y": 576,
-    "z": 10,
-    "width": 437,
-    "height": 92,
-    "tabOrder": 10
+    "x": 697,
+    "y": 245,
+    "z": 8,
+    "width": 532,
+    "height": 63,
+    "tabOrder": 8
   },
   "visual": {
     "visualType": "textbox",
@@ -60,7 +60,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "6 observations mensuelles des MÊMES clients : ce graphique ne mesure pas l’évolution temporelle du taux de défaut.",
+                    "value": "Six observations des MÊMES clients : la courbe suit les retards, pas une évolution du taux de défaut.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
