@@ -247,6 +247,10 @@ def run(input_path:Path,output:Path,*,official:bool):
                       'download_sha256':sha,'kind':'official_paysim_kaggle_zip' if official else 'synthetic_test',
                       'usage':'research/portfolio only; no real-world fraud claims'},
         'observed':observed,
+        'prevalence_by_partition':{p:split[p]['fraud']/split[p]['n'] for p in split},
+        'test_predicted_probability_mean':float(test_prob.mean()),
+        'test_observed_fraud_rate':float(test_y.mean()),
+        'test_probability_to_observed_rate_ratio':float(test_prob.mean()/test_y.mean()),
         'split':{'train_steps':[1,TRAIN_END],'validation_steps':[TRAIN_END+1,VALID_END],
                  'test_steps':[VALID_END+1,744],'by_partition':split,
                  'train_negative_keep':NEGATIVE_KEEP,'seed':SEED},
@@ -272,7 +276,7 @@ def run(input_path:Path,output:Path,*,official:bool):
 
 **Research only.** No real bank fraud data, no operational alarm rule.  Source: [PaySim Kaggle](https://www.kaggle.com/datasets/ealaxi/paysim1), simulated mobile money, CC BY-SA 4.0 attribution required.
 
-**Data checked:** {observed['rows']:,} simulated transfers; {observed['frauds']:,} fraud labels ({observed['frauds']/observed['rows']:.3%}). Full chronological split: {split['train']['n']:,} train / {split['validation']['n']:,} validation / {split['test']['n']:,} holdout test.
+**Data checked:** {observed['rows']:,} simulated mobile-money transactions; {observed['frauds']:,} fraud labels ({observed['frauds']/observed['rows']:.3%}). Chronological step split (NOT equal sample sizes): {split['train']['n']:,} train / {split['validation']['n']:,} validation / {split['test']['n']:,} holdout test.
 
 **Selected model (validation only):** {selected}, validation PR-AUC {validation[selected]['pr_auc']:.5f}. Input only transaction type and log transaction amount. Excluded all account identifiers, account balance values and built-in fraud flags. No model leakage from post-transaction balances.
 
@@ -293,6 +297,10 @@ def run(input_path:Path,output:Path,*,official:bool):
 | High-risk decile — observed rate | {top['observed_fraud_rate']:.3%} |
 
 **Simulator baseline `isFlaggedFraud`:** recall {baseline['recall']:.3%} at {baseline['alerted']} alarms. This is a comparison with a built-in flag, not a separate deployed fraud-detection product.
+
+## Severe simulated population shift / calibration warning
+
+Fraud prevalence by simulated step window: **train {split['train']['fraud']/split['train']['n']:.3%}** → **validation {split['validation']['fraud']/split['validation']['n']:.3%}** → **test {split['test']['fraud']/split['test']['n']:.3%}**. These are not equally sized time windows by transaction count. The mean test prediction is only **{test_prob.mean():.3%}**, versus **{test_y.mean():.3%} observed fraud**. Thus, model probabilities are **materially undercalibrated under temporal shift** despite ranking value: do not interpret these scores as trustworthy default/fraud probabilities.
 
 ## Interpretation
 

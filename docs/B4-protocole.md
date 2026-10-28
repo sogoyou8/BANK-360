@@ -37,3 +37,9 @@ La connexion Kaggle publique doit fonctionner pour l'import réel ; si elle exig
 3. Fraude rare : l'accuracy est trompeuse ; privilégier PR-AUC, rappel, précision, alertes et coûts.
 4. Répartition des types et comportement des montants potentiellement prédictibles uniquement dans PaySim.
 5. Aucune décision de bloquer, accuser, signaler ou refuser une opération ne doit être automatisée depuis cette étude.
+
+## Lecture obligatoire des résultats officiels (contrôle de validité)
+
+La source PaySim complète est **très inégalement répartie dans le temps simulé** : au moment de la première exécution, les transactions se concentrent sur les étapes précédant 480, tandis que la prévalence de fraude croît fortement sur la fin. Un découpage par étapes préserve l'ordre, mais n'assure pas des proportions 60/20/20 en lignes. Il est obligatoire de présenter **la proportion de fraude de chaque partition** et de comparer la moyenne des probabilités du test au taux observé. Si ce rapport est très inférieur à 1, parler de **sous-calibration**, pas d'estimation fiable de la probabilité de fraude.
+
+Les mesures de classement (PR-AUC et déciles) peuvent rester intéressantes malgré cette dérive, mais ne démontrent pas de fiabilité de seuil ou de calibration pour un acteur bancaire réel.
