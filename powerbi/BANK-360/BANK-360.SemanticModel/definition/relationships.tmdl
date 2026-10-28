@@ -1,0 +1,23 @@
+relationship Segments_Age
+	fromColumn: Segments.age_band
+	toColumn: Age.age_band
+
+relationship Segments_CreditLimit
+	fromColumn: Segments.credit_limit_band
+	toColumn: CreditLimit.credit_limit_band
+
+relationship Segments_Status
+	fromColumn: Segments.september_status
+	toColumn: Status.september_status
+
+relationship Payments_Age
+	fromColumn: Payments.age_band
+	toColumn: Age.age_band
+
+relationship Payments_CreditLimit
+	fromColumn: Payments.credit_limit_band
+	toColumn: CreditLimit.credit_limit_band
+
+relationship Payments_Status
+	fromColumn: Payments.september_status
+	toColumn: Status.september_status

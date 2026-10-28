@@ -1,0 +1,29 @@
+table Status
+
+	column september_status
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: september_status
+
+	partition Status = m
+		mode: import
+		source =
+			let
+			    Source = #table(type table [september_status = Int64.Type], {
+			        {-2},
+			        {-1},
+			        {0},
+			        {1},
+			        {2},
+			        {3},
+			        {4},
+			        {5},
+			        {6},
+			        {7},
+			        {8},
+			        {9}
+			    })
+			in
+			    Source
+
+	annotation PBI_ResultType = Table

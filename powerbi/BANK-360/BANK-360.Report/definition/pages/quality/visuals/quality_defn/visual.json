@@ -1,0 +1,79 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
+  "name": "quality_defn",
+  "position": {
+    "x": 42,
+    "y": 273,
+    "z": 6,
+    "width": 1183,
+    "height": 246,
+    "tabOrder": 6
+  },
+  "visual": {
+    "visualType": "textbox",
+    "visualContainerObjects": {
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "SOURCE  UCI Machine Learning Repository · Default of Credit Card Clients · Yeh (2009)\nLICENCE  CC BY 4.0 · https://doi.org/10.24432/C55S3H\nPÉRIMÈTRE  30 000 clients taïwanais · avril–septembre 2005 · étiquette de défaut le mois suivant\nGRANULARITÉ  agrégats par âge × limite de crédit × statut de paiement\nNE PAS INTERPRÉTER  la somme des limites comme encours ; le taux de défaut comme ratio NPL réglementaire\nFRAUDE / EBA  jeux de données distincts : aucune jointure avec ce modèle",
+                    "textStyle": {
+                      "fontFamily": "Segoe UI",
+                      "fontSize": "12pt",
+                      "fontWeight": "400",
+                      "color": "#EAF1F9"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

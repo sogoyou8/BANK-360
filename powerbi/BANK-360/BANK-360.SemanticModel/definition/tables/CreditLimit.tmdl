@@ -1,0 +1,22 @@
+table CreditLimit
+
+	column credit_limit_band
+		dataType: string
+		summarizeBy: none
+		sourceColumn: credit_limit_band
+
+	partition CreditLimit = m
+		mode: import
+		source =
+			let
+			    Source = #table(type table [credit_limit_band = text], {
+			        {"<50k"},
+			        {"50k-99k"},
+			        {"100k-199k"},
+			        {"200k-499k"},
+			        {"500k+"}
+			    })
+			in
+			    Source
+
+	annotation PBI_ResultType = Table

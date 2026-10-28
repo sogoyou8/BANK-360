@@ -1,0 +1,12 @@
+model Model
+	culture: fr-FR
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: fr-FR
+
+ref table Segments
+ref table Payments
+ref table Age
+ref table CreditLimit
+ref table Status
+ref table Metrics

@@ -1,0 +1,43 @@
+table Payments
+
+	column age_band
+		dataType: string
+		summarizeBy: none
+		sourceColumn: age_band
+
+	column credit_limit_band
+		dataType: string
+		summarizeBy: none
+		sourceColumn: credit_limit_band
+
+	column september_status
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: september_status
+
+	column period
+		dataType: string
+		summarizeBy: none
+		sourceColumn: period
+
+	column client_observations
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: client_observations
+
+	column delayed_clients
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: delayed_clients
+
+	partition Payments = m
+		mode: import
+		source =
+			let
+			    Source = Csv.Document(Web.Contents("https://raw.githubusercontent.com", [RelativePath="sogoyou8/BANK-360/main/powerbi/data/uci350_payment_months.csv"]), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+			    Promoted = Table.PromoteHeaders(Source,[PromoteAllScalars=true]),
+			    Typed = Table.TransformColumnTypes(Promoted,{{"age_band", type text}, {"credit_limit_band", type text}, {"september_status", Int64.Type}, {"period", type text}, {"client_observations", Int64.Type}, {"delayed_clients", Int64.Type}},"en-US")
+			in
+			    Typed
+
+	annotation PBI_ResultType = Table

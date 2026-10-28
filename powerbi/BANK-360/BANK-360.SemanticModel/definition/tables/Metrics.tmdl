@@ -1,0 +1,67 @@
+table Metrics
+
+	column MetricKey
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: MetricKey
+
+	measure 'Dossiers' = SUM(Segments[client_count])
+		formatString: #,##0
+		displayFolder: 01 Portefeuille
+
+	measure 'Défauts' = SUM(Segments[default_count])
+		formatString: #,##0
+		displayFolder: 01 Portefeuille
+
+	measure 'Taux de défaut' = DIVIDE([Défauts],[Dossiers])
+		formatString: 0.0%
+		displayFolder: 02 Risque
+
+	measure 'Limite crédit totale' = SUM(Segments[total_credit_limit_ntd])
+		formatString: #,##0
+		displayFolder: 01 Portefeuille
+
+	measure 'Limite moyenne' = DIVIDE([Limite crédit totale],[Dossiers])
+		formatString: #,##0
+		displayFolder: 01 Portefeuille
+
+	measure 'Age moyen' = DIVIDE(SUM(Segments[total_age_years]),[Dossiers])
+		formatString: 0.0
+		displayFolder: 01 Portefeuille
+
+	measure 'Retards septembre' = SUM(Segments[delayed_count])
+		formatString: #,##0
+		displayFolder: 02 Risque
+
+	measure 'Taux retard septembre' = DIVIDE([Retards septembre],[Dossiers])
+		formatString: 0.0%
+		displayFolder: 02 Risque
+
+	measure 'Observations mensuelles' = SUM(Payments[client_observations])
+		formatString: #,##0
+		displayFolder: 03 Historique
+
+	measure 'Clients retard mensuels' = SUM(Payments[delayed_clients])
+		formatString: #,##0
+		displayFolder: 03 Historique
+
+	measure 'Taux retard mensuel' = DIVIDE([Clients retard mensuels],[Observations mensuelles])
+		formatString: 0.0%
+		displayFolder: 03 Historique
+
+	measure 'Contrôle dénominateur' = IF(CALCULATE([Dossiers], REMOVEFILTERS(Age),REMOVEFILTERS(CreditLimit),REMOVEFILTERS(Status))=30000,1,0)
+		formatString: 0
+		displayFolder: 04 Qualité
+
+	measure 'Contrôle défauts' = IF(CALCULATE([Défauts], REMOVEFILTERS(Age),REMOVEFILTERS(CreditLimit),REMOVEFILTERS(Status))=6636,1,0)
+		formatString: 0
+		displayFolder: 04 Qualité
+
+	partition Metrics = m
+		mode: import
+		source =
+			let
+			    Source = #table(type table [MetricKey = Int64.Type], {{1}})
+			in
+			    Source

@@ -1,28 +1,40 @@
-# BANK 360 — préparation Power BI (B2)
+# BANK 360 — B2 Power BI
 
-B1 ne contient **pas** de rapport `.pbix` ; ce sera le livrable B2. Les données Gold sont disponibles après `python -m bank360 run`.
+## Artefact principal
 
-## Fichiers Power BI à importer
+`BANK-360/BANK-360.pbip` est le projet Power BI Desktop. Il contient un rapport PBIR natif de 4 pages, un modèle sémantique TMDL, 13 mesures DAX, 3 dimensions partagées et 2 tables agrégées.
 
-- `data/gold/gold_credit_clients.csv` (détail pour slicers / visualisations segmentées)
-- `data/gold/gold_credit_overview.csv` (chiffres de référence SQL ; éviter de les additionner)
-- `data/gold/gold_credit_status_segments.csv` (retards septembre)
-- `data/gold/gold_credit_age_segments.csv` et `gold_credit_limit_segments.csv` (cohortes)
-- `data/gold/gold_credit_monthly_status.csv` (six mois historiques ; non cohortes indépendantes)
+**Aucune donnée de client individuel n'est publiée.** Les deux CSV de `powerbi/data/` sont regroupés par tranche d'âge × tranche de limite de crédit × code de paiement; le second les subdivise par mois. Le modèle effectue les taux via `DIVIDE(SUM(numérateur),SUM(dénominateur))` et jamais une moyenne simple de pourcentages par groupe. Les 6 points mensuels sont des *statuts de paiement* pour les mêmes clients, pas des millésimes de défaut.
 
-Utiliser l'encodage **UTF-8** et le séparateur `,`. Ne pas construire de relations inter-tables arbitraires qui multiplient les lignes. Les KPI globaux calculés à partir du détail doivent égaler `gold_credit_overview.csv`.
+## Ouvrir dans Power BI Desktop (Windows)
 
-## Mesures DAX proposées pour vérification B2
+1. Cloner/télécharger ce dépôt, puis ouvrir `powerbi/BANK-360/BANK-360.pbip` dans Power BI Desktop récent avec prise en charge PBIR/TMDL.
+2. Si Power BI le demande, autoriser la connexion Web **anonyme** à `https://raw.githubusercontent.com` pour les deux CSV agrégés publics.
+3. Cliquer **Actualiser** pour importer les CSV et enregistrer le rapport. Aucun identifiant Fabric ni licence Pro requis pour un rapport local.
+4. Vérifier 30 000 dossiers, 6 636 défauts et un taux de défaut de 22,12 % dans la vue générale, puis les sélecteurs âge/limite et la courbe 2005.
 
-```dax
-Clients = DISTINCTCOUNT(gold_credit_clients[credit_client_id])
-Défauts historiques = SUM(gold_credit_clients[default_next_month])
-Taux défaut (%) = 100 * DIVIDE([Défauts historiques], [Clients])
-Retards septembre = SUM(gold_credit_clients[delayed_september_flag])
-Taux retards septembre (%) = 100 * DIVIDE([Retards septembre], [Clients])
-Plafonds totaux (NTD) = SUM(gold_credit_clients[limit_bal_ntd])
-```
+La première actualisation requiert Internet ; le rapport n'a pas été ouvert dans Power BI Desktop dans cet environnement Linux. Les fichiers sont testés statiquement et les données par GitHub Actions. **Ne pas déclarer une recette visuelle Power BI Desktop réussie avant ouverture, actualisation, contrôle des interactions et capture d'écran sur Windows.**
 
-Mettre en **nombre décimal** les deux mesures déjà multipliées par 100, avec le suffixe `%` sans appliquer une multiplication additionnelle. Ou utiliser une mesure en fraction, format `0.0%` ; ne pas faire les deux.
+## Périmètre
 
-Afficher dans chaque page : `UCI350 · Taïwan 2005 · devise NTD · historique, démonstratif` et le type de donnée (réelle historique / synthétique de test). Les identifiants client sont techniques et ne doivent pas être affichés en libre consultation dans les pages publiques.
+- 01 Vue générale : volume clients, défauts, taux, limite moyenne, segments âge / limite, filtres.
+- 02 Risque de crédit : défauts par statut historique de paiement, limite de crédit, sélecteurs.
+- 03 Paiements 2005 : évolution du *retard de paiement* pour les mêmes clients d'avril à septembre, avec dénominateurs explicites.
+- 04 Qualité et méthode : référence à l'UCI, limites d'usage, contrôles globaux non filtrés.
+
+## Sources
+
+Yeh (2009), **Default of Credit Card Clients**, UCI Machine Learning Repository, DOI [10.24432/C55S3H](https://doi.org/10.24432/C55S3H) ; licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Il s'agit de données de Taïwan en 2005, de limites de crédit en NTD, et d'une étiquette de défaut historique non assimilable au NPL réglementaire. Les agrégats sont issus du pipeline B1 `--source official` (archive d'origine UCI). EBA, PaySim et autres populations bancaires ne sont pas jointes au modèle B2.
+
+Les CSV regroupés ont une licence d'adaptation conforme à la source avec attribution. Le manifeste `powerbi/data/B2-aggregation-manifest.json` garde le SHA256 du ZIP original et des deux exports.
+
+## Actualisation reproductible en GitHub Actions
+
+`BANK 360 — B2 official aggregate data` télécharge l'archive officielle UCI, valide les 30 000 lignes avec B1, produit les deux CSV par agrégation SQL, vérifie les équivalences puis versionne exclusivement les CSV agrégés et leur manifeste. Ce pipeline ne déploie aucun site ni rapport dans Power BI Service. Il peut être relancé via **Actions → B2 official aggregate data → Run workflow**.
+
+## Recette
+
+`python scripts/build-b2-pbip.py` régénère les fichiers sémantiques / visuels de façon déterministe.
+`python -m unittest discover -s tests -v` valide les schémas, les références de champs, les formules, les rapports, les mesures, les agrégats et les tests B1.
+
+**Limite :** il n'existe pas ici de moteur Power BI Desktop pour enregistrer un fichier `.pbix` ou vérifier le rendu DAX/visuel interactif natif. Le PBIP livré est à ouvrir dans Desktop pour la recette de rendu, pas un PBIX déjà homologué.
