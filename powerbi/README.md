@@ -50,3 +50,9 @@ Les CSV regroupés ont une licence d'adaptation conforme à la source avec attri
 R2.3 réorganise les quatre pages en lecture **KPI → filtres → analyse**, avec deux tableaux plus larges, tri métier des tranches d'âge et de limite de crédit et une page méthodologie allégée. Les calculs, sources et fichiers de données officielles UCI restent inchangés. Voir [`docs/B2-R2.3-recette.md`](../docs/B2-R2.3-recette.md).
 
 Pour utiliser la version corrigée, **fermer Power BI Desktop avant de remplacer les fichiers** et ouvrir le `.pbip` depuis un nouveau dossier. La recette d'affichage native reste à confirmer sur Windows, même si les tests GitHub réussissent. Ne pas réexécuter le générateur après des ajustements manuels dans Power BI Desktop sans sauvegarde : il reconstruira les visuels.
+
+## B2 — R2.4 : notes, périmètre affiché et recette de filtres
+
+R2.4 remonte les notes de bas de page pour qu'elles soient visibles à 65 %, augmente leur lisibilité et distingue explicitement la **base totale UCI (30 000 dossiers)** des KPI modifiés par les filtres ou les clics dans les graphiques. Aucun indicateur ni jeu de données n'est modifié. Les six filtres restent connectés aux dimensions du modèle.
+
+**Validation Desktop encore nécessaire :** d'abord effacer une éventuelle barre sélectionnée, puis **choisir la tranche 18–29 dans le menu déroulant**. Résultats attendus : 9 618 dossiers, 2 197 défauts et 22,8 % ; revenir à « Tout » doit restaurer 30 000 / 6 636. Test similaire pour Limite et Statut, puis les deux contrôles de la page 04 à `1`. Voir [`docs/B2-R2.4-cloture.md`](../docs/B2-R2.4-cloture.md).

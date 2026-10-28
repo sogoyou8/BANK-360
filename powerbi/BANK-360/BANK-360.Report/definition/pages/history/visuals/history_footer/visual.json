@@ -3,10 +3,10 @@
   "name": "history_footer",
   "position": {
     "x": 36,
-    "y": 685,
+    "y": 643,
     "z": 11,
     "width": 1188,
-    "height": 23,
+    "height": 39,
     "tabOrder": 11
   },
   "visual": {
@@ -60,10 +60,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "180 000 observations = 30 000 personnes observées 6 fois (pas 180 000 clients distincts).",
+                    "value": "180 000 observations = 30 000 personnes observées 6 fois ; pas 180 000 clients distincts.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "9pt",
+                      "fontSize": "11pt",
                       "fontWeight": "400",
                       "color": "#A6B6CB"
                     }

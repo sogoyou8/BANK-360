@@ -60,7 +60,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Lecture : association descriptive entre statut historique et défaut, sans décision individuelle.",
+                    "value": "Lecture descriptive des groupes sélectionnés : les KPI changent selon filtres ou clics sur les barres.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "10pt",
