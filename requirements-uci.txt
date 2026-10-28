@@ -1,0 +1,4 @@
+# Only required to read the original Excel .xls inside the UCI official ZIP.
+# CSV ingestion, SQLite, SQL validation and Power BI exports use Python standard library.
+pandas>=2.2,<3
+xlrd>=2.0,<3

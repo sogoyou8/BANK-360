@@ -1,0 +1,59 @@
+{
+  "project": "BANK 360",
+  "phase": "B1",
+  "reviewed_on": "2026-10-28",
+  "domains": [
+    {
+      "id": "uci_credit_350",
+      "area": "credit_risk",
+      "source": "UCI Machine Learning Repository",
+      "uri": "https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients",
+      "data_type": "historical_customer_level",
+      "population": "Taiwan credit card clients (2005)",
+      "size_observations": 30000,
+      "licensed_as": "CC BY 4.0",
+      "availability": "pipeline_implemented_download_blocked_in_preparation_environment",
+      "join_policy": "isolated",
+      "mirror_uri": "https://huggingface.co/datasets/scikit-learn/credit-card-clients/raw/main/UCI_Credit_Card.csv",
+      "raw_download_uri": "https://archive.ics.uci.edu/static/public/350/default+of+credit+card+clients.zip"
+    },
+    {
+      "id": "eba_risk_dashboard",
+      "area": "sector_performance",
+      "source": "European Banking Authority",
+      "uri": "https://www.eba.europa.eu/risk-and-data-analysis/risk-analysis/risk-monitoring/risk-dashboard",
+      "data_type": "aggregated_sector_indicators",
+      "reference_period": "Q2 2026 release available",
+      "availability": "source_verified_not_downloaded",
+      "join_policy": "isolated"
+    },
+    {
+      "id": "paysim",
+      "area": "fraud",
+      "source": "PaySim Kaggle original",
+      "uri": "https://www.kaggle.com/datasets/ealaxi/paysim1",
+      "data_type": "simulated_mobile_money_transactions",
+      "licensed_as": "CC BY-SA 4.0 (Kaggle display)",
+      "availability": "catalog_verified_login_needed",
+      "join_policy": "isolated"
+    },
+    {
+      "id": "bdf_webstat",
+      "area": "optional_macro",
+      "source": "Banque de France",
+      "uri": "https://www.data.gouv.fr/dataservices/webstat",
+      "data_type": "aggregated_macro_statistics",
+      "availability": "account_required_optional",
+      "join_policy": "context_only"
+    },
+    {
+      "id": "ecb_sdmx",
+      "area": "optional_macro",
+      "source": "European Central Bank",
+      "uri": "https://data.ecb.europa.eu/help/api/overview",
+      "data_type": "aggregated_macro_statistics",
+      "availability": "api_documentation_verified_optional",
+      "join_policy": "context_only"
+    }
+  ]
+}

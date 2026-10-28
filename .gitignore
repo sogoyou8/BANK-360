@@ -1,0 +1,29 @@
+# Local/source data: do not commit datasets or database artifacts
+/data/raw/*
+/data/silver/*
+/data/gold/*
+!/data/raw/.gitkeep
+!/data/silver/.gitkeep
+!/data/gold/.gitkeep
+*.duckdb
+*.db
+*.parquet
+*.csv
+*.xls
+*.xlsx
+*.pbix
+.env
+.env.*
+__pycache__/
+.venv/
+node_modules/
+dist/
+# B1 reproducible outputs, not committed in a future public repository
+/reports/B1-quality-report.json
+/examples/demo-output/
+*.sqlite
+*.zip
+.pytest_cache/
+
+# Only synthetic example intentionally versioned
+!examples/demo_credit_24.csv
