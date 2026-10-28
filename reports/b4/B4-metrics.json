@@ -13,6 +13,14 @@
     "frauds": 8213,
     "max_step": 743
   },
+  "prevalence_by_partition": {
+    "train": 0.00088567770239739,
+    "validation": 0.006175277348939073,
+    "test": 0.014827658365968133
+  },
+  "test_predicted_probability_mean": 0.0024589372727852046,
+  "test_observed_fraud_rate": 0.014827658365968133,
+  "test_probability_to_observed_rate_ratio": 0.16583449740310055,
   "split": {
     "train_steps": [
       1,
