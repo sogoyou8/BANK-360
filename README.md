@@ -1,0 +1,92 @@
+# BANK 360 — Banking Intelligence & Risk Analytics
+
+**DATA 05 — B1 Data Engineering** · 28 octobre 2026
+
+## Situation réelle
+
+- [x] **B0** : cadrage, inventaire des sources, règles métier et architecture
+- [x] **B1 — Implémentation** : ETL Python, schéma SQL, vues Gold, exports Power BI, 16 tests automatisés, démonstration contrôlée
+- [ ] **B1 — Homologation sur les 30 000 dossiers UCI** : le téléchargement de la source complète est bloqué dans l'environnement de préparation. Exécuter `run` avec un accès Internet pour terminer cette validation.
+- [ ] B2 : rapport Power BI et indicateurs sectoriels EBA
+- [ ] B3 : analyse et scoring expérimental de défaut
+- [ ] B4 : fraude PaySim
+- [ ] B5 : cockpit Web
+- [ ] B6 : finalisation et portfolio
+
+Le code est opérationnel avec CSV au schéma UCI (Python 3.10+ / SQLite 3, **aucune installation Python externe pour le CSV**). Le ZIP et le XLS officiels nécessitent les dépendances `requirements-uci.txt`. SQLite est utilisé en B1 à la place de DuckDB pour permettre une exécution sans installation ni serveur. Les CSV sont prêts à être importés dans Power BI.
+
+## Exécution sur Windows PowerShell (cas normal)
+
+Depuis le dossier extrait `BANK-360-B1` :
+
+```powershell
+Set-Location "C:\chemin\vers\BANK-360-B1"
+python -m pip install -r requirements-uci.txt
+python -m bank360 run --source official
+python -m bank360 validate
+python -m unittest discover -s tests -v
+```
+
+Cela télécharge **l'archive d'origine UCI**, importe les 30 000 lignes, rejette un fichier non conforme et génère le rapport de qualité plus les CSV. Le téléchargement ne fonctionne que si l'ordinateur dispose d'un accès Internet autorisé.
+
+En cas d'indisponibilité de l'archive officielle, utiliser **explicitement** le miroir CSV (pas de substitution silencieuse) :
+
+```powershell
+python -m bank360 run --source mirror
+```
+
+Le miroir est un exemplaire de diffusion tiers attribué à l'ensemble UCI ; `origin_claim=mirror` et le SHA-256 du fichier figurent dans le rapport. Si tu disposes déjà du fichier UCI :
+
+```powershell
+python -m bank360 build --input "C:\chemin\UCI_Credit_Card.csv" --origin local-unknown
+```
+
+Le processus **n'écrase aucun livrable existant en cas d'échec des contrôles avant export**.
+
+## Ce que B1 produit
+
+| Chemin | Utilité |
+|---|---|
+| `data/raw/` | Source brute et inchangée, non versionnée |
+| `data/bank360.sqlite` | Base SQLite locale avec 1 table Silver + vues Gold |
+| `data/silver/silver_credit_clients.csv` | 25 colonnes canoniques, grain client |
+| `data/gold/gold_credit_clients.csv` | Table client enrichie pour BI |
+| `data/gold/gold_credit_overview.csv` | KPI globaux historiques |
+| `data/gold/gold_credit_status_segments.csv` | Segments par code de retard septembre |
+| `data/gold/gold_credit_age_segments.csv` | Segments d'âge |
+| `data/gold/gold_credit_limit_segments.csv` | Tranches de plafond de crédit |
+| `data/gold/gold_credit_payment_history.csv` | 6 observations mensuelles par client (non indépendantes) |
+| `data/gold/gold_credit_monthly_status.csv` | Indicateur mensuel descriptif de retard |
+| `data/gold/B1-export-manifest.json` | Hash SHA-256 et nombre de lignes pour chaque export |
+| `reports/B1-quality-report.json` | Résultats vérifiés, contrôles, avertissements, provenance |
+
+## SQL et critères de qualité
+
+- `sql/01_schema.sql` : schéma strict, clés, contraintes d'intégrité
+- `sql/02_gold_views.sql` : vues analytiques et agrégats reproductibles
+- `sql/03_integrity_checks.sql` : 13 tests SQL devant tous retourner zéro
+- `bank360/` : acquisition, parsing CSV/XLS, contrôles, réconciliation Python↔SQL, CLI
+- `tests/test_pipeline.py` : 12 tests d'intégration sans réseau
+- `docs/B1-realisation.md` : méthodes, limites, reproductibilité et statut
+- `powerbi/README.md` : guide de préparation pour B2
+
+Les valeurs d'origine `EDUCATION=0/5/6`, `MARRIAGE=0`, les codes de paiement -2/-1/0, et les soldes de facture négatifs ne sont pas inventés ni supprimés : ils sont préservés et signalés.
+
+## Démonstration hors réseau
+
+Un jeu de **24 enregistrements entièrement fictifs** et sa sortie sont disponibles dans `examples/`. Ce jeu sert seulement à vérifier le fonctionnement du code. Les exports portent explicitement la provenance `SYNTHETIC_B1_TEST` ; **ils ne représentent pas les mesures de l'échantillon UCI**.
+
+```powershell
+python -m bank360 build --input examples/demo_credit_24.csv --origin synthetic-test --demo --expected-rows 24 --output-dir examples/demo-output
+python -m bank360 validate --db examples/demo-output/data/bank360.sqlite
+```
+
+## Interdictions analytiques
+
+1. Aucune jointure entre clients UCI, transactions PaySim et indicateurs EBA.
+2. Taux de défaut UCI ≠ ratio réglementaire NPL ; `LIMIT_BAL` ≠ encours de crédits.
+3. Population Taiwan 2005 ≠ clientèle française 2026 ; ne pas extrapoler.
+4. Aucune décision d'octroi/refus de crédit ; finalité démonstrative exclusivement.
+5. Aucun déploiement ni publication sans validation explicite ultérieure.
+
+**Source originale / attribution** : I-Cheng Yeh (2009), *Default of Credit Card Clients*, UCI Machine Learning Repository, DOI [10.24432/C55S3H](https://doi.org/10.24432/C55S3H), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Les noms de colonnes, vues et agrégations constituent des adaptations attribuées à BANK 360.
