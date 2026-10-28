@@ -1,6 +1,6 @@
 # BANK 360 — Banking Intelligence & Risk Analytics
 
-**DATA 05 — B0 / B1 / B2** · 28 octobre 2026
+**DATA 05 — B0 / B1 / B2 / B3** · 28 octobre 2026
 
 ## Situation réelle
 
@@ -8,7 +8,7 @@
 - [x] **B1 — Implémentation** : ETL Python, schéma SQL, vues Gold, exports Power BI, 16 tests automatisés, démonstration contrôlée
 - [x] **B1 — Homologation sur les 30 000 dossiers UCI** : validation officielle réussie via GitHub Actions, le 28 octobre 2026.
 - [x] **B2 — Power BI Credit Risk : TERMINÉ ET RECETTÉ (28/10/2026)**. PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels, CI réussie et validation visuelle/interactive Power BI Desktop sur captures et vidéos. Les indicateurs sectoriels EBA restent un chantier distinct.
-- [ ] B3 : analyse et scoring expérimental de défaut
+- [x] **B3 — Credit Risk Analytics : TERMINÉ (28/10/2026)**. Étude de prédiction de défaut historique, trois approches comparées, train/validation/test 18k/6k/6k, audit de biais descriptifs et résultats agrégés ; aucun scoring bancaire réel.
 - [ ] B4 : fraude PaySim
 - [ ] B5 : cockpit Web
 - [ ] B6 : finalisation et portfolio
@@ -98,6 +98,15 @@ python -m bank360 validate --db examples/demo-output/data/bank360.sqlite
 5. Le code est visible sur ce dépôt GitHub public ; aucun déploiement applicatif n'a été effectué.
 
 **Source originale / attribution** : I-Cheng Yeh (2009), *Default of Credit Card Clients*, UCI Machine Learning Repository, DOI [10.24432/C55S3H](https://doi.org/10.24432/C55S3H), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Les noms de colonnes, vues et agrégations constituent des adaptations attribuées à BANK 360.
+
+## B3 — Credit Risk Analytics : expérimentation officielle vérifiée
+
+- [Modèle et interprétation B3](reports/b3/B3-model-card.md) · [Protocole](docs/B3-protocole.md) · [Rapport de clôture](docs/B3-validation-finale.md)
+- [Exécution GitHub Actions officielle — PASS](https://github.com/sogoyou8/BANK-360/actions/runs/40694443901)
+- **Modèle retenu sur validation :** Histogram Gradient Boosting. **Test indépendant 6 000 dossiers :** ROC-AUC 0,7758 ; PR-AUC 0,5486 ; Brier 0,1359, contre PR-AUC 0,2212 et Brier 0,1723 pour la référence.
+- Seuil de **0,13** sélectionné sur validation pour optimiser F2 (non bancaire) : rappel 85,2 % mais 2 465 faux positifs sur 4 673 non-défaillants au test ; **non adapté à une décision réelle**.
+- Export seulement d'agrégats : déciles, calibration, importance des variables et audit sexe/âge (les attributs sensibles ne sont pas utilisés par les modèles). Pas de données individuelles, pas de modèle déployé.
+- Résultats **Taïwan 2005 seulement**, aucun transfert démontré à une banque française actuelle.
 
 ## B2 — Rapport Power BI natif
 
