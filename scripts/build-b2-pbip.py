@@ -49,7 +49,13 @@ def make_visual(name,x,y,w,h,kind,fields=None,title=None,order=1):
                       'valueAxis':item(labelColor=solid(COLOR['muted']),showAxisTitle=literal(False)),
                       'dataPoint':item(fill=solid(COLOR['cyan']))}
     elif kind=='slicer':
-        v['objects']={'general':item(orientation=literal('vertical'))}
+        # Use a dropdown with readable contrast on the dark dashboard.
+        v['objects']={
+            'data':item(mode=literal('Dropdown')),
+            'items':item(fontColor=solid(COLOR['fg']),textSize=literal(11),
+                         background=solid(COLOR['surface'])),
+            'header':item(show=literal(False),fontColor=solid(COLOR['muted']))
+        }
     d['visual']=v
     return d
 def textbox(name,x,y,w,h,value,fontsize=13,color=None,weight='600',order=1):
@@ -103,7 +109,7 @@ def generate():
         for dim,col in [('Age','age_band'),('CreditLimit','credit_limit_band'),('Status','september_status')]:
             relationships.extend([f'relationship {fact}_{dim}',f'\tfromColumn: {fact}.{col}',f'\ttoColumn: {dim}.{col}',''])
     write(MODEL/'definition/relationships.tmdl','\n'.join(relationships))
-    measures=[('Dossiers','SUM(Segments[client_count])','#,##0','01 Portefeuille'),('Défauts','SUM(Segments[default_count])','#,##0','01 Portefeuille'),('Taux de défaut','DIVIDE([Défauts],[Dossiers])','0.0%','02 Risque'),('Limite crédit totale','SUM(Segments[total_credit_limit_ntd])','#,##0','01 Portefeuille'),('Limite moyenne','DIVIDE([Limite crédit totale],[Dossiers])','#,##0','01 Portefeuille'),('Age moyen','DIVIDE(SUM(Segments[total_age_years]),[Dossiers])','0.0','01 Portefeuille'),('Retards septembre','SUM(Segments[delayed_count])','#,##0','02 Risque'),('Taux retard septembre','DIVIDE([Retards septembre],[Dossiers])','0.0%','02 Risque'),('Observations mensuelles','SUM(Payments[client_observations])','#,##0','03 Historique'),('Clients retard mensuels','SUM(Payments[delayed_clients])','#,##0','03 Historique'),('Taux retard mensuel','DIVIDE([Clients retard mensuels],[Observations mensuelles])','0.0%','03 Historique'),('Contrôle dénominateur','IF(CALCULATE([Dossiers], REMOVEFILTERS(Age),REMOVEFILTERS(CreditLimit),REMOVEFILTERS(Status))=30000,1,0)','0','04 Qualité'),('Contrôle défauts','IF(CALCULATE([Défauts], REMOVEFILTERS(Age),REMOVEFILTERS(CreditLimit),REMOVEFILTERS(Status))=6636,1,0)','0','04 Qualité')]
+    measures=[('Dossiers','SUM(Segments[client_count])','#,##0','01 Portefeuille'),('Défauts','SUM(Segments[default_count])','#,##0','01 Portefeuille'),('Taux de défaut','DIVIDE([Défauts],[Dossiers])','0.0%','02 Risque'),('Limite crédit totale','SUM(Segments[total_credit_limit_ntd])','#,##0','01 Portefeuille'),('Limite moyenne','DIVIDE([Limite crédit totale],[Dossiers])','#,##0','01 Portefeuille'),('Age moyen','DIVIDE(SUM(Segments[total_age_years]),[Dossiers])','0.0','01 Portefeuille'),('Retards septembre','SUM(Segments[delayed_count])','#,##0','02 Risque'),('Taux retard septembre','DIVIDE([Retards septembre],[Dossiers])','0.0%','02 Risque'),('Observations mensuelles','SUM(Payments[client_observations])','#,##0','03 Historique'),('Clients retard mensuels','SUM(Payments[delayed_clients])','#,##0','03 Historique'),('Taux retard mensuel','DIVIDE([Clients retard mensuels],[Observations mensuelles])','0.0%','03 Historique'),('Contrôle dénominateur','IF(SUMX(ALL(Segments),Segments[client_count])=30000,1,0)','0','04 Qualité'),('Contrôle défauts','IF(SUMX(ALL(Segments),Segments[default_count])=6636,1,0)','0','04 Qualité')]
     ml=['table Metrics','', '\tcolumn MetricKey','\t\tdataType: int64','\t\tisHidden','\t\tsummarizeBy: none','\t\tsourceColumn: MetricKey','']
     for n,dax,formatString,folder in measures:
         ml.extend([f"\tmeasure '{n}' = {dax}",f'\t\tformatString: {formatString}',f'\t\tdisplayFolder: {folder}',''])
