@@ -3,7 +3,7 @@
   "phase": "B1",
   "verification_date": "2026-10-28",
   "implementation": "COMPLETE_WITH_TESTS",
-  "real_uci_30000_import": "BLOCKED_NO_NETWORK_OR_XLS_DEPENDENCIES_IN_PREPARATION_RUNTIME",
+  "real_uci_30000_import": "PASS_GITHUB_ACTIONS_OFFICIAL_ARCHIVE",
   "public_bank_data_claim": "NONE",
   "demo_dataset": "SYNTHETIC_24_NOT_REAL",
   "demo_ingestion": "PASS",
@@ -11,11 +11,19 @@
   "sql_integrity_checks": 13,
   "exports_tested": 8,
   "additional_export_manifest": true,
-  "remaining_real_validation_commands": [
+  "remaining_real_validation_commands": [],
+  "next_project_phase": "B2_READY",
+  "real_uci_workflow_url": "https://github.com/sogoyou8/BANK-360/actions/runs/40661255296",
+  "b1_overall_status": "PASS",
+  "real_uci_metrics": {
+    "client_count": 30000,
+    "default_count": 6636,
+    "default_rate_pct": 22.12,
+    "sql_integrity_checks_passed": 13
+  },
+  "optional_local_reproduction_commands": [
     "python -m pip install -r requirements-uci.txt",
     "python -m bank360 run --source official",
-    "python -m bank360 validate",
-    "python -m unittest discover -s tests -v"
-  ],
-  "next_project_phase": "B2_AFTER_REAL_DATA_VALIDATION"
+    "python -m bank360 validate"
+  ]
 }
