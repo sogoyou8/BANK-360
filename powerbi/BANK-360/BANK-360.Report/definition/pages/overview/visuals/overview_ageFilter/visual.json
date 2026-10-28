@@ -3,11 +3,11 @@
   "name": "overview_ageFilter",
   "position": {
     "x": 34,
-    "y": 549,
-    "z": 9,
-    "width": 342,
-    "height": 132,
-    "tabOrder": 9
+    "y": 241,
+    "z": 7,
+    "width": 292,
+    "height": 78,
+    "tabOrder": 7
   },
   "visual": {
     "visualType": "slicer",

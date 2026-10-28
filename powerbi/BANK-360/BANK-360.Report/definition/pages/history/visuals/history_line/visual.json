@@ -3,11 +3,11 @@
   "name": "history_line",
   "position": {
     "x": 34,
-    "y": 259,
-    "z": 6,
-    "width": 798,
-    "height": 290,
-    "tabOrder": 6
+    "y": 337,
+    "z": 9,
+    "width": 566,
+    "height": 327,
+    "tabOrder": 9
   },
   "visual": {
     "visualType": "lineChart",
@@ -49,6 +49,24 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Payments"
+                  }
+                },
+                "Property": "period"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
     "visualContainerObjects": {
@@ -140,7 +158,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Part de clients en retard · avril → septembre 2005'"
+                  "Value": "'Paiements en retard · avril–septembre 2005'"
                 }
               }
             },
@@ -195,9 +213,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#A6B6CB'"
+                      "Value": "'#EAF1F9'"
                     }
                   }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
                 }
               }
             },
@@ -222,6 +247,13 @@
                       "Value": "'#A6B6CB'"
                     }
                   }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
                 }
               }
             },

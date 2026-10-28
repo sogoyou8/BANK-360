@@ -3,11 +3,11 @@
   "name": "history_agefilter",
   "position": {
     "x": 34,
-    "y": 566,
-    "z": 8,
-    "width": 343,
-    "height": 118,
-    "tabOrder": 8
+    "y": 241,
+    "z": 6,
+    "width": 290,
+    "height": 78,
+    "tabOrder": 6
   },
   "visual": {
     "visualType": "slicer",

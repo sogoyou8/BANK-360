@@ -2,12 +2,12 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.11.0/schema.json",
   "name": "overview_note",
   "position": {
-    "x": 832,
-    "y": 554,
-    "z": 11,
-    "width": 394,
-    "height": 109,
-    "tabOrder": 11
+    "x": 712,
+    "y": 249,
+    "z": 9,
+    "width": 508,
+    "height": 59,
+    "tabOrder": 9
   },
   "visual": {
     "visualType": "textbox",
@@ -60,10 +60,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Taux pondéré : défauts / dossiers. LIMIT_BAL décrit une limite de crédit, pas un encours bancaire.",
+                    "value": "Périmètre : 30 000 dossiers UCI. Taux pondérés par le volume des dossiers.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "10pt",
+                      "fontSize": "11pt",
                       "fontWeight": "400",
                       "color": "#A6B6CB"
                     }

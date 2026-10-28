@@ -3,11 +3,11 @@
   "name": "overview_age",
   "position": {
     "x": 34,
-    "y": 260,
-    "z": 7,
-    "width": 600,
-    "height": 270,
-    "tabOrder": 7
+    "y": 337,
+    "z": 10,
+    "width": 586,
+    "height": 327,
+    "tabOrder": 10
   },
   "visual": {
     "visualType": "clusteredBarChart",
@@ -49,6 +49,24 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Age"
+                  }
+                },
+                "Property": "age_band"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
     "visualContainerObjects": {
@@ -140,7 +158,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Défaut selon la tranche d’âge'"
+                  "Value": "'Taux de défaut · tranche d’âge'"
                 }
               }
             },
@@ -195,9 +213,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#A6B6CB'"
+                      "Value": "'#EAF1F9'"
                     }
                   }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
                 }
               }
             },
@@ -222,6 +247,13 @@
                       "Value": "'#A6B6CB'"
                     }
                   }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
                 }
               }
             },

@@ -45,21 +45,8 @@ Les CSV regroupés ont une licence d'adaptation conforme à la source avec attri
 - [Agrégations UCI source officielle PASS](https://github.com/sogoyou8/BANK-360/actions/runs/40662864723) : 196 segments, 1 176 segment-mois.
 - **Power BI Desktop non ouvert ici** : la validation graphique et fonctionnelle du PBIP reste explicitement non vérifiée.
 
-## Réparation R2.1 — pages blanches lors de la première ouverture
+## B2 — R2.3 : finition Power BI (28 octobre 2026)
 
-Le 28 octobre, Power BI Desktop chargeait bien les six tables mais affichait
-un canevas blanc sans onglets. Le fichier PBIR `definition/report.json`
-ne renseignait pas `themeCollection`, requis par son schéma officiel.
-Le générateur B2 et un test de non-régression ont été corrigés.
-Cette correction est **validée statiquement** ; le rendu dans Power BI Desktop
-reste à confirmer depuis Windows.
+R2.3 réorganise les quatre pages en lecture **KPI → filtres → analyse**, avec deux tableaux plus larges, tri métier des tranches d'âge et de limite de crédit et une page méthodologie allégée. Les calculs, sources et fichiers de données officielles UCI restent inchangés. Voir [`docs/B2-R2.3-recette.md`](../docs/B2-R2.3-recette.md).
 
-**Après récupération de la version corrigée :** fermer Power BI Desktop,
-extraire le projet dans un **nouveau dossier** (ne pas superposer l'ancien),
-puis ouvrir `powerbi/BANK-360/BANK-360.pbip`. Ne pas recopier les anciens
-fichiers locaux `.Report/definition/` sur cette version. Les autorisations
-d'accès Web restent « Anonyme ».
-
-En cas de pages encore absentes, essayer d'ouvrir directement
-`powerbi/BANK-360/BANK-360.Report/definition.pbir` (ouvre le rapport et
-son modèle avec référence `byPath`), puis capturer l'éventuelle erreur.
+Pour utiliser la version corrigée, **fermer Power BI Desktop avant de remplacer les fichiers** et ouvrir le `.pbip` depuis un nouveau dossier. La recette d'affichage native reste à confirmer sur Windows, même si les tests GitHub réussissent. Ne pas réexécuter le générateur après des ajustements manuels dans Power BI Desktop sans sauvegarde : il reconstruira les visuels.

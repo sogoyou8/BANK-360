@@ -3,11 +3,11 @@
   "name": "risk_status",
   "position": {
     "x": 34,
-    "y": 258,
-    "z": 7,
-    "width": 772,
-    "height": 290,
-    "tabOrder": 7
+    "y": 337,
+    "z": 10,
+    "width": 545,
+    "height": 327,
+    "tabOrder": 10
   },
   "visual": {
     "visualType": "clusteredColumnChart",
@@ -49,6 +49,24 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Status"
+                  }
+                },
+                "Property": "september_status"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
       }
     },
     "visualContainerObjects": {
@@ -140,7 +158,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Défaut par statut de remboursement en septembre'"
+                  "Value": "'Défaut · code de paiement septembre'"
                 }
               }
             },
@@ -195,9 +213,16 @@
                 "color": {
                   "expr": {
                     "Literal": {
-                      "Value": "'#A6B6CB'"
+                      "Value": "'#EAF1F9'"
                     }
                   }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
                 }
               }
             },
@@ -222,6 +247,13 @@
                       "Value": "'#A6B6CB'"
                     }
                   }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
                 }
               }
             },
