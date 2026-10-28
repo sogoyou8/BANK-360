@@ -40,3 +40,7 @@ Ouvrir `http://127.0.0.1:5173`. En CI, `npm ci` remplace `npm install` **une foi
 Vérifier le rendu réel à 1440 × 900 et sur mobile ; le contraste du mode clair ; l'ouverture de chaque page ; la navigation au clavier ; les filtres `18-29` (9 618 dossiers, 2 197 défauts) puis remise à Tout ; 180 000 observations de paiement sans filtre ; la sélection d'un canal fraude ; les exports CSV et les liens de provenance ; la séparation stricte des champs UCI/PaySim. Les tests de structure ne remplacent pas cette vérification visuelle.
 
 **Aucun déploiement** et aucune connexion bancaire réelle dans B5. B6 finalisera l'acceptation et les éléments de portfolio.
+
+## Aperçu immédiat, sans npm ni serveur
+
+Le workflow B5 génère dans ses artefacts GitHub Actions le fichier autonome `BANK-360-B5-APERCU-LOCAL.html` (script JS et CSS intégrés). Il suffit de télécharger `bank360-b5-static-preview` dans l'exécution GitHub Actions B5, d'extraire l'archive et de **double-cliquer sur ce fichier HTML**. Aucun hébergement, installation ou connexion n'est nécessaire pour le parcourir. Les données agrégées sont incluses dans le bundle statique. Ce rendu hors ligne ne constitue pas une publication publique.

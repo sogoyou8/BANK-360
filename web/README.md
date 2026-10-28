@@ -25,3 +25,7 @@ Dock flottant extensible, palette `Ctrl/Cmd + K`, interface adaptable et deux th
 Les données sont **embarquées à la compilation à partir des fichiers versionnés dans le dépôt** : `powerbi/data/uci350_segments.csv`, `powerbi/data/uci350_payment_months.csv`, `reports/b3/` et `reports/b4/`. Les fichiers UCI réels client-par-client et les transactions PaySim individuelles restent exclus. L'Atlas n'est qu'une illustration : aucune donnée géographique ne sous-tend les cartes.
 
 L'application présente des études d'analyse historique et de simulation. **Pas un outil bancaire opérationnel, pas un modèle de décision de crédit, pas un service de détection de fraude en production**.
+
+### Prévisualisation autonome
+
+`npm run build && npm run standalone` produit un fichier `dist/BANK-360-B5-APERCU-LOCAL.html` entièrement autonome. Dans GitHub Actions, il est fourni dans le téléchargement `bank360-b5-static-preview`. Il s'ouvre directement dans Chrome sans serveur local.

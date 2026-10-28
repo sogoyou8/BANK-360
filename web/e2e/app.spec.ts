@@ -49,3 +49,14 @@ test('B5 : navigation clavier et viewport mobile',async({page})=>{
  await expect(page.getByRole('heading',{name:'Rapports & Paramètres'})).toBeVisible();
  await page.screenshot({path:'test-results/b5-mobile.png',fullPage:true});
 });
+
+test('B5 : aperçu HTML autonome utilisable hors ligne',async({page})=>{
+ const {resolve}=await import('node:path');
+ const {pathToFileURL}=await import('node:url');
+ const localFile=resolve(process.cwd(),'dist/BANK-360-B5-APERCU-LOCAL.html');
+ await page.goto(pathToFileURL(localFile).href);
+ await expect(page.getByText('Une vision plus claire.')).toBeVisible();
+ await page.locator('nav .nav-primary[title="Crédit & Portefeuille"]').click();
+ await page.locator('nav .nav-sub-link[title="Portefeuille bancaire"]').click();
+ await expect(page.locator('.kpi-grid .kpi-copy strong').first()).toContainText('30 000');
+});
