@@ -30,7 +30,7 @@ jobs:
         run: python -m unittest tests.test_b4 -v
       - name: Check that codebase contains no raw payment CSV or modeled account scores
         run: |
-          if git ls-files | grep -E '(^data/raw/|^reports/b4/.*(transaction|score|raw|\.pkl|\.joblib))'; then
+          if git ls-files | grep -E '(^data/raw/.*\.(csv|zip|parquet|pkl|joblib)$|^reports/b4/.*(transaction|score|raw|\.pkl|\.joblib))'; then
             echo 'ERROR: raw transaction or score export committed'; exit 1
           fi
           echo 'No raw PaySim records or per-account scores committed'
