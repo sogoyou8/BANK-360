@@ -1,0 +1,122 @@
+{
+  "phase": "B4",
+  "status": "PASS",
+  "experiment": "SIMULATED_PAYMENTS_ONLY",
+  "provenance": {
+    "source_url": "https://www.kaggle.com/api/v1/datasets/download/ealaxi/paysim1",
+    "download_sha256": "f7eef9ffad5cfa64a034143a5c9b30491d189420b273d5ad5723ca40b596613d",
+    "kind": "official_paysim_kaggle_zip",
+    "usage": "research/portfolio only; no real-world fraud claims"
+  },
+  "observed": {
+    "rows": 6362620,
+    "frauds": 8213,
+    "max_step": 743
+  },
+  "split": {
+    "train_steps": [
+      1,
+      480
+    ],
+    "validation_steps": [
+      481,
+      610
+    ],
+    "test_steps": [
+      611,
+      744
+    ],
+    "by_partition": {
+      "train": {
+        "n": 6039443,
+        "fraud": 5349
+      },
+      "validation": {
+        "n": 222824,
+        "fraud": 1376
+      },
+      "test": {
+        "n": 100353,
+        "fraud": 1488
+      }
+    },
+    "train_negative_keep": 0.05,
+    "seed": 42
+  },
+  "features": [
+    "log1p(amount)",
+    "type (five one-hot flags)"
+  ],
+  "excluded": [
+    "step from model",
+    "isFraud",
+    "isFlaggedFraud",
+    "nameOrig",
+    "nameDest",
+    "oldbalanceOrg",
+    "newbalanceOrig",
+    "oldbalanceDest",
+    "newbalanceDest"
+  ],
+  "selection": "highest validation PR-AUC; tie-break lowest Brier; one untouched chronological test",
+  "validation": {
+    "logistic": {
+      "pr_auc": 0.05568944125779132,
+      "brier": 0.006127135371105875,
+      "roc_auc": 0.893580931094748
+    },
+    "gradient_boosting": {
+      "pr_auc": 0.27187671805999725,
+      "brier": 0.005297319411321518,
+      "roc_auc": 0.9190882579237458
+    }
+  },
+  "model": "gradient_boosting",
+  "alert_rate_budget_validation": 0.005,
+  "threshold_validation": 0.014223154109022603,
+  "holdout_test": {
+    "n": 100353,
+    "frauds": 1488,
+    "alerted": 790,
+    "alert_rate": 0.007872211094835232,
+    "precision": 0.5227848101265823,
+    "recall": 0.2775537634408602,
+    "false_positive_rate": 0.0038132807363576594,
+    "pr_auc": 0.3651144283747276,
+    "roc_auc": 0.9199705467540455,
+    "brier": 0.012549736394748197,
+    "confusion": {
+      "tn": 98488,
+      "fp": 377,
+      "fn": 1075,
+      "tp": 413
+    },
+    "target_validation_alert_budget": 0.005
+  },
+  "simulator_rule_baseline": {
+    "name": "PaySim simulator isFlaggedFraud rule (not model input)",
+    "alerted": 8,
+    "recall": 0.005376344086021506,
+    "precision": 1.0,
+    "confusion": {
+      "tn": 98865,
+      "fp": 0,
+      "fn": 1480,
+      "tp": 8
+    }
+  },
+  "high_risk_decile": {
+    "decile": 1,
+    "transactions": 10036,
+    "frauds": 1073,
+    "observed_fraud_rate": 0.10691510561976883,
+    "mean_probability": 0.022151304475597527
+  },
+  "limitations": [
+    "Full dataset is a SIMULATOR, not true banking records",
+    "Chronological step split is not external time validation",
+    "Some generator-specific patterns cannot generalize",
+    "No cost of investigation or real sanctions modeled",
+    "No person-level transactions/scores/model binary exported"
+  ]
+}
