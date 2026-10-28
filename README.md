@@ -1,6 +1,6 @@
 # BANK 360 — Banking Intelligence & Risk Analytics
 
-**DATA 05 — B0 / B1 / B2 / B3 / B4** · 28 octobre 2026
+**DATA 05 — B0 / B1 / B2 / B3 / B4 / B5** · 28 octobre 2026
 
 ## Situation réelle
 
@@ -10,7 +10,7 @@
 - [x] **B2 — Power BI Credit Risk : TERMINÉ ET RECETTÉ (28/10/2026)**. PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels, CI réussie et validation visuelle/interactive Power BI Desktop sur captures et vidéos. Les indicateurs sectoriels EBA restent un chantier distinct.
 - [x] **B3 — Credit Risk Analytics : TERMINÉ (28/10/2026)**. Étude de prédiction de défaut historique, trois approches comparées, train/validation/test 18k/6k/6k, audit de biais descriptifs et résultats agrégés ; aucun scoring bancaire réel.
 - [x] **B4 — Fraud Analytics : TERMINÉ (28/10/2026), simulation PaySim uniquement**. 6 362 620 transactions simulées, modèles comparés, validation chronologique, métriques, contrôles de fuite, déciles et audits d'alertes. Aucune décision, aucun scoring réel ou déploiement.
-- [ ] B5 : cockpit Web
+- [x] **B5 — Cockpit Web React : DÉVELOPPEMENT ET TESTS TERMINÉS (28/10/2026)**. 11 pages dans six sections, UX Aurora + Spatial + Atlas, filtres sourcés, exports, responsive, palette clavier, aperçu HTML autonome ; tests navigateur/compilation PASS. **Recette esthétique utilisateur et déploiement public non effectués**.
 - [ ] B6 : finalisation et portfolio
 
 ### Recette B1 sur données historiques réelles
@@ -98,6 +98,16 @@ python -m bank360 validate --db examples/demo-output/data/bank360.sqlite
 5. Le code est visible sur ce dépôt GitHub public ; aucun déploiement applicatif n'a été effectué.
 
 **Source originale / attribution** : I-Cheng Yeh (2009), *Default of Credit Card Clients*, UCI Machine Learning Repository, DOI [10.24432/C55S3H](https://doi.org/10.24432/C55S3H), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Les noms de colonnes, vues et agrégations constituent des adaptations attribuées à BANK 360.
+
+## B5 — Application Web Aurora Spatial Atlas
+
+- **Source :** [web/](web/) · [Cadrage et commandes](docs/B5-implementation.md) · [Recette technique](docs/B5-validation-finale.md).
+- **11 pages intégrées** : Command Center, portefeuille, clients/segments, risque, paiements, fraude, investigations, modèles, exploration, qualité, rapports/paramètres. **6 grandes entrées** dans le dock flottant.
+- **Identité** : Aurora + Spatial Workspace + Atlas (interface sombre vitrée, option claire, design responsive et panneaux contextuels). Aucun faux graphique temps réel ni point géographique inventé.
+- **Données intégrées à la compilation** : CSV agrégés B2 (UCI historiques) et JSON/CSV B3/B4 (PaySim simulé) ; sources séparées, aucun dossier ni transaction individuelle publiés.
+- **CI :** [build TypeScript + test données + 5 scénarios Playwright réussis](https://github.com/sogoyou8/BANK-360/actions/runs/40710999940), y compris **prévisualisation HTML autonome testée hors ligne**.
+- **Prévisualisation** : télécharger l'artefact `bank360-b5-static-preview` depuis l'exécution CI, extraire, ouvrir `BANK-360-B5-APERCU-LOCAL.html` directement dans Chrome (aucun npm nécessaire).
+- **État** : B5 terminé techniquement, **inspection esthétique finale sur la machine utilisateur non encore consignée**. Aucun déploiement Vercel/GitHub Pages ni banque connectée.
 
 ## B4 — Fraud Analytics PaySim : expérimentation validée
 
