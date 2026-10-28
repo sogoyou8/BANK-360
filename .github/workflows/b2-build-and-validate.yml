@@ -30,7 +30,7 @@ jobs:
           python scripts/build-b2-pbip.py
           git diff --exit-code -- powerbi/BANK-360
       - name: Run B1 + B2 offline tests
-        run: python -m unittest discover -s tests -v
+        run: python -m unittest tests.test_pipeline tests.test_b2 tests.test_b2_r23 tests.test_b2_r24 -v
       - name: Check no individual customer data is committed
         run: |
           if git ls-files | grep -E '^data/(raw|silver|gold)/.*\.(csv|xls|xlsx|zip)$'; then
