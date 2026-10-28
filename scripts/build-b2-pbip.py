@@ -85,7 +85,7 @@ def generate():
     save(BASE/'BANK-360.pbip',{'$schema':S+'pbip/pbipProperties/1.0.0/schema.json','version':'1.0','artifacts':[{'report':{'path':'BANK-360.Report'}}],'settings':{'enableAutoRecovery':True}})
     save(REPORT/'definition.pbir',{'$schema':S+'item/report/definitionProperties/2.0.0/schema.json','version':'4.0','datasetReference':{'byPath':{'path':'../BANK-360.SemanticModel'}}})
     save(REPORT/'definition/version.json',{'$schema':S+'item/report/definition/versionMetadata/1.0.0/schema.json','version':'2.0.0'})
-    save(REPORT/'definition/report.json',{'$schema':S+'item/report/definition/report/3.3.0/schema.json','settings':{'exportDataMode':'AllowSummarized','useEnhancedTooltips':True}})
+    save(REPORT/'definition/report.json',{'$schema':S+'item/report/definition/report/3.3.0/schema.json','themeCollection':{},'settings':{'exportDataMode':'AllowSummarized','useEnhancedTooltips':True}})
     save(MODEL/'definition.pbism',{'$schema':S+'item/semanticModel/definitionProperties/1.0.0/schema.json','version':'4.2','settings':{}})
     write(MODEL/'definition/database.tmdl','database\n\tcompatibilityLevel: 1606')
     names=['Segments','Payments','Age','CreditLimit','Status','Metrics']

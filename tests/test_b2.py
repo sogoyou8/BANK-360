@@ -14,6 +14,23 @@ class BIProject(unittest.TestCase):
         r=json.loads((P/'BANK-360.Report/definition.pbir').read_text(encoding='utf-8'))
         self.assertEqual(r['datasetReference']['byPath']['path'],'../BANK-360.SemanticModel')
         self.assertTrue((P/'BANK-360.SemanticModel/definition/model.tmdl').is_file())
+    def test_report_metadata_mandatory_theme_collection(self):
+        """Power BI PBIR report schema requires themeCollection even for default theme.
+
+        Missing this key can prevent the report layer from loading while the
+        semantic model independently loads correctly.
+        """
+        report = json.loads((P/'BANK-360.Report/definition/report.json').read_text(encoding='utf-8'))
+        self.assertEqual(
+            report['$schema'],
+            'https://developer.microsoft.com/json-schemas/fabric/item/report/definition/report/3.3.0/schema.json'
+        )
+        self.assertIn('themeCollection', report)
+        self.assertIsInstance(report['themeCollection'], dict)
+        self.assertTrue((P/'BANK-360.Report/definition/version.json').is_file())
+        metadata=json.loads((P/'BANK-360.Report/definition/pages/pages.json').read_text(encoding='utf-8'))
+        self.assertEqual(metadata['activePageName'], metadata['pageOrder'][0])
+
     def test_pages_and_visuals_valid_references(self):
         report=P/'BANK-360.Report/definition'
         pages=json.loads((report/'pages/pages.json').read_text(encoding='utf-8'))['pageOrder']
