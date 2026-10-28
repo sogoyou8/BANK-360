@@ -32,7 +32,7 @@ const pages:{id:Page,label:string,short:string,group:string,icon:IconType,summar
 const byPage=Object.fromEntries(pages.map(p=>[p.id,p])) as Record<Page,(typeof pages)[number]>;
 const groups=['GÉNÉRAL','CRÉDIT UCI','PAYSIM · SIMULATION','INTELLIGENCE','GOUVERNANCE'];
 const n=(v:number)=>fmtInt(v);
-const percent=(v:number)=>fmtPct(v);
+const percent=(v:number,d=1)=>fmtPct(v,d);
 const fra=b4.holdout_test;
 const baseline=b3.holdout_test_metrics;
 function Chip({children,variant='blue'}:{children:React.ReactNode,variant?:'blue'|'violet'|'red'|'green'|'muted'}){return <span className={'chip '+variant}>{children}</span>}
