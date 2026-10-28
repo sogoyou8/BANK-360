@@ -1,13 +1,13 @@
 # BANK 360 — Banking Intelligence & Risk Analytics
 
-**DATA 05 — B1 Data Engineering** · 28 octobre 2026
+**DATA 05 — B0 / B1 / B2** · 28 octobre 2026
 
 ## Situation réelle
 
 - [x] **B0** : cadrage, inventaire des sources, règles métier et architecture
 - [x] **B1 — Implémentation** : ETL Python, schéma SQL, vues Gold, exports Power BI, 16 tests automatisés, démonstration contrôlée
 - [x] **B1 — Homologation sur les 30 000 dossiers UCI** : validation officielle réussie via GitHub Actions, le 28 octobre 2026.
-- [ ] B2 : rapport Power BI et indicateurs sectoriels EBA
+- [x] **B2 — Power BI Credit Risk** : PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels et tests CI réussis. **Recette visuelle Power BI Desktop encore nécessaire** ; indicateurs sectoriels EBA conservés comme chantier indépendant.
 - [ ] B3 : analyse et scoring expérimental de défaut
 - [ ] B4 : fraude PaySim
 - [ ] B5 : cockpit Web
@@ -98,3 +98,13 @@ python -m bank360 validate --db examples/demo-output/data/bank360.sqlite
 5. Le code est visible sur ce dépôt GitHub public ; aucun déploiement applicatif n'a été effectué.
 
 **Source originale / attribution** : I-Cheng Yeh (2009), *Default of Credit Card Clients*, UCI Machine Learning Repository, DOI [10.24432/C55S3H](https://doi.org/10.24432/C55S3H), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Les noms de colonnes, vues et agrégations constituent des adaptations attribuées à BANK 360.
+
+## B2 — Rapport Power BI natif
+
+Le projet est dans [`powerbi/BANK-360/BANK-360.pbip`](powerbi/BANK-360/BANK-360.pbip). Voir [`powerbi/README.md`](powerbi/README.md) pour son ouverture et les sources.
+
+- [Tests GitHub B2 réussis](https://github.com/sogoyou8/BANK-360/actions/runs/40662864649)
+- [UCI350 : agrégats officiels créés, contrôlés et versionnés](https://github.com/sogoyou8/BANK-360/actions/runs/40662864723)
+- 30 000 dossiers historiques · 6 636 défauts · 196 segments · 1 176 groupes mensuels
+
+**Remarque :** GitHub Actions contrôle le modèle et les données ; il ne peut pas confirmer l'affichage dans Power BI Desktop. Aucun déploiement de rapport ou application n'a été effectué.
