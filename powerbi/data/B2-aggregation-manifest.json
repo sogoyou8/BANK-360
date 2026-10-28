@@ -1,0 +1,27 @@
+{
+  "project": "BANK 360",
+  "phase": "B2",
+  "source": "UCI350 historical Taiwan 2005",
+  "population": 30000,
+  "defaults": 6636,
+  "default_rate_pct": 22.12,
+  "credit_limits_ntd": 5024529680,
+  "months": [
+    "2005-04",
+    "2005-05",
+    "2005-06",
+    "2005-07",
+    "2005-08",
+    "2005-09"
+  ],
+  "segment_rows": 196,
+  "monthly_rows": 1176,
+  "status": "PASS",
+  "source_zip_sha256": "56c885f84457f6680f8438f02bfcdac9579323d8a94465ee5f26e32baa727602",
+  "scope": "historical_uci",
+  "origin_url": "https://archive.ics.uci.edu/static/public/350/default+of+credit+card+clients.zip",
+  "license": "CC BY 4.0; Yeh (2009), DOI 10.24432/C55S3H",
+  "limitation": "Cohort history 2005; credit limits are not outstanding loan balances; not French 2026 data",
+  "uci350_segments.csv_sha256": "91dec63d3f62e369e5985646aa8c2991c3934a64e38297e95cae0293b05748ce",
+  "uci350_payment_months.csv_sha256": "1acde6b9f47e4c42b64269cc8088fd68c8bf02ab24c3de66daa12692e670a049"
+}
