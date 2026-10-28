@@ -10,7 +10,7 @@ test('B5 : page d’accueil, 11 pages, deux origines explicitement séparées',a
 });
 test('B5 : filtrage âge réel et reset, regroupement de paiements',async({page})=>{
  await page.goto('/');
- await page.getByRole('button',{name:/Portefeuille bancaire/}).first().click().catch(async()=>page.locator('nav .nav-link[title="Portefeuille bancaire"]').click());
+ await page.locator('nav .nav-link[title="Portefeuille bancaire"]').click();
  await expect(page.getByText('30 000',{exact:true}).first()).toBeVisible();
  await page.locator('#filter-age').selectOption('18-29');
  await expect(page.locator('.kpi-grid .kpi-copy strong').first()).toContainText('9 618');
