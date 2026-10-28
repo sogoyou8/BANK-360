@@ -50,6 +50,9 @@ class B4Tests(unittest.TestCase):
         self.assertEqual(report['holdout_test']['n'],(743-610)*12)
         self.assertEqual(sum(report['holdout_test']['confusion'].values()),report['holdout_test']['n'])
         self.assertEqual(report['provenance']['kind'],'synthetic_test')
+        self.assertTrue(0 <= report['test_predicted_probability_mean'] <= 1)
+        self.assertAlmostEqual(report['test_observed_fraud_rate'],report['split']['by_partition']['test']['fraud']/report['split']['by_partition']['test']['n'])
+        self.assertEqual(set(report['prevalence_by_partition']),{'train','validation','test'})
         for file in ['B4-metrics.json','B4-model-card.md','B4-risk-deciles.csv','B4-alerts-by-type.csv','B4-alerts-by-simulated-day.csv']:
             self.assertTrue((out/file).is_file())
         self.assertNotIn('nameOrig',json.loads((out/'B4-metrics.json').read_text())['features'])

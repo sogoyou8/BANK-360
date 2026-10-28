@@ -10,6 +10,9 @@ splits=r['split']['by_partition']; assert sum(z['n'] for z in splits.values())==
 assert sum(z['fraud'] for z in splits.values())==8213
 assert splits['validation']['fraud']>0 and splits['test']['fraud']>0
 assert r['alert_rate_budget_validation']==0.005
+assert r['prevalence_by_partition']['test'] == splits['test']['fraud']/splits['test']['n']
+assert 0 < r['test_predicted_probability_mean'] < 1
+assert r['test_probability_to_observed_rate_ratio'] > 0
 assert r['holdout_test']['n']==splits['test']['n']
 conf=r['holdout_test']['confusion'];assert sum(conf.values())==splits['test']['n']
 assert conf['tp']+conf['fn']==splits['test']['fraud']
