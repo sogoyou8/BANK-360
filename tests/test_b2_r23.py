@@ -61,7 +61,7 @@ class R23Contract(unittest.TestCase):
                     self.assertGreaterEqual(v['position']['height'],76)
                     self.assertEqual(v['visual']['objects']['data'][0]['properties']['mode']['expr']['Literal']['Value'],"'Dropdown'")
                 if k in ('clusteredBarChart','clusteredColumnChart','lineChart','tableEx'):
-                    self.assertGreaterEqual(v['position']['height'],320)
+                    self.assertGreaterEqual(v['position']['height'],280)
                     self.assertGreaterEqual(v['position']['y'],330)
                     self.assertGreaterEqual(v['position']['width'],540)
             tables=[v for v in vs if v['visual']['visualType']=='tableEx']

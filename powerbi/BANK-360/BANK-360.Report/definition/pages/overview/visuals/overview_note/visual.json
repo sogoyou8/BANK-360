@@ -60,7 +60,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Périmètre : 30 000 dossiers UCI. Taux pondérés par le volume des dossiers.",
+                    "value": "Base totale UCI : 30 000 dossiers. Les KPI et graphiques reflètent les filtres et les barres sélectionnées.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "11pt",

@@ -3,10 +3,10 @@
   "name": "risk_footer",
   "position": {
     "x": 36,
-    "y": 685,
+    "y": 643,
     "z": 12,
     "width": 1188,
-    "height": 23,
+    "height": 39,
     "tabOrder": 12
   },
   "visual": {
@@ -60,10 +60,10 @@
               {
                 "textRuns": [
                   {
-                    "value": "Codes UCI -2, -1, 0, puis 1 à 8 : valeurs historiques, non équivalentes à un score de risque.",
+                    "value": "Codes UCI -2, -1, 0, puis 1 à 8 : valeurs historiques, pas un score de risque.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
-                      "fontSize": "9pt",
+                      "fontSize": "11pt",
                       "fontWeight": "400",
                       "color": "#A6B6CB"
                     }

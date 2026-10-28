@@ -190,14 +190,14 @@ def generate():
                 v(k,34+i*307,114,288,110,'card',{'Values':[metric(m)]},t)
             v('ageFilter',34,241,292,78,'slicer',{'Values':[col('Age','age_band')]},'Tranche d’âge')
             v('limitFilter',342,241,333,78,'slicer',{'Values':[col('CreditLimit','credit_limit_band')]},'Limite de crédit')
-            txt('note',712,249,508,59,'Périmètre : 30 000 dossiers UCI. Taux pondérés par le volume des dossiers.',11,COLOR['muted'],'400')
-            v('age',34,337,586,327,'clusteredBarChart',
+            txt('note',712,249,508,59,'Base totale UCI : 30 000 dossiers. Les KPI et graphiques reflètent les filtres et les barres sélectionnées.',11,COLOR['muted'],'400')
+            v('age',34,337,586,289,'clusteredBarChart',
               {'Category':[col('Age','age_band')],'Y':[metric('Taux de défaut')]},'Taux de défaut · tranche d’âge')
             set_sort(visuals[-1],'Age','age_band')
-            v('limit',636,337,610,327,'clusteredColumnChart',
+            v('limit',636,337,610,289,'clusteredColumnChart',
               {'Category':[col('CreditLimit','credit_limit_band')],'Y':[metric('Taux de défaut')]},'Taux de défaut · limite de crédit')
             set_sort(visuals[-1],'CreditLimit','credit_limit_band')
-            txt('footer',36,685,1188,23,'LIMIT_BAL est une limite accordée (NTD), pas un encours bancaire.',9,COLOR['muted'],'400')
+            txt('footer',36,643,1188,39,'LIMIT_BAL est une limite accordée (NTD), pas un encours bancaire.',11,COLOR['muted'],'400')
         elif pid=='risk':
             for i,(k,t,m) in enumerate([
                 ('r','Taux de défaut','Taux de défaut'),('d','Défauts','Défauts'),
@@ -206,16 +206,16 @@ def generate():
                 v(k,34+i*307,114,288,110,'card',{'Values':[metric(m)]},t)
             v('statusfilter',34,241,314,78,'slicer',{'Values':[col('Status','september_status')]},'Statut de paiement')
             v('agefilter',364,241,300,78,'slicer',{'Values':[col('Age','age_band')]},'Tranche d’âge')
-            txt('note',697,248,529,62,'Lecture : association descriptive entre statut historique et défaut, sans décision individuelle.',10,COLOR['muted'],'400')
-            v('status',34,337,545,327,'clusteredColumnChart',
+            txt('note',697,248,529,62,'Lecture descriptive des groupes sélectionnés : les KPI changent selon filtres ou clics sur les barres.',10,COLOR['muted'],'400')
+            v('status',34,337,545,289,'clusteredColumnChart',
               {'Category':[col('Status','september_status')],'Y':[metric('Taux de défaut')]},'Défaut · code de paiement septembre')
             set_sort(visuals[-1],'Status','september_status')
-            v('cohort',595,337,651,327,'tableEx',
+            v('cohort',595,337,651,289,'tableEx',
               {'Values':[col('CreditLimit','credit_limit_band'),metric('Dossiers'),metric('Défauts'),metric('Taux de défaut')]},
               'Portefeuille · limite de crédit')
             refine_table(visuals[-1],[155,133,130,143],['Limite NTD','Dossiers','Défauts','Taux'])
             set_sort(visuals[-1],'CreditLimit','credit_limit_band')
-            txt('footer',36,685,1188,23,'Codes UCI -2, -1, 0, puis 1 à 8 : valeurs historiques, non équivalentes à un score de risque.',9,COLOR['muted'],'400')
+            txt('footer',36,643,1188,39,'Codes UCI -2, -1, 0, puis 1 à 8 : valeurs historiques, pas un score de risque.',11,COLOR['muted'],'400')
         elif pid=='history':
             for i,(k,t,m) in enumerate([
                 ('obs','Observations de paiement','Observations mensuelles'),
@@ -226,16 +226,16 @@ def generate():
             v('agefilter',34,241,290,78,'slicer',{'Values':[col('Age','age_band')]},'Tranche d’âge')
             v('limitfilter',340,241,335,78,'slicer',{'Values':[col('CreditLimit','credit_limit_band')]},'Limite de crédit')
             txt('caveat',697,245,532,63,'Six observations des MÊMES clients : la courbe suit les retards, pas une évolution du taux de défaut.',10,COLOR['muted'],'400')
-            v('line',34,337,566,327,'lineChart',
+            v('line',34,337,566,289,'lineChart',
               {'Category':[col('Payments','period')],'Y':[metric('Taux retard mensuel')]},'Paiements en retard · avril–septembre 2005')
             set_sort(visuals[-1],'Payments','period')
-            v('table',616,337,630,327,'tableEx',
+            v('table',616,337,630,289,'tableEx',
               {'Values':[col('Payments','period'),metric('Observations mensuelles'),
                          metric('Clients retard mensuels'),metric('Taux retard mensuel')]},
               'Détail mensuel')
             refine_table(visuals[-1],[116,135,150,142],['Mois','Obs.','En retard','Taux'])
             set_sort(visuals[-1],'Payments','period')
-            txt('footer',36,685,1188,23,'180 000 observations = 30 000 personnes observées 6 fois (pas 180 000 clients distincts).',9,COLOR['muted'],'400')
+            txt('footer',36,643,1188,39,'180 000 observations = 30 000 personnes observées 6 fois ; pas 180 000 clients distincts.',11,COLOR['muted'],'400')
         else:
             for i,(k,t,m) in enumerate([
                 ('all','Dossiers disponibles','Dossiers'),
