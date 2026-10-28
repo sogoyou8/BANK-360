@@ -1,0 +1,22 @@
+table Age
+
+	column age_band
+		dataType: string
+		summarizeBy: none
+		sourceColumn: age_band
+
+	partition Age = m
+		mode: import
+		source =
+			let
+			    Source = #table(type table [age_band = text], {
+			        {"18-29"},
+			        {"30-39"},
+			        {"40-49"},
+			        {"50-59"},
+			        {"60+"}
+			    })
+			in
+			    Source
+
+	annotation PBI_ResultType = Table

@@ -1,0 +1,39 @@
+name: BANK 360 — B2 native Power BI project checks
+
+on:
+  push:
+    paths:
+      - 'powerbi/**'
+      - 'scripts/build-b2-*.py'
+      - 'tests/test_b2.py'
+      - '.github/workflows/b2-build-and-validate.yml'
+  pull_request:
+    paths:
+      - 'powerbi/**'
+      - 'scripts/build-b2-*.py'
+      - 'tests/test_b2.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  project-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate the PBIP and compare with the committed version
+        run: |
+          python scripts/build-b2-pbip.py
+          git diff --exit-code -- powerbi/BANK-360
+      - name: Run B1 + B2 offline tests
+        run: python -m unittest discover -s tests -v
+      - name: Check no individual customer data is committed
+        run: |
+          if git ls-files | grep -E '^data/(raw|silver|gold)/.*\.(csv|xls|xlsx|zip)$'; then
+            echo 'ERROR: B1 individual data committed'; exit 1
+          fi
+          echo 'Only B2 grouped snapshot CSVs are allowed'
