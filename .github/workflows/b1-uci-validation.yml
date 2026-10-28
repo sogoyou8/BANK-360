@@ -1,0 +1,52 @@
+name: BANK 360 — B1 official UCI validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "bank360/**"
+      - "sql/**"
+      - "requirements-uci.txt"
+      - ".github/workflows/b1-uci-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-real-uci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install official UCI XLS reader
+        run: python -m pip install -r requirements-uci.txt
+      - name: Download and validate the official dataset (30,000 historical records)
+        run: python -m bank360 run --source official
+      - name: Independently check SQLite integrity
+        run: python -m bank360 validate
+      - name: Confirm dataset provenance and row count
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = json.loads(Path("reports/B1-quality-report.json").read_text(encoding="utf-8"))
+          print("Source:", p.get("origin_claim"), "Kind:", p.get("dataset_kind"))
+          print("Rows:", p.get("metrics", {}).get("client_count"))
+          assert p.get("origin_claim") == "official", "Did not use the official UCI source"
+          assert p.get("metrics", {}).get("client_count") == 30000, "Wrong client count"
+          assert all(x == 0 for x in p.get("integrity_checks", {}).values()), "SQL checks failed"
+          PY
+      - name: Archive quality evidence only (no raw banking dataset)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bank360-b1-uci-validation
+          path: |
+            reports/B1-quality-report.json
+            data/gold/B1-export-manifest.json
+          if-no-files-found: warn
+          retention-days: 30
