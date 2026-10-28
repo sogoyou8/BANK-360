@@ -1,6 +1,6 @@
 # BANK 360 — Banking Intelligence & Risk Analytics
 
-**DATA 05 — B0 / B1 / B2 / B3** · 28 octobre 2026
+**DATA 05 — B0 / B1 / B2 / B3 / B4** · 28 octobre 2026
 
 ## Situation réelle
 
@@ -9,7 +9,7 @@
 - [x] **B1 — Homologation sur les 30 000 dossiers UCI** : validation officielle réussie via GitHub Actions, le 28 octobre 2026.
 - [x] **B2 — Power BI Credit Risk : TERMINÉ ET RECETTÉ (28/10/2026)**. PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels, CI réussie et validation visuelle/interactive Power BI Desktop sur captures et vidéos. Les indicateurs sectoriels EBA restent un chantier distinct.
 - [x] **B3 — Credit Risk Analytics : TERMINÉ (28/10/2026)**. Étude de prédiction de défaut historique, trois approches comparées, train/validation/test 18k/6k/6k, audit de biais descriptifs et résultats agrégés ; aucun scoring bancaire réel.
-- [ ] B4 : fraude PaySim
+- [x] **B4 — Fraud Analytics : TERMINÉ (28/10/2026), simulation PaySim uniquement**. 6 362 620 transactions simulées, modèles comparés, validation chronologique, métriques, contrôles de fuite, déciles et audits d'alertes. Aucune décision, aucun scoring réel ou déploiement.
 - [ ] B5 : cockpit Web
 - [ ] B6 : finalisation et portfolio
 
@@ -98,6 +98,14 @@ python -m bank360 validate --db examples/demo-output/data/bank360.sqlite
 5. Le code est visible sur ce dépôt GitHub public ; aucun déploiement applicatif n'a été effectué.
 
 **Source originale / attribution** : I-Cheng Yeh (2009), *Default of Credit Card Clients*, UCI Machine Learning Repository, DOI [10.24432/C55S3H](https://doi.org/10.24432/C55S3H), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Les noms de colonnes, vues et agrégations constituent des adaptations attribuées à BANK 360.
+
+## B4 — Fraud Analytics PaySim : expérimentation validée
+
+- **Exécution PaySim Kaggle complète :** [GitHub Actions — PASS](https://github.com/sogoyou8/BANK-360/actions/runs/40696747283) ; [rapport final](docs/B4-validation-finale.md) ; [carte du modèle](reports/b4/B4-model-card.md).
+- **6 362 620 transactions simulées / 8 213 étiquettes de fraude**, non liées aux dossiers UCI.
+- **Test chronologique : 100 353 transactions, 1 488 fraudes** ; Gradient Boosting PR-AUC **0,3651**, ROC-AUC **0,9200** ; au seuil de validation (volume d'alertes 0,5 %), **790 alertes** dont **413 vraies** et **377 fausses** ; **1 075 fraudes manquées**.
+- **Avertissement :** la prévalence de fraude passe de 0,0886 % dans le train à 1,4828 % sur le test ; la probabilité moyenne prédite sur test (0,2459 %) sous-estime fortement cette fréquence. Les performances ne sont pas calibrées pour un usage réel.
+- La sélection, les seuils, les audits et tous les exports sont strictement expérimentaux, agrégés, sans transaction individuelle. **Aucune banque réelle** ni transaction réelle.
 
 ## B3 — Credit Risk Analytics : expérimentation officielle vérifiée
 
