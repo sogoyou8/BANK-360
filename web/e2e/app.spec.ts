@@ -140,3 +140,54 @@ test('R2 : thème clair lisible et recherche strictement dédiée aux pages',asy
  await page.keyboard.press('Enter');
  await expect(page.getByRole('heading',{name:'Risque de crédit'})).toBeVisible();
 });
+
+test('R3 — Rapports et Qualité : cartes compactes à la hauteur de leur contenu',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});
+ await page.goto('/');
+ for(const tab of ['Qualité','Rapports']){
+   await page.getByRole('button',{name:tab,exact:true}).click();
+   const cards=await page.locator('.screen-grid>.surface').evaluateAll(nodes=>nodes.map(n=>{const b=n.getBoundingClientRect();return{height:b.height,width:b.width,top:b.top}}));
+   expect(cards).toHaveLength(3);
+   expect(cards.every(x=>x.height>80&&x.height<430),tab+' : panneaux réellement compacts').toBe(true);
+   await noMainScroll(page);
+   await page.screenshot({path:'test-results/r3-'+tab.toLowerCase()+'.png'});
+ }
+});
+test('R3 — Risk : statuts UCI explicites et effectifs représentés sans modifier les codes de filtre',async({page})=>{
+ await page.goto('/');
+ await openSection(page,'Crédit','Risque');
+ const card=page.locator('.risk-grid>.surface').last();
+ await expect(card.getByText(/codes non précisés/)).toBeVisible();
+ await expect(card.getByText('−1 · à jour')).toBeVisible();
+ await expect(card.getByText('2 · 2 mois')).toBeVisible();
+ await expect(card.getByText('−2 · non précisé')).toBeVisible();
+ const group=card.locator('.chart-row').filter({hasText:'2 · 2 mois'});
+ await expect(group.locator('.row-count')).toContainText('n=');
+ await page.locator('#filter-status').selectOption('2');
+ await expect(page.locator('#filter-status')).toHaveValue('2');
+ await expect(page.locator('#filter-status option:checked')).toContainText('2 · 2 mois');
+ await expect(page.locator('.risk-grid .bar-count').first()).toContainText('n=');
+});
+test('R3 — Taille des groupes visible dans les répartitions de défaut',async({page})=>{
+ await page.goto('/');
+ const age=page.locator('.home-screen .chart-bar').first();
+ await expect(age.locator('.bar-count')).toContainText('n=');
+ await openSection(page,'Crédit','Portefeuille');
+ await expect(page.locator('.portfolio-grid .row-count').first()).toContainText('n=');
+ await expect(page.locator('.portfolio-grid .chart-row').first()).toHaveAttribute('title',/dossiers/);
+});
+test('R3 — Modèles : comparaison de validation compacte sans masquer les sous-vues',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});await page.goto('/');
+ await openSection(page,'Intelligence','Modèles');
+ let diag=page.locator('.models-grid>.surface').last();
+ let h=await diag.evaluate(e=>e.getBoundingClientRect().height);expect(h).toBeLessThan(390);
+ await expect(page.getByText('Comparaison PR-AUC · validation')).toBeVisible();
+ await page.getByRole('button',{name:'Variables',exact:true}).click();
+ await expect(page.getByText('Retard · septembre').first()).toBeVisible();
+ await page.getByRole('button',{name:'Calibration'}).click();
+ await expect(page.locator('.calibration-row')).toHaveCount(8);
+ await page.getByRole('button',{name:'Sous-groupes'}).click();
+ await expect(page.getByText('60+').first()).toBeVisible();
+ await noMainScroll(page);
+ await page.screenshot({path:'test-results/r3-models.png'});
+});

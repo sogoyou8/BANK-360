@@ -39,3 +39,11 @@ Sur desktop (largeur d'au moins 1120 px et hauteur utile d'au moins 720 px), cha
 ## Finition R2
 
 Les dix vues utilisent désormais des compositions différentes selon l'activité (synthèse, crédit, risques, fraude, gouvernance, rapports), et non une grille de cartes répétée. Les graphiques quantitatifs affichent zéro et des repères numériques, la série des paiements utilise une échelle démarrant à zéro, et l'écran des modèles distingue explicitement métriques de **test** et comparaisons de **validation**. La calibration met côte à côte score moyen prédit et taux réellement observé. Les contrôles de navigation ont un matériau translucide, les surfaces analytiques sont plus opaques, et le thème clair a été renforcé. La recherche sert exclusivement à accéder à une page.
+
+## R3 — Finition métier ciblée
+
+- Rapports et Qualité : panneaux calibrés sur la quantité réelle de contenu, sans cartes vides ni données ajoutées artificiellement.
+- Modèles : comparaisons PR-AUC de validation de hauteur compacte ; les autres onglets continuent d'afficher les variables, la calibration et l'audit.
+- Retards septembre : légende lisible des codes UCI sans invention de sens pour les codes `-2` et `0`. Les valeurs d'origine restent inchangées dans les filtres/exportations.
+- Graphiques de défaut par âge, plafond et code : `n=` dossiers affiché avec chaque taux. Aucun indicateur supplémentaire factice.
+- Mono-écran conservé sur desktop, mobile scrollable.
