@@ -32,3 +32,34 @@
 :root[data-theme=light] .nav-sub-link{color:#344d7b}
 @media(max-width:900px){.nav-rail{overflow:hidden}.nav-rail.mobile-show{overflow:hidden}.nav-rail.mobile-show nav{overflow:auto}.workspace-tabs{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:thin}}
 @media(max-width:650px){.nav-rail.mobile-show .nav-flyout{margin-left:15px}.workspace-tabs button{padding:8px 10px;white-space:nowrap}}
+
+
+/* B5 R5.1 — Dock permanent. Navigation et contenu ont une géométrie indépendante. */
+.nav-rail{flex:0 0 92px;width:92px;min-width:92px;max-width:92px;transition:none;overflow:visible;z-index:30}
+.nav-brand{justify-content:center;padding:20px 0 14px}
+.nav-brand>div,.nav-profile>div:nth-child(2){display:none!important}
+.nav-rail nav{padding:16px 11px;overflow:visible}
+.nav-section{margin-bottom:12px}
+.nav-primary{justify-content:center;min-height:55px;padding:0!important;gap:0}
+.nav-primary>span{display:none!important}
+.nav-primary .primary-chevron{display:none!important}
+.nav-bottom{padding:10px 8px 16px}
+.nav-profile{justify-content:center;padding:4px}
+.nav-dismiss{position:fixed;inset:0;z-index:24;border:0;background:transparent;cursor:default}
+.nav-flyout{position:absolute!important;left:calc(100% + 15px)!important;top:0!important;width:256px!important;max-height:min(70vh,500px);overflow-y:auto;margin:0!important;padding:9px!important;border:1px solid rgba(181,199,255,.37)!important;border-radius:19px!important;background:linear-gradient(148deg,rgba(43,53,103,.96),rgba(15,27,59,.98))!important;box-shadow:0 18px 70px #03061b9c,inset 0 1px 0 #fff2!important;backdrop-filter:blur(25px)}
+.nav-flyout.is-open{display:grid}
+:root[data-theme=light] .nav-flyout{background:linear-gradient(145deg,rgba(252,253,255,.97),rgba(226,237,255,.98))!important}
+@media(max-width:900px){
+  .app-frame{padding:0;gap:0}
+  .nav-rail{position:fixed;inset:auto 10px max(10px,env(safe-area-inset-bottom)) 10px;transform:none!important;flex:none!important;width:auto!important;min-width:0;max-width:none;height:70px;z-index:30;border-radius:22px;overflow:visible!important}
+  .nav-brand,.nav-bottom{display:none}
+  .nav-rail nav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-items:center;gap:2px;width:100%;height:100%;padding:7px 6px;overflow:visible!important}
+  .nav-section,.nav-section:nth-child(2),.nav-section:nth-child(4){margin:0!important;min-width:0}
+  .nav-primary{height:53px;min-height:53px;width:100%;margin:0;border-radius:14px;padding:0!important;justify-content:center}
+  .nav-primary>span,.nav-primary .primary-chevron{display:none!important}
+  .nav-flyout,.nav-flyout.is-open{position:fixed!important;top:auto!important;left:12px!important;right:12px!important;bottom:calc(91px + env(safe-area-inset-bottom));width:auto!important;max-height:min(65vh,480px);overflow-y:auto!important;padding:9px!important;margin:0!important;border-radius:18px!important}
+  .app-scroll{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
+  .main-wrap{width:100%}
+  .mobile-hamburger{display:none!important}
+}
+@media(max-width:400px){.nav-rail{left:7px;right:7px}.nav-rail nav{padding:6px 4px;gap:0}.nav-primary{height:52px;min-height:52px}}

@@ -18,7 +18,9 @@ Le rendu est disponible sur `http://127.0.0.1:5173`. Pour les tests de navigateu
 
 11 pages : Command Center, Portefeuille bancaire, Clients & Segmentation, Risque de crédit, Historique des paiements, Fraud Analytics, Alertes & Investigations, Modèles IA & Performance, Data Explorer, Data Quality & Traçabilité, Rapports & Paramètres.
 
-Dock flottant extensible, palette `Ctrl/Cmd + K`, interface adaptable et deux thèmes.
+Dock de navigation permanent, de largeur fixe (92 px desktop) et barre d'icônes fixe en bas sur mobile. Les sous-pages s'affichent dans un panneau flottant **sans redimensionner le cockpit**. Palette `Ctrl/Cmd + K`, interface adaptable et deux thèmes.
+
+La navbar n'est plus dépliable : aucun bouton de réduction/extension. Ouvrir une section affiche uniquement ses sous-pages en superposition ; `Escape` ou un clic hors du menu le ferme.
 
 ## Contrat de données
 
