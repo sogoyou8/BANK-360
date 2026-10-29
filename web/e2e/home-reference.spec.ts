@@ -84,3 +84,49 @@ test('Mobile : dock fixe, aucun dépassement horizontal, modules lisibles',async
  expect(state.overflow).toBeLessThanOrEqual(2);expect(state.dockY).toBeGreaterThan(700);
  await page.screenshot({path:'test-results/home-reference-mobile.png',fullPage:true});
 });
+
+test('Finition des vigilances : typographie hiérarchisée et sous-textes non tronqués sur desktop',async({page})=>{
+ for(const [width,height,minTitle,minSub] of [[1672,941,14.9,12.9],[1440,900,12.4,11.4]] as const){
+  await page.setViewportSize({width,height});await page.goto('/');
+  await expect(page.locator('.home-watch-row')).toHaveCount(3);
+  const state=await page.locator('.home-watch-row').evaluateAll(nodes=>nodes.map(row=>{
+   const title=row.querySelector('.home-watch-text strong') as HTMLElement;
+   const sub=row.querySelector('.home-watch-text small') as HTMLElement;
+   const panel=row.closest('.home-watch-panel')!.getBoundingClientRect();
+   const bounds=row.getBoundingClientRect();
+   return {
+    titleSize:parseFloat(getComputedStyle(title).fontSize),
+    subSize:parseFloat(getComputedStyle(sub).fontSize),
+    titleOverflow:title.scrollWidth-title.clientWidth,
+    subOverflow:sub.scrollWidth-sub.clientWidth,
+    bottom:bounds.bottom,
+    panelBottom:panel.bottom,
+    subColor:getComputedStyle(sub).color
+   };
+  }));
+  for(const item of state){
+   expect(item.titleSize).toBeGreaterThanOrEqual(minTitle);
+   expect(item.subSize).toBeGreaterThanOrEqual(minSub);
+   expect(item.titleOverflow).toBeLessThanOrEqual(1);
+   expect(item.subOverflow).toBeLessThanOrEqual(1);
+   expect(item.bottom).toBeLessThanOrEqual(item.panelBottom-4);
+   expect(item.subColor).toBe('rgb(213, 225, 248)');
+  }
+  const main=await page.locator('#main-content').evaluate(el=>el.scrollHeight-el.clientHeight);
+  expect(main).toBeLessThanOrEqual(3);
+  await page.screenshot({path:'test-results/home-legibility-'+width+'.png'});
+ }
+});
+test('Finition : mobile lisible sans débordement ni régression du dock',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('/');
+ await expect(page.locator('.home-watch-row')).toHaveCount(3);
+ const metrics=await page.evaluate(()=>({
+   overflow:document.documentElement.scrollWidth-window.innerWidth,
+   dockBottom:document.querySelector('.nav-dock')!.getBoundingClientRect().bottom,
+   headings:[...document.querySelectorAll('.home-watch-text strong')].map(x=>parseFloat(getComputedStyle(x).fontSize))
+ }));
+ expect(metrics.overflow).toBeLessThanOrEqual(2);
+ expect(metrics.dockBottom).toBeLessThanOrEqual(844);
+ expect(metrics.headings.every(x=>x>=12)).toBe(true);
+ await page.screenshot({path:'test-results/home-legibility-mobile.png',fullPage:true});
+});
