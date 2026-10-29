@@ -71,7 +71,7 @@ test('Gouvernance, rapports, confidentialité et navigation rapide',async({page}
  await expect(page.locator('html')).toHaveAttribute('data-theme','light');
  await page.keyboard.press('Control+k');
  await expect(page.getByRole('dialog',{name:'Navigation rapide'})).toBeVisible();
- await page.getByPlaceholder('Chercher une page ou une analyse…').fill('Risque');
+ await page.getByPlaceholder('Rechercher une page…').fill('Risque');
  await page.keyboard.press('Enter');
  await expect(page.getByRole('heading',{name:'Risque de crédit'})).toBeVisible();
 });
@@ -96,4 +96,47 @@ test('Prévisualisation HTML autonome',async({page})=>{
  await page.goto(pathToFileURL(resolve('dist/BANK-360-B5-APERCU-LOCAL.html')).href);
  await expect(page.getByRole('heading',{name:'Vue d’ensemble'})).toBeVisible();
  await openSection(page,'Crédit','Portefeuille');await expect(page.getByText('30 000').first()).toBeVisible();
+});
+
+test('R2 : quatre mises en page métier distinctes sans scroll global',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});await page.goto('/');
+ const designs:[string,string,string][]=[['Crédit','Portefeuille','portfolio'],['Crédit','Risque','risk'],['Fraude','Fraude','fraud'],['Rapports','','reports']];
+ for(const [group,item,id] of designs){if(item)await openSection(page,group,item);else await page.getByRole('button',{name:group,exact:true}).click();
+ await expect(page.locator('#main-content')).toHaveAttribute('data-page',id);
+ const rect=await page.locator('.screen-grid').evaluate(el=>{const s=getComputedStyle(el);return{cols:s.gridTemplateColumns,rows:s.gridTemplateRows}});
+ expect(rect.cols.split(' ').length).toBe(2);
+ await noMainScroll(page);
+ await page.screenshot({path:'test-results/r2-'+id+'.png'});
+ }
+});
+test('R2 : graphiques avec zéro visible et courbe de retards à base zéro',async({page})=>{
+ await page.goto('/');await expect(page.locator('.chart-scale').first()).toBeVisible();
+ await expect(page.locator('.chart-scale').first().getByText('0,0 %')).toBeVisible();
+ await openSection(page,'Crédit','Paiements');
+ await expect(page.locator('.trend-scale')).toBeVisible();
+ await expect(page.locator('.trend-scale').getByText('0,0 %')).toBeVisible();
+ const top=await page.locator('.trend-scale').locator('span').first().textContent();expect(top).not.toBe('0,0 %');
+});
+test('R2 : calibration compare prédit et observé, contexte validation versus test',async({page})=>{
+ await page.goto('/');await openSection(page,'Intelligence','Modèles');
+ await expect(page.getByText('ROC-AUC · test')).toBeVisible();
+ await page.getByRole('button',{name:'Calibration'}).click();
+ await expect(page.getByText('Score moyen').first()).toBeVisible();
+ await expect(page.getByText('Défaut observé').first()).toBeVisible();
+ await expect(page.locator('.calibration-row')).toHaveCount(8);
+ await page.getByRole('button',{name:'Modèles',exact:true}).last().click();
+ await expect(page.getByText('Comparaison PR-AUC · validation')).toBeVisible();
+});
+test('R2 : thème clair lisible et recherche strictement dédiée aux pages',async({page})=>{
+ await page.goto('/');await page.getByRole('button',{name:'Basculer le thème'}).click();
+ await expect(page.locator('html')).toHaveAttribute('data-theme','light');
+ const color=await page.locator('.metric small').first().evaluate(e=>getComputedStyle(e).color);
+ expect(color).toBe('rgb(53, 73, 105)');
+ await page.screenshot({path:'test-results/r2-light.png'});
+ await page.getByRole('button',{name:/Accéder à une page/}).click();
+ await expect(page.getByRole('dialog',{name:'Navigation rapide'})).toBeVisible();
+ await expect(page.getByText(/Navigation uniquement/)).toBeVisible();
+ await page.getByPlaceholder('Rechercher une page…').fill('Risque');
+ await page.keyboard.press('Enter');
+ await expect(page.getByRole('heading',{name:'Risque de crédit'})).toBeVisible();
 });
