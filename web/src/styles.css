@@ -82,3 +82,64 @@
 :root[data-theme=light] .quality-good{color:#207c67;background:rgba(43,159,125,.13)}
 @media(max-width:1120px){.home-grid,.portfolio-grid,.risk-grid,.fraud-grid,.alerts-grid,.quality-grid,.reports-grid{grid-template-columns:1fr 1fr;grid-template-rows:minmax(0,1fr) minmax(0,1fr)}.home-grid>.surface:first-child,.portfolio-grid>.surface:first-child,.risk-grid>.surface:first-child,.fraud-grid>.surface:first-child,.alerts-grid>.surface:first-child,.quality-grid>.surface:first-child,.reports-grid>.surface:first-child{grid-column:1;grid-row:1}.home-grid>.surface:nth-child(2),.portfolio-grid>.surface:nth-child(2),.risk-grid>.surface:nth-child(2),.fraud-grid>.surface:nth-child(2),.alerts-grid>.surface:nth-child(2),.quality-grid>.surface:nth-child(2),.reports-grid>.surface:nth-child(2){grid-column:2;grid-row:1}.home-grid>.surface:nth-child(3),.portfolio-grid>.surface:nth-child(3),.risk-grid>.surface:nth-child(3),.fraud-grid>.surface:nth-child(3),.alerts-grid>.surface:nth-child(3),.quality-grid>.surface:nth-child(3),.reports-grid>.surface:nth-child(3){grid-column:1 / 3;grid-row:2}.models-grid{grid-template-columns:1fr 1.1fr}}
 @media(max-width:900px){.home-grid,.portfolio-grid,.risk-grid,.fraud-grid,.alerts-grid,.quality-grid,.reports-grid{grid-template-columns:1fr!important;grid-template-rows:none;grid-auto-rows:minmax(260px,auto)}.home-grid>.surface,.portfolio-grid>.surface,.risk-grid>.surface,.fraud-grid>.surface,.alerts-grid>.surface,.quality-grid>.surface,.reports-grid>.surface{grid-column:auto!important;grid-row:auto!important}.quality-status{height:auto;min-height:40px;flex-wrap:wrap;padding:10px 12px}.quality-status span{margin-left:0}.chart-bars{min-height:150px}.chart-scale{font-size:9px}}
+
+
+/* B5.R3 — final targeted usability improvements; nothing in the data model changes. */
+.bar-count{display:block;font-size:10px;color:#aac0dd;font-variant-numeric:tabular-nums;line-height:1.15;white-space:nowrap}
+.chart-bar:has(.bar-count){gap:4px}
+.chart-bar:has(.bar-count) .bar-track{min-height:8px}
+.row-group{min-width:0;display:flex;flex-direction:column;gap:3px;overflow:hidden;text-align:left}
+.row-group .row-name{display:block;min-width:0}
+.row-count{display:block;font-size:9px;color:#aabbdc;line-height:1.1;font-variant-numeric:tabular-nums}
+.risk-grid .surface:last-child .chart-rows{justify-content:flex-start;gap:4px}
+.risk-grid .surface:last-child .chart-row{min-height:28px;padding:4px 3px;grid-template-columns:minmax(107px,48%) minmax(35px,1fr) minmax(48px,57px)}
+.risk-grid .surface:last-child .row-name{white-space:normal;line-height:1.1}
+.risk-grid .surface:last-child .surface-head{align-items:flex-start}
+.risk-grid .surface:last-child .surface-subtitle{white-space:normal;line-height:1.3;max-width:310px}
+/* Panels size themselves to real content, instead of filling an empty viewport. */
+.quality-grid,.reports-grid{flex:0 0 auto;align-content:start;align-items:start;grid-template-columns:minmax(0,1.18fr) minmax(0,1fr);grid-template-rows:auto auto;gap:14px;max-width:1170px}
+.quality-grid>.surface,.reports-grid>.surface{height:auto!important;align-self:start;min-height:0}
+.quality-grid>.surface:first-child,.reports-grid>.surface:first-child{grid-column:1;grid-row:1 / 3}
+.quality-grid>.surface:nth-child(2),.reports-grid>.surface:nth-child(2){grid-column:2;grid-row:1}
+.quality-grid>.surface:nth-child(3),.reports-grid>.surface:nth-child(3){grid-column:2;grid-row:2}
+.quality-grid .surface-body,.reports-grid .surface-body{height:auto;min-height:0;flex:0 1 auto;overflow:visible}
+.quality-grid .quality-list,.quality-grid .source-list,.quality-grid .quality-notes,.reports-grid .export-stack,.reports-grid .reference-list,.reports-grid .preferences{height:auto;min-height:0;flex:none;justify-content:flex-start}
+.quality-grid .quality-list>div{padding:9px 0}
+.quality-grid .quality-notes{gap:3px}
+.quality-grid .quality-notes>div{padding:7px 0;font-size:10px;line-height:1.5}
+.quality-grid .source-list{gap:8px}
+.quality-grid .source-list>a{padding:11px 12px}
+.reports-grid .export-stack{gap:9px}
+.reports-grid .export-stack button{padding:12px 13px}
+.reports-grid .reference-list{gap:8px}
+.reports-grid .reference-list a{padding:11px 13px}
+.reports-grid .preferences{gap:3px}
+.reports-grid .preferences>div{padding:8px 0 10px}
+/* Models: compact, top-aligned comparisons; expansive only for detailed views. */
+.models-grid{flex:0 0 auto;align-content:start;align-items:start;grid-template-columns:minmax(0,.94fr) minmax(0,1.38fr);grid-template-rows:auto}
+.models-grid>.surface{align-self:start}
+.models-grid>.surface:first-child{height:390px}
+.models-grid>.surface:nth-child(2){height:auto;max-height:min(510px,calc(100dvh - 225px))}
+.models-grid>.surface:nth-child(2) .surface-body{height:auto;min-height:0;flex:0 1 auto;overflow-y:auto}
+.models-grid>.surface:nth-child(2) .chart-rows{min-height:0;flex:0 1 auto;justify-content:flex-start;gap:9px;max-height:300px}
+.models-grid>.surface:nth-child(2) .chart-row{min-height:35px;padding:7px 5px}
+.models-grid>.surface:nth-child(2) .table-viewport{height:auto;max-height:335px;min-height:0}
+.models-grid>.surface:nth-child(2) .calibration-view{height:auto;min-height:0;max-height:375px}
+.models-grid>.surface:nth-child(2) .calibration-list{max-height:320px}
+.models-grid>.surface:nth-child(2) .drift-panel .chart-rows{max-height:260px}
+:root[data-theme=light] .bar-count,:root[data-theme=light] .row-count{color:#465c7f}
+@media(max-width:1120px){
+ .quality-grid,.reports-grid{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)!important;grid-template-rows:auto auto!important;max-width:100%}
+ .quality-grid>.surface:first-child,.reports-grid>.surface:first-child{grid-column:1;grid-row:1 / 3}
+ .quality-grid>.surface:nth-child(2),.reports-grid>.surface:nth-child(2){grid-column:2;grid-row:1}
+ .quality-grid>.surface:nth-child(3),.reports-grid>.surface:nth-child(3){grid-column:2;grid-row:2}
+ .models-grid{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+}
+@media(max-width:900px){
+ .quality-grid,.reports-grid,.models-grid{flex:0 0 auto;grid-template-columns:1fr!important;grid-template-rows:none!important;grid-auto-rows:auto!important;align-content:start}
+ .quality-grid>.surface,.reports-grid>.surface,.models-grid>.surface{grid-column:auto!important;grid-row:auto!important;min-height:0;height:auto!important;max-height:none}
+ .models-grid>.surface:first-child{height:340px!important}
+ .models-grid>.surface:nth-child(2){max-height:none}
+ .models-grid>.surface:nth-child(2) .surface-body{overflow:visible}
+ .risk-grid .surface:last-child .chart-rows{max-height:390px}
+}

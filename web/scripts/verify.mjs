@@ -23,3 +23,7 @@ assert.ok(src.includes('function CalibrationView'), 'Calibration prédite et obs
 assert.ok(src.includes('chart-scale'), 'Repères des axes requis');
 assert.ok(src.includes('Comparaison PR-AUC · validation'), 'Séparation validation/test requise');
 assert.ok(!src.includes('Rechercher une analyse'), 'Recherche limitée à la navigation');
+
+assert.ok(src.includes('paymentStatusLabel'), 'Labels des codes de remboursement requis');
+assert.ok(src.includes("Code ${code} : signification non précisée"), 'Codes non documentés à préserver');
+assert.ok(src.includes('bar-count')&&src.includes('row-count'), 'Effectifs des segments requis');
