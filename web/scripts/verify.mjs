@@ -18,3 +18,8 @@ for(const phase of ['B1 ·','B2 ·','B3 ·','B4 ·','EXPERIENCE','PROJET'])asser
 for(const name of ['B3-calibration.csv','B3-feature-importance.csv','B3-subgroup-audit.csv'])assert.ok(read('web/src/riskEvidence.ts').includes(name));
 assert.ok(!src.includes('Math.random('));assert.ok(!src.includes('new Date()'));
 console.log('B5.R: 10 pages / 6 sections, sources réconciliées, recherche, diagnostics, pas de métriques fabriquées — PASS');
+
+assert.ok(src.includes('function CalibrationView'), 'Calibration prédite et observée requise');
+assert.ok(src.includes('chart-scale'), 'Repères des axes requis');
+assert.ok(src.includes('Comparaison PR-AUC · validation'), 'Séparation validation/test requise');
+assert.ok(!src.includes('Rechercher une analyse'), 'Recherche limitée à la navigation');

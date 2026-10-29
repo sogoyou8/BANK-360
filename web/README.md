@@ -35,3 +35,7 @@ L'application présente des études d'analyse historique et de simulation. **Pas
 ## UX mono-écran — B5.R
 
 Sur desktop (largeur d'au moins 1120 px et hauteur utile d'au moins 720 px), chaque page occupe l'écran sans scroll global. Les tables scrollent à l'intérieur de leurs panneaux. Sur mobile, le contenu est volontairement vertical pour éviter tout écrasement des graphiques. Navigation permanente à six sections, popovers hors flux et palette clavier. L'interface ne montre aucun numéro de phase ni faux statut temps réel. Consulte `docs/B5R-architecture.md` pour le contrat.
+
+## Finition R2
+
+Les dix vues utilisent désormais des compositions différentes selon l'activité (synthèse, crédit, risques, fraude, gouvernance, rapports), et non une grille de cartes répétée. Les graphiques quantitatifs affichent zéro et des repères numériques, la série des paiements utilise une échelle démarrant à zéro, et l'écran des modèles distingue explicitement métriques de **test** et comparaisons de **validation**. La calibration met côte à côte score moyen prédit et taux réellement observé. Les contrôles de navigation ont un matériau translucide, les surfaces analytiques sont plus opaques, et le thème clair a été renforcé. La recherche sert exclusivement à accéder à une page.
