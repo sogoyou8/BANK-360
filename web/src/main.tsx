@@ -61,7 +61,7 @@ function Tabs({options,value,onChange,label}:{options:{id:string,label:string}[]
 }
 function ChartBars({items,format=asPct,accent='blue',selected,onSelect}:{items:{id:string,label:string,value:number}[],format?:(n:number)=>string,accent?:'blue'|'rose'|'mint'|'violet',selected?:string,onSelect?:(x:string)=>void}){
  const highest=Math.max(...items.map(x=>x.value),.0001);
- return <div className={'chart-bars tone-'+accent} role="group" aria-label={'Graphique par groupe, échelle de zéro à '+format(highest)}}>
+ return <div className={'chart-bars tone-'+accent} role="group" aria-label={'Graphique par groupe, échelle de zéro à '+format(highest)}>
    <div className="chart-scale" aria-hidden="true"><span>{format(highest)}</span><span>{format(highest/2)}</span><span>{format(0)}</span></div>
    {items.map(item=><button type="button" className={'chart-bar '+(selected===item.id?'bar-selected':'')} onClick={()=>onSelect?.(item.id)} disabled={!onSelect} key={item.id} title={item.label+' : '+format(item.value)} aria-label={item.label+' : '+format(item.value)}><span className="bar-value">{format(item.value)}</span><span className="bar-track"><i style={{height:Math.max(3,100*item.value/highest)+'%'}}/></span><span className="bar-label">{item.label}</span></button>)}
   </div>;
