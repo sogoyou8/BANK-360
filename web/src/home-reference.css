@@ -1,0 +1,137 @@
+/* BANK 360 — Home reference composition. Scoped: all other nine views remain untouched. */
+.home-reference-screen{--home-blue:#7eb7ff;--home-violet:#ac9bff;--home-mint:#60e6df;--home-rose:#fd91c2;--home-frame:#778ddd;--home-ink:#f8f9ff;--home-secondary:#b1c2e5;color:var(--home-ink);gap:16px}
+.home-overview-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;flex:0 0 116px;min-height:0}
+.home-kpi{display:flex;align-items:center;gap:20px;min-width:0;position:relative;overflow:hidden;text-align:left;padding:16px 20px;border:1px solid rgba(118,161,255,.7);border-radius:22px;background:linear-gradient(130deg,rgba(35,55,108,.92),rgba(25,43,89,.93) 49%,rgba(46,76,138,.79));box-shadow:inset 0 1px 1px rgba(230,239,255,.2),inset -3px -7px 20px rgba(3,12,42,.36),0 9px 22px rgba(3,10,27,.18);transition:border-color .18s,box-shadow .18s,transform .18s}
+.home-kpi::before{content:'';position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:radial-gradient(ellipse at 84% -30%,rgba(126,155,255,.22),transparent 64%)}
+.home-kpi:hover,.home-kpi:focus-visible{border-color:#c6d5ff;box-shadow:inset 0 1px 1px #ffffff50,0 0 27px #7295ff32,0 13px 27px #050a2d5a;transform:translateY(-1px)}
+.home-kpi-violet{border-color:rgba(141,124,255,.8)}.home-kpi-rose{border-color:rgba(247,135,221,.82)}.home-kpi-mint{border-color:rgba(58,200,255,.86)}
+.home-kpi-icon{display:grid;place-items:center;flex:0 0 64px;width:64px;height:64px;border-radius:17px;border:1px solid rgba(91,139,255,.36);background:linear-gradient(140deg,#234caa5b,#081e5ebf);color:#75afff;box-shadow:inset 1px 1px 1px #d9e6ff33,inset -5px -7px 11px #08103e7a,0 9px 16px #070d2e69}
+.home-kpi-violet .home-kpi-icon{color:#b59fff;background:linear-gradient(140deg,#6a4db077,#26145b9e);border-color:#9474f381}.home-kpi-rose .home-kpi-icon{color:#ff9cc8;background:linear-gradient(140deg,#a943787c,#51204b86);border-color:#f075b77a}.home-kpi-mint .home-kpi-icon{color:#64f4ee;background:linear-gradient(140deg,#0a667786,#103a6882);border-color:#3ed4e766}
+.home-kpi-text{display:flex;flex-direction:column;min-width:0;gap:3px;flex:1;z-index:1}.home-kpi-label{font-size:14px;color:#f1f4ff;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-weight:560}.home-kpi-text strong{font-size:30px;font-weight:750;letter-spacing:-.8px;line-height:1.12;font-variant-numeric:tabular-nums;white-space:nowrap}.home-kpi-text small{font-size:13px;color:#b9c6e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-kpi-action{width:38px;height:38px;border-radius:50%;flex:0 0 38px;display:grid;place-items:center;color:#f8faff;background:linear-gradient(138deg,rgba(100,141,216,.40),rgba(27,48,102,.77));border:1px solid rgba(146,178,255,.18);box-shadow:inset 1px 1px 1px #ecf2ff24;z-index:1}
+.home-overview-grid{display:grid;flex:1;min-height:0;grid-template-columns:minmax(0,1.261fr) minmax(0,1fr);gap:16px}
+.home-right-stack{display:grid;min-width:0;min-height:0;grid-template-rows:minmax(0,1.08fr) minmax(0,1fr);gap:16px}
+.home-glass-panel{display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden;border-radius:24px;border:1px solid rgba(138,165,244,.68);background:linear-gradient(160deg,rgba(19,36,76,.96),rgba(11,24,54,.96) 52%,rgba(24,42,88,.95));box-shadow:inset 0 1px 1px rgba(239,247,255,.18),inset -4px -8px 20px rgba(2,11,39,.38),0 16px 40px #0309192c;position:relative}
+.home-glass-panel::before{content:'';position:absolute;left:0;right:0;top:0;height:33%;pointer-events:none;background:radial-gradient(ellipse at 38% -12%,rgba(104,155,255,.11),transparent 65%)}
+.home-panel-header{flex:0 0 93px;display:flex;align-items:flex-start;gap:20px;padding:21px 22px 10px;position:relative;z-index:1}
+.home-panel-symbol{display:grid;place-items:center;flex:0 0 60px;width:60px;height:60px;border:1px solid rgba(133,158,255,.43);border-radius:17px;color:#aed2ff;background:linear-gradient(135deg,rgba(96,132,220,.51),rgba(40,66,141,.37));box-shadow:inset 1px 1px 1px #d3e3ff3d,inset -4px -7px 15px #06113950}
+.home-symbol-credit{color:#b8cfff}.home-symbol-fraud{color:#7decff;background:linear-gradient(145deg,rgba(58,116,205,.60),rgba(13,59,97,.34))}.home-symbol-watch{color:#b5d2ff;background:linear-gradient(145deg,#276ad28a,#14357199)}
+.home-panel-title{display:flex;min-width:0;flex:1;flex-direction:column;gap:6px;padding-top:5px}.home-panel-title h2{font-size:19px;font-weight:690;letter-spacing:-.42px;margin:0;line-height:1.25;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.home-panel-title small{font-size:14px;color:#afc0e4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-analyze{height:43px;display:flex;align-items:center;gap:14px;border-radius:13px;background:linear-gradient(145deg,rgba(49,99,207,.65),rgba(22,57,136,.67));border:1px solid rgba(105,158,255,.96);box-shadow:inset 0 1px 1px #f9fbff30,0 5px 17px #123cbb25;color:#f3f6ff;padding:0 17px;font-size:14px;white-space:nowrap;margin-top:4px}
+.home-analyze:hover{background:linear-gradient(140deg,rgba(71,132,244,.78),rgba(27,66,148,.85))}
+.home-credit-chart{min-height:0;flex:1;margin:31px 26px 45px 22px;display:flex;position:relative}
+.home-chart-axis{width:46px;flex:0 0 46px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:1px 4px 0 0;margin:0 0 60px;font-size:14px;color:#c8d5f0;font-variant-numeric:tabular-nums;white-space:nowrap}
+.home-chart-plot{min-width:0;position:relative;flex:1;margin:0 0 60px;height:auto;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-bottom:1px solid rgba(165,198,255,.5);border-left:1px solid rgba(165,198,255,.18)}
+.home-chart-gridlines{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;pointer-events:none}
+.home-chart-gridlines i{display:block;border-top:1px dashed rgba(147,169,226,.26);width:100%}.home-chart-gridlines i:last-child{border-top:0}
+.home-credit-column{position:relative;min-width:0;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;overflow:visible;background:linear-gradient(90deg,transparent,rgba(89,115,184,.05) 10%,rgba(89,115,184,.08) 50%,transparent 90%);border-right:1px dashed rgba(141,161,233,.09);padding:0 8px;color:#e6edff;z-index:1}
+.home-credit-column:hover,.home-credit-column:focus-visible{background:rgba(106,143,249,.12);outline-offset:-1px}
+.home-credit-bar{width:min(74px,77%);max-height:100%;min-height:3px;position:relative;display:block;flex-shrink:0;border-radius:11px 11px 0 0;background:linear-gradient(180deg,#8ac8ff 0%,#6eaeff 25%,#6188eb 64%,#5369d3 100%);border:1px solid rgba(161,219,255,.54);border-bottom:0;box-shadow:inset 2px 1px 2px #e7f4ff2e,inset -5px -1px 17px #315aca35,0 0 17px #4f83f735;transition:filter .16s,box-shadow .16s}
+.home-credit-column:hover .home-credit-bar{filter:brightness(1.15);box-shadow:0 0 25px #7eb5ff63}
+.home-credit-value{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);font-size:14px;color:#f7faff;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+.home-credit-age,.home-credit-count{position:absolute;left:0;right:0;white-space:nowrap;text-align:center}
+.home-credit-age{top:calc(100% + 14px);font-size:14px;color:#e7eeff}.home-credit-count{top:calc(100% + 40px);font-size:13px;color:#c0ceeb;font-variant-numeric:tabular-nums}
+.home-fraud-panel .home-panel-header{flex-basis:99px}
+.home-fraud-body{flex:1;display:flex;flex-direction:column;min-height:0;padding:1px 24px 19px}
+.home-fraud-channels{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;gap:22px;padding-bottom:18px}
+.home-fraud-channel{display:grid;grid-template-columns:96px minmax(0,1fr) 48px;align-items:center;gap:17px;min-height:24px;background:transparent;text-align:left;padding:0 5px;color:#eef4ff}
+.home-fraud-channel-name{font-size:13px;white-space:nowrap;color:#dce9ff}.home-fraud-track{height:14px;border-radius:12px;background:linear-gradient(110deg,rgba(97,130,211,.35),rgba(92,105,180,.27));box-shadow:inset 0 2px 5px #020c2e68;overflow:hidden}.home-fraud-track i{display:block;height:100%;border-radius:12px;background:linear-gradient(90deg,#fc87c1,#c995e0 56%,#838de2);box-shadow:inset 1px 1px 1px #ffd1ee6b,0 0 12px #fc87c15d}.home-fraud-channel:hover .home-fraud-track i{filter:brightness(1.16)}.home-fraud-channel strong{font-size:15px;font-variant-numeric:tabular-nums;text-align:right}
+.home-fraud-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid rgba(143,178,237,.25);padding:12px 0 0;min-height:64px}.home-fraud-metrics>div{display:flex;align-items:center;gap:16px;min-width:0}.home-fraud-metrics>div:nth-child(2){border-left:1px solid #9eb6ff2a;padding-left:20px}.home-fraud-mini-icon{width:51px;height:51px;border-radius:13px;display:grid;place-items:center;color:#c0b8ff;background:linear-gradient(146deg,rgba(61,75,161,.5),rgba(30,44,102,.56));border:1px solid #8196ec36}.home-mini-blue{color:#83c6ff}.home-fraud-metrics small{display:block;color:#b4c4e3;font-size:13px}.home-fraud-metrics strong{display:block;font-size:21px;line-height:1.3;margin-top:1px;font-variant-numeric:tabular-nums}
+.home-watch-panel .home-panel-header{flex:0 0 60px;align-items:center;gap:14px;padding:11px 22px 4px}.home-watch-panel .home-panel-symbol{height:43px;width:43px;flex-basis:43px;border-radius:12px}.home-watch-panel .home-panel-title{padding:0}.home-watch-panel .home-panel-title h2{font-size:19px}
+.home-watch-list{display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:5px;min-height:0;flex:1;padding:0 21px 13px}
+.home-watch-row{display:flex;align-items:center;gap:15px;min-width:0;min-height:0;overflow:hidden;background:linear-gradient(125deg,rgba(37,57,105,.80),rgba(22,35,76,.77) 58%,rgba(36,56,105,.81));border:1px solid rgba(120,151,239,.34);border-radius:13px;padding:7px 10px;text-align:left;transition:background .16s,border-color .16s}
+.home-watch-row:hover{background:linear-gradient(135deg,#29447c,#293c78);border-color:#9cb8ffab}
+.home-watch-icon{width:48px;height:48px;flex:0 0 48px;display:grid;place-items:center;border-radius:13px}.home-watch-rose{background:#d3489f31;color:#ff93c5}.home-watch-violet{background:#5a49c33b;color:#b3a2ff}.home-watch-mint{background:#067c934a;color:#64eee2}
+.home-watch-text{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}.home-watch-text strong{font-size:13px;font-weight:680;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.home-watch-text small{font-size:12px;color:#bdcbea;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.home-watch-next{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;border-radius:12px;background:rgba(81,111,180,.33);color:#fff;box-shadow:inset 1px 1px 1px rgba(255,255,255,.07)}
+/* Reconstruct the reference image's desktop geometry only when this view is active. */
+@media(min-width:901px){
+ .app:has(.home-reference-screen) .app-layout{padding:17px 28px 15px 18px;gap:26px}
+ .app:has(.home-reference-screen) .nav-dock{width:87px;min-width:87px;padding:18px 9px;border-radius:27px}
+ .app:has(.home-reference-screen) .nav-dock nav{gap:14px}
+ .app:has(.home-reference-screen) .dock-link{width:63px;height:63px;border-radius:17px}
+ .app:has(.home-reference-screen) .dock-emblem{width:52px;height:52px;margin:4px 0 17px}
+ .app:has(.home-reference-screen) .dock-emblem div{width:44px;height:44px}
+ .app:has(.home-reference-screen) .dock-footer{width:51px;height:51px}
+ .app:has(.home-reference-screen) .topbar{height:71px;min-height:71px;padding:0 18px;gap:22px}
+ .app:has(.home-reference-screen) .wordmark{font-size:22px;letter-spacing:3.7px}
+ .app:has(.home-reference-screen) .search-trigger{height:53px;width:clamp(280px,31vw,488px);padding:0 17px}
+ .app:has(.home-reference-screen) .search-trigger span{font-size:13px}
+ .app:has(.home-reference-screen) .top-icon{width:52px;height:52px;border-radius:14px}
+ .app:has(.home-reference-screen) .profile-bubble{width:50px;height:50px}
+ .app:has(.home-reference-screen) .view-head{height:77px;min-height:77px;padding:8px 4px 11px}
+ .app:has(.home-reference-screen) .view-name{gap:27px}
+ .app:has(.home-reference-screen) .view-overline{font-size:13px;letter-spacing:1.6px}
+ .app:has(.home-reference-screen) .view-head h1{font-size:33px;letter-spacing:-.9px}
+ .app:has(.home-reference-screen) .view{padding:0 0 8px;overflow:hidden}
+ .app:has(.home-reference-screen) .statusline{height:30px;min-height:30px;padding:0 4px;font-size:11px}
+ .app:has(.home-reference-screen) .statusline .status-divider{width:1px;height:15px;background:#7182ac}
+ .app:has(.home-reference-screen) .statusline .status-spacer{display:none}
+ .app:has(.home-reference-screen) .statusline .status-spacer+span{display:none}
+}
+@media(min-width:901px) and (max-width:1500px){
+ .app:has(.home-reference-screen) .app-layout{padding:14px 27px 13px 14px;gap:17px}
+ .app:has(.home-reference-screen) .nav-dock{width:75px;min-width:75px}
+ .app:has(.home-reference-screen) .dock-link{width:52px;height:52px}
+ .app:has(.home-reference-screen) .nav-dock nav{gap:11px}
+ .app:has(.home-reference-screen) .topbar{height:61px;min-height:61px}
+ .app:has(.home-reference-screen) .view-head{height:67px;min-height:67px}
+ .app:has(.home-reference-screen) .view-head h1{font-size:29px}
+ .home-overview-kpis{flex-basis:103px;gap:12px}
+ .home-kpi{padding:12px 13px;gap:11px}
+ .home-kpi-icon{width:49px;height:49px;flex-basis:49px}
+ .home-kpi-text strong{font-size:24px}
+ .home-kpi-label{font-size:12px}
+ .home-kpi-text small{font-size:11px}
+ .home-kpi-action{width:31px;height:31px;flex-basis:31px}
+ .home-panel-header{gap:14px;padding:15px 15px 8px;flex-basis:78px}
+ .home-panel-symbol{width:50px;height:50px;flex-basis:50px}
+ .home-panel-title h2{font-size:16px}
+ .home-panel-title small{font-size:12px}
+ .home-analyze{height:37px;padding:0 10px;font-size:12px}
+ .home-watch-panel .home-panel-header{flex-basis:53px}
+ .home-watch-icon{width:40px;height:40px;flex-basis:40px}
+ .home-watch-list{padding:0 13px 10px}
+ .home-watch-row{padding:5px 8px;gap:9px}
+ .home-watch-text strong{font-size:11px}
+ .home-watch-text small{font-size:10px}
+ .home-credit-chart{margin:10px 16px 33px 13px}
+ .home-credit-bar{width:min(64px,78%)}
+ .home-credit-age{font-size:12px}.home-credit-count{font-size:11px}
+ .home-fraud-panel .home-panel-header{flex-basis:78px}
+ .home-fraud-body{padding:0 14px 13px}
+ .home-fraud-channel{grid-template-columns:80px minmax(0,1fr) 40px;gap:10px}
+ .home-fraud-metrics{min-height:53px}.home-fraud-mini-icon{width:39px;height:39px}
+}
+@media(min-width:901px) and (max-height:810px){
+ .home-overview-kpis{flex-basis:94px}.home-reference-screen{gap:11px}.home-overview-grid,.home-right-stack{gap:11px}
+ .home-credit-chart{margin-top:4px;margin-bottom:27px}.home-chart-plot,.home-chart-axis{margin-bottom:47px}
+ .home-watch-panel .home-panel-header{flex-basis:50px}.home-watch-list{padding-bottom:7px}
+ .home-watch-icon{width:34px;height:34px;flex-basis:34px}.home-watch-next{width:30px;height:30px;flex-basis:30px}
+ .home-watch-text strong{font-size:10px}.home-watch-text small{font-size:9px}
+ .home-fraud-panel .home-panel-header{flex-basis:76px}.home-fraud-channels{gap:11px;padding-bottom:6px}.home-fraud-metrics{min-height:45px}.home-fraud-mini-icon{width:34px;height:34px}
+}
+@media(max-width:900px){
+ .home-reference-screen{height:auto;gap:13px;padding-bottom:17px}
+ .home-overview-kpis{grid-template-columns:repeat(2,minmax(0,1fr));flex:auto;min-height:0;gap:10px}
+ .home-kpi{min-height:101px;padding:11px;gap:10px;border-radius:17px}
+ .home-kpi-icon{height:43px;width:43px;flex-basis:43px;border-radius:12px}.home-kpi-icon svg{width:22px;height:22px}
+ .home-kpi-text strong{font-size:21px}.home-kpi-label{font-size:11px}.home-kpi-text small{font-size:10px}
+ .home-kpi-action{display:none}
+ .home-overview-grid{display:flex;flex-direction:column;flex:auto;gap:13px}
+ .home-right-stack{display:flex;flex-direction:column;gap:13px}
+ .home-risk-panel{height:460px}.home-fraud-panel{height:320px}.home-watch-panel{height:285px}
+ .home-panel-header{flex-basis:80px;padding:14px;gap:11px}.home-panel-symbol{width:43px;height:43px;flex-basis:43px}.home-panel-symbol svg{height:23px;width:23px}.home-panel-title h2{font-size:17px}.home-panel-title small{font-size:11px}
+ .home-analyze{font-size:11px;padding:0 10px;height:34px;gap:6px}
+ .home-credit-chart{margin:8px 10px 29px}.home-chart-axis{font-size:10px;width:35px;flex-basis:35px}.home-chart-plot,.home-chart-axis{margin-bottom:47px}.home-credit-value{font-size:11px}.home-credit-age{font-size:11px}.home-credit-count{font-size:9px;top:calc(100% + 33px)}
+ .home-credit-bar{width:min(56px,78%)}
+ .home-fraud-panel .home-panel-header{flex-basis:75px}.home-fraud-body{padding:0 14px 13px}.home-fraud-channel{grid-template-columns:75px minmax(0,1fr) 37px;gap:9px}.home-fraud-channel-name{font-size:11px}.home-fraud-channel strong{font-size:12px}
+ .home-fraud-metrics{min-height:62px}.home-fraud-mini-icon{width:38px;height:38px}.home-fraud-metrics strong{font-size:17px}.home-fraud-metrics small{font-size:11px}
+ .home-watch-panel .home-panel-header{flex-basis:55px}.home-watch-list{padding:0 12px 11px}.home-watch-icon{width:34px;height:34px;flex-basis:34px}.home-watch-row{padding:5px 7px;gap:9px}.home-watch-text strong{font-size:11px}.home-watch-text small{font-size:10px}.home-watch-next{width:28px;height:28px;flex-basis:28px}
+}
+@media(max-width:380px){.home-kpi-text strong{font-size:18px}.home-kpi-label{font-size:10px}.home-credit-bar{width:min(43px,74%)}.home-kpi-icon{width:37px;height:37px;flex-basis:37px}}
+:root[data-theme=light] .home-reference-screen{--home-ink:#192849;--home-secondary:#4b628a;color:#192849}
+:root[data-theme=light] .home-reference-screen .home-kpi,:root[data-theme=light] .home-reference-screen .home-glass-panel{background:linear-gradient(145deg,rgba(252,254,255,.95),rgba(224,235,253,.97));border-color:#96aedf;box-shadow:0 12px 28px #5673a62d,inset 0 1px #fff}
+:root[data-theme=light] .home-reference-screen .home-kpi-label,:root[data-theme=light] .home-reference-screen .home-kpi-text strong,:root[data-theme=light] .home-reference-screen .home-panel-title h2,:root[data-theme=light] .home-reference-screen .home-watch-text strong,:root[data-theme=light] .home-reference-screen .home-fraud-channel-name,:root[data-theme=light] .home-reference-screen .home-fraud-channel strong,:root[data-theme=light] .home-reference-screen .home-fraud-metrics strong{color:#192849}
+:root[data-theme=light] .home-reference-screen .home-kpi-text small,:root[data-theme=light] .home-reference-screen .home-panel-title small,:root[data-theme=light] .home-reference-screen .home-fraud-metrics small,:root[data-theme=light] .home-reference-screen .home-watch-text small,:root[data-theme=light] .home-reference-screen .home-credit-age,:root[data-theme=light] .home-reference-screen .home-credit-count,:root[data-theme=light] .home-reference-screen .home-chart-axis{color:#456086}
+:root[data-theme=light] .home-reference-screen .home-watch-row{background:rgba(228,237,252,.84);border-color:#a7b9d9}
+:root[data-theme=light] .home-reference-screen .home-credit-value{color:#263d60}

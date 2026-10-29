@@ -110,8 +110,8 @@ test('R2 : quatre mises en page métier distinctes sans scroll global',async({pa
  }
 });
 test('R2 : graphiques avec zéro visible et courbe de retards à base zéro',async({page})=>{
- await page.goto('/');await expect(page.locator('.chart-scale').first()).toBeVisible();
- await expect(page.locator('.chart-scale').first().getByText('0,0 %')).toBeVisible();
+ await page.goto('/');await expect(page.locator('.home-chart-axis')).toBeVisible();
+ await expect(page.locator('.home-chart-axis').getByText('0 %',{exact:true})).toBeVisible();
  await openSection(page,'Crédit','Paiements');
  await expect(page.locator('.trend-scale')).toBeVisible();
  await expect(page.locator('.trend-scale').getByText('0,0 %')).toBeVisible();
@@ -130,8 +130,8 @@ test('R2 : calibration compare prédit et observé, contexte validation versus t
 test('R2 : thème clair lisible et recherche strictement dédiée aux pages',async({page})=>{
  await page.goto('/');await page.getByRole('button',{name:'Basculer le thème'}).click();
  await expect(page.locator('html')).toHaveAttribute('data-theme','light');
- const color=await page.locator('.metric small').first().evaluate(e=>getComputedStyle(e).color);
- expect(color).toBe('rgb(53, 73, 105)');
+ const color=await page.locator('.home-kpi-text small').first().evaluate(e=>getComputedStyle(e).color);
+ expect(color).toBe('rgb(69, 96, 134)');
  await page.screenshot({path:'test-results/r2-light.png'});
  await page.getByRole('button',{name:/Accéder à une page/}).click();
  await expect(page.getByRole('dialog',{name:'Navigation rapide'})).toBeVisible();
@@ -170,8 +170,8 @@ test('R3 — Risk : statuts UCI explicites et effectifs représentés sans modif
 });
 test('R3 — Taille des groupes visible dans les répartitions de défaut',async({page})=>{
  await page.goto('/');
- const age=page.locator('.home-screen .chart-bar').first();
- await expect(age.locator('.bar-count')).toContainText('n=');
+ const age=page.locator('.home-credit-column').first();
+ await expect(age.locator('.home-credit-count')).toContainText('n=');
  await openSection(page,'Crédit','Portefeuille');
  await expect(page.locator('.portfolio-grid .row-count').first()).toContainText('n=');
  await expect(page.locator('.portfolio-grid .chart-row').first()).toHaveAttribute('title',/dossiers/);
