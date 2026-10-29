@@ -9,7 +9,7 @@
 .home-kpi-violet .home-kpi-icon{color:#b59fff;background:linear-gradient(140deg,#6a4db077,#26145b9e);border-color:#9474f381}.home-kpi-rose .home-kpi-icon{color:#ff9cc8;background:linear-gradient(140deg,#a943787c,#51204b86);border-color:#f075b77a}.home-kpi-mint .home-kpi-icon{color:#64f4ee;background:linear-gradient(140deg,#0a667786,#103a6882);border-color:#3ed4e766}
 .home-kpi-text{display:flex;flex-direction:column;min-width:0;gap:3px;flex:1;z-index:1}.home-kpi-label{font-size:14px;color:#f1f4ff;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;font-weight:560}.home-kpi-text strong{font-size:30px;font-weight:750;letter-spacing:-.8px;line-height:1.12;font-variant-numeric:tabular-nums;white-space:nowrap}.home-kpi-text small{font-size:13px;color:#b9c6e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .home-kpi-action{width:38px;height:38px;border-radius:50%;flex:0 0 38px;display:grid;place-items:center;color:#f8faff;background:linear-gradient(138deg,rgba(100,141,216,.40),rgba(27,48,102,.77));border:1px solid rgba(146,178,255,.18);box-shadow:inset 1px 1px 1px #ecf2ff24;z-index:1}
-.home-overview-grid{display:grid;flex:1;min-height:0;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px}
+.home-overview-grid{display:grid;flex:1;min-height:0;grid-template-columns:minmax(0,1.261fr) minmax(0,1fr);gap:16px}
 .home-right-stack{display:grid;min-width:0;min-height:0;grid-template-rows:minmax(0,1.08fr) minmax(0,1fr);gap:16px}
 .home-glass-panel{display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden;border-radius:24px;border:1px solid rgba(138,165,244,.68);background:linear-gradient(160deg,rgba(19,36,76,.96),rgba(11,24,54,.96) 52%,rgba(24,42,88,.95));box-shadow:inset 0 1px 1px rgba(239,247,255,.18),inset -4px -8px 20px rgba(2,11,39,.38),0 16px 40px #0309192c;position:relative}
 .home-glass-panel::before{content:'';position:absolute;left:0;right:0;top:0;height:33%;pointer-events:none;background:radial-gradient(ellipse at 38% -12%,rgba(104,155,255,.11),transparent 65%)}
@@ -45,7 +45,7 @@
 .home-watch-text{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}.home-watch-text strong{font-size:13px;font-weight:680;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.home-watch-text small{font-size:12px;color:#bdcbea;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.home-watch-next{width:39px;height:39px;flex:0 0 39px;display:grid;place-items:center;border-radius:12px;background:rgba(81,111,180,.33);color:#fff;box-shadow:inset 1px 1px 1px rgba(255,255,255,.07)}
 /* Reconstruct the reference image's desktop geometry only when this view is active. */
 @media(min-width:901px){
- .app:has(.home-reference-screen) .app-layout{padding:17px 48px 15px 18px;gap:26px}
+ .app:has(.home-reference-screen) .app-layout{padding:17px 28px 15px 18px;gap:26px}
  .app:has(.home-reference-screen) .nav-dock{width:87px;min-width:87px;padding:18px 9px;border-radius:27px}
  .app:has(.home-reference-screen) .nav-dock nav{gap:14px}
  .app:has(.home-reference-screen) .dock-link{width:63px;height:63px;border-radius:17px}
