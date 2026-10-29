@@ -59,7 +59,7 @@ test('Explorateur : univers de données et export',async({page})=>{
  await page.getByRole('button',{name:'Fraude',exact:true}).last().click();
  await expect(page.getByText('100 353').first()).toBeVisible();
  await page.getByRole('button',{name:'Jours simulés'}).click();
- await expect(page.getByText('Jour simulé')).toBeVisible();
+ await expect(page.getByRole('columnheader',{name:'Jour simulé'})).toBeVisible();
 });
 test('Gouvernance, rapports, confidentialité et navigation rapide',async({page})=>{
  await page.goto('/');await page.getByRole('button',{name:'Qualité',exact:true}).click();

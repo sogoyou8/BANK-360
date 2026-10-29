@@ -10,7 +10,7 @@
 - [x] **B2 — Power BI Credit Risk : TERMINÉ ET RECETTÉ (28/10/2026)**. PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels, CI réussie et validation visuelle/interactive Power BI Desktop sur captures et vidéos. Les indicateurs sectoriels EBA restent un chantier distinct.
 - [x] **B3 — Credit Risk Analytics : TERMINÉ (28/10/2026)**. Étude de prédiction de défaut historique, trois approches comparées, train/validation/test 18k/6k/6k, audit de biais descriptifs et résultats agrégés ; aucun scoring bancaire réel.
 - [x] **B4 — Fraud Analytics : TERMINÉ (28/10/2026), simulation PaySim uniquement**. 6 362 620 transactions simulées, modèles comparés, validation chronologique, métriques, contrôles de fuite, déciles et audits d'alertes. Aucune décision, aucun scoring réel ou déploiement.
-- [x] **B5 — Cockpit Web React : DÉVELOPPEMENT ET TESTS TERMINÉS (28/10/2026)**. 11 pages dans six sections, UX Aurora + Spatial + Atlas, filtres sourcés, exports, responsive, palette clavier, aperçu HTML autonome ; tests navigateur/compilation PASS. **Recette esthétique utilisateur et déploiement public non effectués**.
+- [x] **B5 — Cockpit Web React : VERSION B5.R (29/10/2026)**. **10 pages dans 6 sections**, Portefeuille + Segmentation fusionnés, vues mono-écran desktop, UI glass/neumorphism et diagnostics de modèles approfondis ; tests GitHub et prévisualisation locale. **Recette esthétique utilisateur et publication non effectuées.**
 - [ ] B6 : finalisation et portfolio
 
 ### Recette B1 sur données historiques réelles
@@ -99,10 +99,15 @@ python -m bank360 validate --db examples/demo-output/data/bank360.sqlite
 
 **Source originale / attribution** : I-Cheng Yeh (2009), *Default of Credit Card Clients*, UCI Machine Learning Repository, DOI [10.24432/C55S3H](https://doi.org/10.24432/C55S3H), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Les noms de colonnes, vues et agrégations constituent des adaptations attribuées à BANK 360.
 
+## B5 — Application Web Aurora Spatial Atlas · refonte B5.R
+
+- [Architecture métier et UX B5.R](docs/B5R-architecture.md) : dix pages, six sections, mono-écran desktop, contrôles contextuels, analyse multi-sources et diagnostics.
+- Interface sans indicateurs fictifs d'activité temps réel, sans références aux étapes de développement, aucune géolocalisation client ; données historiques UCI et simulations PaySim distinctes.
+
 ## B5 — Application Web Aurora Spatial Atlas
 
 - **Source :** [web/](web/) · [Cadrage et commandes](docs/B5-implementation.md) · [Recette technique](docs/B5-validation-finale.md).
-- **11 pages intégrées** : Command Center, portefeuille, clients/segments, risque, paiements, fraude, investigations, modèles, exploration, qualité, rapports/paramètres. **6 grandes entrées** dans le dock flottant.
+- **10 pages intégrées** : Command Center, portefeuille, clients/segments, risque, paiements, fraude, investigations, modèles, exploration, qualité, rapports/paramètres. **6 grandes entrées** dans le dock flottant.
 - **Identité** : Aurora + Spatial Workspace + Atlas (interface sombre vitrée, option claire, design responsive et panneaux contextuels). Aucun faux graphique temps réel ni point géographique inventé.
 - **Données intégrées à la compilation** : CSV agrégés B2 (UCI historiques) et JSON/CSV B3/B4 (PaySim simulé) ; sources séparées, aucun dossier ni transaction individuelle publiés.
 - **CI :** [build TypeScript + test données + 5 scénarios Playwright réussis](https://github.com/sogoyou8/BANK-360/actions/runs/40710999940), y compris **prévisualisation HTML autonome testée hors ligne**.
