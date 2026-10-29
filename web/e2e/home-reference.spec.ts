@@ -23,7 +23,7 @@ test('Référence 1672 × 941 : proportions des panneaux, zéro contenu coupé e
  near(pos.fraud.x,981,12,'fraude x');near(pos.fraud.y,297,8,'fraude y');near(pos.watch.bottom,879,12,'vigilance fin');
  expect(pos.mainScroll).toBeLessThanOrEqual(3);expect(pos.bodyOverflow).toBeLessThanOrEqual(2);
  for(const el of await page.locator('.home-watch-row').all()){
-  const bbox=await el.boundingBox();expect(bbox).not.toBeNull();expect(bbox!.bottom).toBeLessThanOrEqual(pos.watch.bottom-5);
+  const bbox=await el.boundingBox();expect(bbox).not.toBeNull();expect(bbox!.y+bbox!.height).toBeLessThanOrEqual(pos.watch.bottom-5);
  }
  await page.screenshot({path:'test-results/home-reference-1672x941.png',fullPage:true});
 });

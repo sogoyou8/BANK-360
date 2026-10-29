@@ -111,7 +111,7 @@ test('R2 : quatre mises en page métier distinctes sans scroll global',async({pa
 });
 test('R2 : graphiques avec zéro visible et courbe de retards à base zéro',async({page})=>{
  await page.goto('/');await expect(page.locator('.home-chart-axis')).toBeVisible();
- await expect(page.locator('.home-chart-axis').getByText('0 %')).toBeVisible();
+ await expect(page.locator('.home-chart-axis').getByText('0 %',{exact:true})).toBeVisible();
  await openSection(page,'Crédit','Paiements');
  await expect(page.locator('.trend-scale')).toBeVisible();
  await expect(page.locator('.trend-scale').getByText('0,0 %')).toBeVisible();
