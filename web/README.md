@@ -16,7 +16,7 @@ Le rendu est disponible sur `http://127.0.0.1:5173`. Pour les tests de navigateu
 
 ## Navigation
 
-11 pages : Command Center, Portefeuille bancaire, Clients & Segmentation, Risque de crédit, Historique des paiements, Fraud Analytics, Alertes & Investigations, Modèles IA & Performance, Data Explorer, Data Quality & Traçabilité, Rapports & Paramètres.
+10 pages / 6 sections : Vue d'ensemble ; Portefeuille & segmentation, Risque de crédit, Paiements & comportements ; Détection de fraude, Analyse des alertes ; Modèles & performance, Explorateur de données ; Qualité & traçabilité ; Rapports & préférences. Aucun écran individuel Clients n'est nécessaire : l'analyse des groupes se fait dans Portefeuille.
 
 Dock de navigation permanent, de largeur fixe (92 px desktop) et barre d'icônes fixe en bas sur mobile. Les sous-pages s'affichent dans un panneau flottant **sans redimensionner le cockpit**. Palette `Ctrl/Cmd + K`, interface adaptable et deux thèmes.
 
@@ -31,3 +31,7 @@ L'application présente des études d'analyse historique et de simulation. **Pas
 ### Prévisualisation autonome
 
 `npm run build && npm run standalone` produit un fichier `dist/BANK-360-B5-APERCU-LOCAL.html` entièrement autonome. Dans GitHub Actions, il est fourni dans le téléchargement `bank360-b5-static-preview`. Il s'ouvre directement dans Chrome sans serveur local.
+
+## UX mono-écran — B5.R
+
+Sur desktop (largeur d'au moins 1120 px et hauteur utile d'au moins 720 px), chaque page occupe l'écran sans scroll global. Les tables scrollent à l'intérieur de leurs panneaux. Sur mobile, le contenu est volontairement vertical pour éviter tout écrasement des graphiques. Navigation permanente à six sections, popovers hors flux et palette clavier. L'interface ne montre aucun numéro de phase ni faux statut temps réel. Consulte `docs/B5R-architecture.md` pour le contrat.
