@@ -103,6 +103,13 @@
 .app:has(.intelligence-workspace) .app-layout{padding-top:9px;padding-bottom:9px}
 .app:has(.intelligence-workspace) .topbar{height:56px;min-height:56px}
 .app:has(.intelligence-workspace) .statusline{height:23px;min-height:23px}
+/* C4.8.4 — Match the approved Aurora reference at 1648px: dock and left rails. */
+@media(min-width:1500px){
+ .app:has(.intelligence-workspace) .app-layout{padding-left:17px;gap:23px}
+ .app:has(.intelligence-workspace) .nav-dock{width:87px;min-width:87px}
+ .app:has(.intelligence-workspace) .dock-link{width:57px;height:57px}
+ .app:has(.intelligence-workspace) .view-name{gap:35px;min-width:min(37.5vw,615px)}
+}
 @media(min-width:901px) and (max-width:1450px){
  .iw-kpis{height:77px;min-height:77px;gap:9px}.iw-kpi{gap:8px;padding:8px}.iw-kpi-icon{height:40px;width:40px}.iw-kpi-copy>span{font-size:10px}.iw-kpi-copy strong{font-size:21px}
  .iw-board{gap:9px}.intelligence-workspace{gap:9px}
