@@ -214,6 +214,25 @@
 :root[data-theme=light] .fw-trend-switch button{color:#294878}
 :root[data-theme=light] .fw-trend-switch button.active{color:#fff}
 :root[data-theme=light] .fw-view-heading-sub{color:#465f81}
+
+/* C3.9 — Short desktop viewport: six day rows + footer must remain visible.
+   Compact only this cockpit, never the previously approved pages. */
+@media (min-width:1121px) and (max-height:740px){
+ .fw-panel-head{min-height:35px;padding:7px 10px 2px}
+ .fw-panel-body{padding:1px 10px 6px}
+ .fw-detail-tools{min-height:21px}
+ .fw-detail-table th{padding:2px 4px;line-height:1.05}
+ .fw-detail-table td{padding:1px 4px;font-size:9px;line-height:1.06}
+ .fw-detail-foot{padding-top:2px;font-size:8px}
+ .fw-channel-row{padding:4px 7px;gap:4px}
+ .fw-channel-metrics{padding-top:3px}
+ .fw-channel-rows{gap:5px}
+ .fw-channel-summary{min-height:16px;font-size:8px}
+ .fw-invest-row{padding:9px 7px}
+ .fw-invest-head{padding:7px}
+ .fw-panel-head small{margin-top:3px}
+}
+
 @media(prefers-reduced-motion:reduce){.fw-day-track i{transition:none}}
 
 .fw-quality-tools{display:flex;gap:6px;align-items:center}
