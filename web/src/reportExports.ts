@@ -71,7 +71,9 @@ export function makeXlsx(dataset:ReportDataset):Blob{
   {name:'xl/worksheets/sheet1.xml',data:sheet}
  ];
  const bytes=zipStored(files);
- return new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+ const buffer=new ArrayBuffer(bytes.byteLength);
+ new Uint8Array(buffer).set(bytes);
+ return new Blob([buffer],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
 }
 export function exportReport(dataset:ReportDataset,format:ExportFormat):void{
  const file=format==='csv'?makeCsv(dataset):makeXlsx(dataset);
