@@ -77,7 +77,7 @@ export default function IntelligenceWorkspace({perspective,onPerspective,context
    if(available<=0||headerHeight<=0||rowHeight<=0)return;
    const capacity=Math.floor((available-headerHeight+.25)/rowHeight);
    const aligned=capacity>=1?Math.min(available,headerHeight+capacity*rowHeight):available;
-   viewport.style.height=Math.max(0,aligned-.75)+'px';
+   viewport.style.height=Math.max(0,aligned)+'px';
    viewport.style.setProperty('--iw-table-header-height',headerHeight+'px');
   };
   align();
