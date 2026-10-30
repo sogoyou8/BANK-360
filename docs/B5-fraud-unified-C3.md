@@ -25,3 +25,18 @@
 Valider les captures Chromium 1672×941, 1440×900, 1366×768 et mobile 390×844, les filtres, CSV, focus clavier, les 7 routes, les jeux B1/B3/B4 et les pages 01/02.
 
 **Gel visuel : uniquement après validation explicite de l'utilisateur.** Aucun déploiement public.
+
+
+## C3.6 à C3.9 — Finition et contrôle de fidélité (30 octobre 2026)
+
+**C3.6 — Évolution** : trois lectures réelles (Alertes, Transactions, Combinée) sur les six groupes J25–J30. La lecture « Alertes » est initiale : les barres ne sont plus écrasées par les 55 037 transactions du groupe J28. La lecture Combinée affiche deux échelles distinctes et explicites ; toutes les hauteurs partent de zéro. Aucun changement des valeurs ni de leur grain.
+
+**C3.7 — Canaux** : les deux seuls canaux avec alertes (CASH_OUT et TRANSFER) occupent désormais leurs panneaux avec barres plus lisibles et diagnostics réellement disponibles : vrais positifs, faux positifs, précision et rappel calculés par canal. Les autres catégories ne sont pas inventées. Leur sélection est toujours exclusive du jour faute de table croisée jour × type.
+
+**C3.8 — Aurora** : dégradés, bords lumineux, verre, relief intérieur, cartes d'investigation, boutons de sélection et contraste renforcés par une feuille CSS propre à Fraude. Pages 01/02 intactes. Thème clair et mobile préservés.
+
+**C3.9 — Contrôle** : Playwright couvre maintenant les trois modes de lecture, les agrégats de canaux (CASH_OUT : 304 alertes dont 288 TP / 16 FP, précision 94,7 %, rappel 38,7 % ; TRANSFER : 486 alertes dont 125 TP / 361 FP, précision 25,7 %, rappel 16,8 %), le refus de jointure jour × canal, CSV, focus clavier, les perspectives, la palette claire, les sorties mobiles et la géométrie desktop de 1672×941, 1440×900, 1366×768 et 1280×720. Les six lignes J25–J30 tiennent aussi à 1280×720 sans défilement interne. Les captures de ces résolutions et le build local HTML sont stockés comme artifacts privés GitHub Actions.
+
+**Dernière validation technique avant recette utilisateur : 45/45 tests Chromium PASS**, builds et contrôles B1/B3/B5 PASS (run GitHub Actions `41000393347`, commit applicatif `dcf3608eacc88fe418107785dca4f100ab7b664a`). Aucune modification de UCI, du contrat B4 ou des KPI de test.
+
+**Décision : C3.6–C3.9 techniquement terminés, gel et fusion de la PR #19 en attente de la capture et de l'approbation explicite de l'utilisateur. Aucun déploiement.**
