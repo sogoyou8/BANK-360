@@ -1,4 +1,4 @@
-import React,{useMemo,useState} from 'react';
+import React,{useEffect,useMemo,useState} from 'react';
 import {Activity,BarChart3,CheckCircle2,ChevronRight,Download,Info,Layers3,Search,ShieldAlert,Target,X} from 'lucide-react';
 import {ages,b3,b3Deciles,b4,b4Deciles,creditTotals,filteredSegments,fraudDays,fraudTypes,fmtInt,fmtPct,initialFilters,limits,segments,type CreditFilters} from './data';
 import {creditAudit,creditCalibration,creditDrivers,driverLabels} from './riskEvidence';
@@ -35,6 +35,7 @@ export default function IntelligenceWorkspace({perspective,onPerspective,context
  const [query,setQuery]=useState('');
  const [sortKey,setSortKey]=useState('');
  const [sortDescending,setSortDescending]=useState(false);
+ useEffect(()=>{setSelectedRow(null);setSelectedDecile(null);setQuery('');setSortKey('')},[context]);
  const creditRows=useMemo(()=>filteredSegments(filters),[filters]);
  const total=useMemo(()=>creditTotals(creditRows),[creditRows]);
  const isCredit=context==='credit',isDays=context==='days';
@@ -53,7 +54,6 @@ export default function IntelligenceWorkspace({perspective,onPerspective,context
   if(!sortKey)return filtered;
   return [...filtered].sort((a,b)=>{const left=a[sortKey],right=b[sortKey],order=typeof left==='number'&&typeof right==='number'?left-right:String(left??'').localeCompare(String(right??''),'fr');return order*(sortDescending?-1:1)});
  },[rows,columns,query,sortKey,sortDescending]);
- const changeContext=(v:IntelligenceContext)=>{onContext(v);onDiagnostic('ranking');setSelectedRow(null);setSelectedDecile(null);setQuery('');setSortKey('')};
  const allowed:DiagnosticView[]=isCredit?['ranking','drivers','calibration','audit']:['ranking','drift'];
  const activeDiag=allowed.includes(diagnostic)?diagnostic:'ranking';
  const detail=rows.find(x=>x.id===selectedRow);
