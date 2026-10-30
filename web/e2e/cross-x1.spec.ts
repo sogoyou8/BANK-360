@@ -27,8 +27,8 @@ test('X1 — credit age and limit filter the SAME cohort, six months, rows and w
  expect(months.every(x=>Number((x?.split('/')?.[1]||'').replace('observations','').replace(/\s/g,''))===9618)).toBe(true);
  await page.getByLabel('Plafond Analyse 360').selectOption('100k-199k');
  await expect(page.locator('.x1-inspector-table tbody tr').first()).toContainText('18-29');
- await expect(page.locator('.x1-detail-body tbody tr').first()).toContainText('100k-199k');
- const counts=await page.locator('.x1-detail-body tbody tr').evaluateAll(xs=>xs.filter(x=>x.querySelector('td')).map(x=>Number((x.querySelectorAll('td')[3].textContent||'').replace(/\s/g,''))));
+ await expect(page.locator('.x1-inspector-table tbody tr').first()).toContainText('100k-199k');
+ const counts=await page.locator('.x1-inspector-table tbody tr').evaluateAll(xs=>xs.filter(x=>x.querySelector('td')).map(x=>Number((x.querySelectorAll('td')[3].textContent||'').replace(/\s/g,''))));
  const kpi=Number((await page.locator('.x1-summary>div').first().locator('b').innerText()).replace(/\s/g,''));
  expect(counts.reduce((a,b)=>a+b,0)).toBe(kpi);
  const x=await credit.locator('.x1-month-bars>div').first().getAttribute('title');
