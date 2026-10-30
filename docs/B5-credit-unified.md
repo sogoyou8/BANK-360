@@ -28,3 +28,10 @@ En absence de dossiers, les taux non définis s'affichent « — » et les graph
 ## Contrôles
 
 `web/scripts/verify.mjs`, `npm run build`, `npm run standalone`, Playwright desktop 1440 × 900 et 1672 × 941, mobile 390 × 844, filtres croisés, réconciliation mois/dossiers, export, navigation depuis l'accueil, autres univers Fraude/Intelligence inchangés. Captures disponibles dans les artifacts GitHub Actions. **Aucun déploiement public avant inspection sur le PC et validation explicite.**
+
+
+## C2.1 — Finition de la densité et de la fidélité graphique
+- Les cinq tranches d'âge du détail portefeuille et les six mois du tableau mensuel sont visibles simultanément sur 1440 × 900 et 1672 × 941, sans scrollbar intérieure ; recherche, tri et export restent actifs.
+- Les quatre cartes KPI retrouvent une action fléchée, avec navigation **dans les trois perspectives de la même page** plutôt que vers des routes supplémentaires.
+- L'axe âge affiche quatre repères alignés sur la valeur maximum réelle, la courbe des retards retrouve sa profondeur et sa grille, le diagramme des statuts utilise un relief neumorphic maîtrisé.
+- Même identité Aurora, dock fixe, huit pages / six sections, mêmes sources UCI et mêmes calculs. Aucun déploiement.

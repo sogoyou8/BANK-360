@@ -70,3 +70,46 @@
 
 /* Six monthly rows must remain legible without scrolling at the reference desktop sizes. */
 @media(min-width:1121px){.cw-monthtable .cw-table-scroll th{padding:6px 5px}.cw-monthtable .cw-table-scroll td{padding:5px 5px}.cw-monthtable .cw-month-foot{padding-top:5px}}
+
+/* C2.1 — Reference-level density and tactile finishing; only the unified Credit view. */
+.cw-kpi{position:relative;padding-right:53px;transition:border-color .16s,box-shadow .16s,transform .16s}
+.cw-kpi:hover{border-color:#c0d2ffbd;box-shadow:inset 0 1px #ffffff30,inset -5px -9px 18px #05112d44,0 12px 25px #02081948}
+.cw-kpi-action{position:absolute;right:14px;top:50%;transform:translateY(-50%);width:34px;height:34px;display:grid;place-items:center;border-radius:50%;border:1px solid #91b2ff43;background:linear-gradient(145deg,#425d9d99,#263f7c88);box-shadow:inset 0 1px #ffffff28,0 4px 11px #0003;color:#e6eeff;transition:background .15s,border-color .15s}
+.cw-kpi-action:hover,.cw-kpi-action:focus-visible{background:linear-gradient(145deg,#507ad0,#304e93);border-color:#c2d7ff;outline-offset:2px}
+.cw-kpi.tone-violet .cw-kpi-action{border-color:#9b93f67a}.cw-kpi.tone-mint .cw-kpi-action{border-color:#73dfeb78}.cw-kpi.tone-rose .cw-kpi-action{border-color:#ed95bb75}
+.cw-age-track{background:linear-gradient(180deg,#7d9dfe08,#628cf01c);border-left:1px solid #718bd00a;border-right:1px solid #718bd00a}
+.cw-age-bars{background:repeating-linear-gradient(to top,transparent 0,transparent calc(33.333% - 1px),#afc8ff1d 33.333%,transparent calc(33.333% + 1px))}
+.cw-age-bar>span{font-size:11px}.cw-age-bar>small{font-size:10px;color:#cbd9f3}
+.cw-axis{width:41px;font-size:10px;align-items:flex-end;padding:14px 4px 36px 0}
+.cw-trend-plot svg{filter:drop-shadow(0 2px 5px #8060e54a)}
+.cw-trend-axis{font-size:10px;color:#c4d5f3}
+.cw-month-picks button strong{font-size:11px}
+.cw-status-layout{gap:13px}.cw-status-list{gap:8px}.cw-status-list>button:not(.cw-drill){min-height:26px}
+.cw-status-list>button:not(.cw-drill).active{outline:1px solid #a2b8f288;outline-offset:-1px}
+.cw-donut{box-shadow:0 0 27px #7e73e72e,inset 0 1px #ffffff73}
+.cw-donut>div{box-shadow:inset 2px 3px 13px #050b28a8,0 0 0 1px #ffffff22}
+/* Both complete desktop tables should be directly visible without their own scrolling. */
+@media(min-width:1121px){
+ .cw-detail .cw-panel-head,.cw-monthtable .cw-panel-head{min-height:44px;padding:10px 12px 4px}
+ .cw-detail .cw-panel-body,.cw-monthtable .cw-panel-body{padding:1px 12px 8px}
+ .cw-detail .cw-table-tools{min-height:25px;padding-bottom:3px}
+ .cw-detail .cw-table-scroll,.cw-monthtable .cw-table-scroll{overflow-y:auto;overscroll-behavior:contain}
+ .cw-detail .cw-table-scroll th,.cw-monthtable .cw-table-scroll th{padding:6px 5px;line-height:1.15}
+ .cw-detail .cw-table-scroll td,.cw-monthtable .cw-table-scroll td{padding:5px 5px;line-height:1.1}
+ .cw-detail .cw-table-scroll tr,.cw-monthtable .cw-table-scroll tr{height:25px}
+ .cw-monthtable .cw-month-foot{min-height:20px;padding-top:4px}
+ .cw-trend .cw-panel-head{min-height:53px}
+ .cw-trend .cw-panel-body{padding-bottom:11px}
+ .cw-age .cw-panel-body{padding-top:3px;padding-bottom:9px}
+}
+@media(min-width:1121px) and (max-width:1500px){
+ .cw-kpi{padding-right:42px}
+ .cw-kpi-action{width:29px;height:29px;right:9px}
+ .cw-kpi strong{font-size:clamp(18px,1.6vw,24px)}
+ .cw-age-bar>span{font-size:10px}.cw-age-bar>small{font-size:9px}
+ .cw-status-layout{gap:7px}
+}
+@media(max-width:1120px){.cw-kpi{padding-right:44px}.cw-kpi-action{right:9px;width:28px;height:28px}}
+@media(max-width:480px){.cw-kpi{padding-right:33px}.cw-kpi-action{right:5px;width:24px;height:24px}.cw-kpi-action svg{width:14px}.cw-kpi strong{font-size:17px}}
+:root[data-theme=light] .cw-kpi-action{color:#284574;background:linear-gradient(145deg,#eff5ff,#d9e6ff);border-color:#95b0dd;box-shadow:0 4px 11px #718fbb30,inset 0 1px #fff}
+:root[data-theme=light] .cw-age-bar>small,:root[data-theme=light] .cw-trend-axis{color:#466187}

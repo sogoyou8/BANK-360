@@ -1,5 +1,5 @@
 import {useEffect,useMemo,useState,type ReactNode} from 'react';
-import {ArrowDownToLine,Check,ChevronDown,Clock3,CreditCard,Info,Search,ShieldAlert,Wallet,X} from 'lucide-react';
+import {ArrowDownToLine,Check,ChevronDown,ChevronRight,Clock3,CreditCard,Info,Search,ShieldAlert,Wallet,X} from 'lucide-react';
 import {segments,payments,filteredSegments,creditTotals,groupSegments,fmtInt,fmtPct,fmtNtd,initialFilters,type CreditFilters} from './data';
 import './credit-workspace.css';
 
@@ -82,6 +82,12 @@ export default function CreditWorkspace({filters,onFilters,mode,onMode}:{filters
  const maxMonthlyScale=Math.max(.1,Math.ceil(maxMonthly*100/10)/10);
  const monthlyPoints=monthly.map((m,i)=>`${28+i*69},${150-124*m.rate/maxMonthlyScale}`).join(' ');
  const fullFilters=filters.age!=='Tout'||filters.limit!=='Tout'||filters.status!=='Tout'||bucket!=='all';
+ const openKpi=(id:string)=>{
+  if(id==='clients'){onMode('overview');setDimension('age_band');setAgeMeasure('count')}
+  else if(id==='defaults'){onMode('risk');setAgeMeasure('rate');setLimitMeasure('rate')}
+  else if(id==='limit'){onMode('overview');setDimension('credit_limit_band');setLimitMeasure('rate')}
+  else if(id==='late'){onMode('payments');setMonth('2005-09')}
+ };
  return <div className="screen credit-workspace" data-mode={mode} data-population={totals.total}>
   <div className="cw-modebar" role="tablist" aria-label="Perspective crédit">
    {([{id:'overview',title:'Vue globale'},{id:'risk',title:'Risque'},{id:'payments',title:'Paiements'}] as const).map(x=><button role="tab" aria-selected={mode===x.id} className={mode===x.id?'active':''} key={x.id} onClick={()=>onMode(x.id)}>{x.title}</button>)}
@@ -95,12 +101,12 @@ export default function CreditWorkspace({filters,onFilters,mode,onMode}:{filters
     {id:'defaults',icon:ShieldAlert,label:'Dossiers en défaut',value:fmtInt(totals.defaults),note:totals.total?`${toPct(topRate)} du portefeuille`:'Aucun dossier',tone:'violet'},
     {id:'limit',icon:CreditCard,label:'Plafond moyen',value:totals.total?fmtNtd(totals.avgLimit):'—',note:'Moyenne pondérée · NTD',tone:'mint'},
     {id:'late',icon:Clock3,label:'Retards · septembre',value:fmtInt(september.delayed),note:september.observations?`${toPct(september.rate)} des dossiers`:'Aucun dossier',tone:'rose'}
-   ].map(k=>{const Icon=k.icon;return <div className={'cw-kpi tone-'+k.tone} key={k.id}><span className="cw-kpi-icon"><Icon size={23}/></span><div><span>{k.label}</span><strong>{k.value}</strong><small>{k.note}</small></div></div>})}
+   ].map(k=>{const Icon=k.icon;return <div className={'cw-kpi tone-'+k.tone} key={k.id}><span className="cw-kpi-icon"><Icon size={23}/></span><div><span>{k.label}</span><strong>{k.value}</strong><small>{k.note}</small></div><button type="button" className="cw-kpi-action" onClick={()=>openKpi(k.id)} aria-label={k.id==='clients'?'Voir la composition du portefeuille':k.id==='defaults'?'Examiner le risque de crédit':k.id==='limit'?'Explorer les plafonds de crédit':'Explorer les retards de paiement'} title={k.id==='clients'?'Composition du portefeuille':k.id==='defaults'?'Risque de crédit':k.id==='limit'?'Plafonds de crédit':'Paiements'}><ChevronRight size={18}/></button></div>})}
   </div>
   <div className="cw-board">
    <Panel title="Segmentation par âge" role="cw-age cw-credit-priority" extra={<Switcher measure={ageMeasure} onChange={setAgeMeasure}/>}>
     {totals.total===0?<Nothing/>:<div className="cw-age-layout">
-     <div className="cw-axis" aria-hidden="true"><span>{ageMeasure==='rate'?fmtPct(ageScale,0):fmtInt(ageScale)}</span><span>{ageMeasure==='rate'?fmtPct(ageScale/2,0):''}</span><span>{ageMeasure==='rate'?'0 %':'0'}</span></div>
+     <div className="cw-axis" aria-hidden="true"><span>{ageMeasure==='rate'?fmtPct(ageScale,0):fmtInt(ageScale)}</span><span>{ageMeasure==='rate'?fmtPct(ageScale*2/3,0):fmtInt(Math.round(ageScale*2/3))}</span><span>{ageMeasure==='rate'?fmtPct(ageScale/3,0):fmtInt(Math.round(ageScale/3))}</span><span>{ageMeasure==='rate'?'0 %':'0'}</span></div>
      <div className="cw-age-bars" role="group" aria-label="Segmentation par âge">
       {agesData.map(a=>{const val=ageMeasure==='rate'?a.rate:a.count;const scale=ageScale;return <button type="button" className={'cw-age-bar '+(filters.age===a.name?'active':'')} key={a.name} onClick={()=>updateFilter('age',a.name)} aria-label={`${a.name} : ${ageMeasure==='rate'?toPct(val):fmtInt(val)+' dossiers'}, ${fmtInt(a.count)} dossiers`}>
         <b>{ageMeasure==='rate'?toPct(val):fmtInt(val)}</b><div className="cw-age-track"><i style={{height:(100*val/scale)+'%'}}/></div><span>{a.name}</span><small>n={fmtInt(a.count)}</small>
@@ -112,10 +118,12 @@ export default function CreditWorkspace({filters,onFilters,mode,onMode}:{filters
     {totals.total===0?<Nothing/>:<div className="cw-trend-chart">
       <div className="cw-trend-axis" aria-hidden="true"><span>{toPct(maxMonthlyScale)}</span><span>{toPct(maxMonthlyScale/2)}</span><span>0 %</span></div>
       <div className="cw-trend-plot"><svg viewBox="0 0 400 170" preserveAspectRatio="none" role="img" aria-label="Taux mensuel de retards, échelle à partir de zéro">
-       <defs><linearGradient id="cw-line-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ac88fd" stopOpacity=".25"/><stop offset="1" stopColor="#ac88fd" stopOpacity="0"/></linearGradient></defs>
-       {[26,88,150].map(y=><path key={y} d={`M 28 ${y} L 373 ${y}`} stroke="#b8c8ff33" strokeDasharray="3 5" fill="none"/>)}
+       <defs><linearGradient id="cw-line-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#ac88fd" stopOpacity=".30"/><stop offset="1" stopColor="#ac88fd" stopOpacity=".015"/></linearGradient><filter id="cw-line-glow" x="-30%" y="-70%" width="160%" height="240%"><feGaussianBlur in="SourceGraphic" stdDeviation=".35"/></filter></defs>
+       {[26,88,150].map(y=><path key={y} d={`M 28 ${y} L 373 ${y}`} stroke="#c5caff38" strokeDasharray="3 5" fill="none"/>)}
+       {[28,97,166,235,304,373].map(x=><path key={'v'+x} d={`M ${x} 26 L ${x} 150`} stroke="#b7aaff17" fill="none"/>)}
+       <path d="M 28 150 L 373 150" stroke="#c5d8ff90" strokeWidth="1" fill="none"/>
        <path d={`M 28 150 L ${monthlyPoints} L 373 150 Z`} fill="url(#cw-line-fill)"/>
-       <polyline points={monthlyPoints} fill="none" stroke="#b391fd" strokeWidth="3" strokeLinejoin="round" vectorEffect="non-scaling-stroke"/>
+       <polyline points={monthlyPoints} fill="none" stroke="#b391fd" strokeWidth="3.5" strokeLinejoin="round" vectorEffect="non-scaling-stroke" filter="url(#cw-line-glow)"/>
        {monthly.map((m,i)=><circle key={m.period} cx={28+i*69} cy={150-124*m.rate/maxMonthlyScale} r={m.period===month?5:3.5} fill={m.period===month?'#edbcff':'#c9b2ff'} stroke="#714fb7" strokeWidth="1.5"/>)}
       </svg>
        <div className="cw-month-picks">{monthly.map(x=><button key={x.period} aria-pressed={month===x.period} onClick={()=>setMonth(x.period)} className={month===x.period?'active':''} title={`${x.period} · ${toPct(x.rate)}`}><strong>{toPct(x.rate)}</strong><span>{x.period.slice(5)}</span></button>)}</div>
