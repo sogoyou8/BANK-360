@@ -41,7 +41,7 @@ test('Référence 1440 × 900 : mono écran, panneau vigilance entièrement visi
 });
 
 test('Accueil : les quatre KPI sont de vrais liens de navigation',async({page})=>{
- const checks:[string,string][]=[['Dossiers de crédit','portfolio'],['Taux de défaut','risk'],['Transactions analysées','fraud'],['Alertes de test','alerts']];
+ const checks:[string,string][]=[['Dossiers de crédit','portfolio'],['Taux de défaut','portfolio'],['Transactions analysées','fraud'],['Alertes de test','alerts']];
  for(const [name,destination] of checks){await page.goto('/');await page.locator('.home-kpi').filter({hasText:name}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page',destination)}
 });
 
@@ -50,7 +50,8 @@ test('Graphique crédit : les âges réutilisent le filtre réel dans Risque',as
  const age=page.locator('.home-credit-column').filter({hasText:'18-29'});
  await expect(age).toHaveAttribute('title',/9\s?618 dossiers/);
  await age.click();
- await expect(page.locator('#main-content')).toHaveAttribute('data-page','risk');
+ await expect(page.locator('#main-content')).toHaveAttribute('data-page','portfolio');
+ await expect(page.getByRole('tab',{name:'Risque'})).toHaveAttribute('aria-selected','true');
  await expect(page.locator('#filter-age')).toHaveValue('18-29');
  await expect(page.getByText('2 197').first()).toBeVisible();
 });

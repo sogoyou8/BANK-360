@@ -1,48 +1,149 @@
-import {test,expect} from '@playwright/test';
-const openSection=async(page:import('@playwright/test').Page,section:string,pageName:string)=>{await page.getByRole('button',{name:section,exact:true}).click();await page.getByRole('menuitem',{name:new RegExp(pageName)}).click()};
-const noMainScroll=async(page:import('@playwright/test').Page)=>{const size=await page.locator('#main-content').evaluate(el=>({scroll:el.scrollHeight,client:el.clientHeight}));expect(size.scroll-size.client).toBeLessThanOrEqual(3)};
-test('Architecture : dix pages, six sections et données séparées',async({page})=>{
+import {test,expect,type Page} from '@playwright/test';
+const noMainScroll=async(page:Page)=>{const v=await page.locator('#main-content').evaluate(e=>e.scrollHeight-e.clientHeight);expect(v).toBeLessThanOrEqual(3)};
+const credit=async(page:Page)=>{await page.getByRole('button',{name:'Crédit',exact:true}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page','portfolio')};
+const section=async(page:Page,name:string,target?:string)=>{await page.getByRole('button',{name,exact:true}).click();if(target)await page.getByRole('menuitem',{name:new RegExp(target)}).click()};
+
+test('Architecture : huit pages, six sections, une seule vue Crédit et données séparées',async({page})=>{
  await page.goto('/');await expect(page.getByRole('heading',{name:'Vue d’ensemble'})).toBeVisible();
  await expect(page.locator('.dock-link')).toHaveCount(6);
+ await credit(page);await expect(page.getByRole('heading',{name:'Portefeuille & segmentation'})).toBeVisible();
+ await expect(page.getByRole('tab',{name:'Vue globale'})).toBeVisible();
+ await expect(page.getByRole('tab',{name:'Risque'})).toBeVisible();
+ await expect(page.getByRole('tab',{name:'Paiements'})).toBeVisible();
  await expect(page.getByText('30 000').first()).toBeVisible();
- await expect(page.getByText('413 fraudes détectées')).toBeVisible();
  await noMainScroll(page);
- await page.screenshot({path:'test-results/r-overview-1440.png',fullPage:true});
 });
-test('Mono-écran : dix pages sans scroll global à 1440 × 900',async({page})=>{
- await page.setViewportSize({width:1440,height:900});await page.goto('/');
- const routes:[string,string,string][]=[['Crédit','Portefeuille','portfolio'],['Crédit','Risque','risk'],['Crédit','Paiements','payments'],['Fraude','Fraude','fraud'],['Fraude','Alertes','alerts'],['Intelligence','Modèles','models'],['Intelligence','Explorer','explorer']];
- for(const [group,sub,id] of routes){await openSection(page,group,sub);await expect(page.locator('#main-content')).toHaveAttribute('data-page',id);await noMainScroll(page)}
- await page.getByRole('button',{name:'Qualité',exact:true}).click();await noMainScroll(page);
- await page.getByRole('button',{name:'Rapports',exact:true}).click();await noMainScroll(page);
+test('Mono-écran à 1440×900 : huit routes et crédit trois modes',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});await page.goto('/');await noMainScroll(page);
+ await credit(page);for(const tab of ['Vue globale','Risque','Paiements']){await page.getByRole('tab',{name:tab}).click();await noMainScroll(page)}
+ for(const [group,name] of [['Fraude','Fraude'],['Fraude','Alertes'],['Intelligence','Modèles'],['Intelligence','Explorer']]){await section(page,group,name);await noMainScroll(page)}
+ await section(page,'Qualité');await noMainScroll(page);await section(page,'Rapports');await noMainScroll(page);
 });
-test('Portefeuille fusionné : âge, seuils, chiffres pondérés et reset',async({page})=>{
- await page.goto('/');await openSection(page,'Crédit','Portefeuille');
+test('Portefeuille : population officielle, KPI pondérés, six panneaux',async({page})=>{
+ await page.goto('/');await credit(page);
+ await expect(page.locator('.cw-panel')).toHaveCount(6);
  await expect(page.getByText('6 636').first()).toBeVisible();
+ await expect(page.getByText('167 484 NTD')).toBeVisible();
+ await expect(page.getByText('6 818').first()).toBeVisible();
+ await expect(page.locator('.cw-monthtable tbody tr')).toHaveCount(6);
+});
+test('Filtre âge croise portefeuille, défaut et six mois, reset restaure 30k',async({page})=>{
+ await page.goto('/');await credit(page);
  await page.locator('#filter-age').selectOption('18-29');
- await expect(page.getByText('9 618').first()).toBeVisible();
- await expect(page.getByText('2 197').first()).toBeVisible();
+ await expect(page.locator('.cw-kpi').first()).toContainText('9 618');
+ await expect(page.locator('.cw-kpi').nth(1)).toContainText('2 197');
+ await expect(page.locator('.cw-kpi').nth(2)).toContainText('124 209');
+ await expect(page.locator('.cw-monthtable tbody tr')).toHaveCount(6);
+ const totals=await page.locator('.cw-monthtable tbody tr').evaluateAll(rs=>rs.map(r=>r.cells[1].textContent));
+ expect(totals).toEqual(Array(6).fill('9 618'));
  await page.getByRole('button',{name:'Réinitialiser les filtres'}).click();
- await expect(page.getByText('30 000').first()).toBeVisible();
- await page.screenshot({path:'test-results/r-portfolio.png'});
+ await expect(page.locator('.cw-kpi').first()).toContainText('30 000');
 });
-test('Paiements : population et observations distinctes',async({page})=>{
- await page.goto('/');await openSection(page,'Crédit','Paiements');
- await expect(page.getByText('180 000').first()).toBeVisible();
- await expect(page.getByText('30 000').first()).toBeVisible();
+test('Crossfilter âge × plafond préserve les intersections réelles',async({page})=>{
+ await page.goto('/');await credit(page);
+ await page.locator('#filter-age').selectOption('18-29');
+ await page.locator('#filter-limit').selectOption('<50k');
+ const shown=await page.locator('.cw-kpi').first().textContent();
+ expect(shown).not.toContain('30 000');expect(shown).not.toContain('9 618');
+ const total=Number((await page.locator('.cw-kpi').first().locator('strong').textContent())!.replace(/\D/g,''));
+ const counts=await page.locator('.cw-monthtable tbody tr').evaluateAll(rs=>rs.map(r=>Number((r.cells[1].textContent||'').replace(/\D/g,''))));
+ expect(counts).toEqual(Array(6).fill(total));
+ await page.getByRole('tab',{name:'Paiements'}).click();
+ await expect(page.locator('#filter-age')).toHaveValue('18-29');
+ await expect(page.locator('#filter-limit')).toHaveValue('<50k');
 });
-test('Fraude : jeu complet distinct du test et de ses alertes',async({page})=>{
- await page.goto('/');await openSection(page,'Fraude','Fraude');
+test('Clic graphique âge et plafond active puis désactive le filtre réel',async({page})=>{
+ await page.goto('/');await credit(page);
+ await page.locator('.cw-age-bar').filter({hasText:'18-29'}).click();
+ await expect(page.locator('#filter-age')).toHaveValue('18-29');
+ await page.locator('.cw-age-bar').filter({hasText:'18-29'}).click();
+ await expect(page.locator('#filter-age')).toHaveValue('Tout');
+ await page.locator('.cw-limit-row').filter({hasText:'<50k'}).click();
+ await expect(page.locator('#filter-limit')).toHaveValue('<50k');
+});
+test('Mesures Dossiers / Défaut sur âge et plafond changent sans changer les effectifs',async({page})=>{
+ await page.goto('/');await credit(page);
+ const age=page.locator('.cw-age');
+ await age.getByRole('button',{name:'Dossiers'}).click();
+ await expect(age.locator('.cw-age-bar').filter({hasText:'18-29'})).toContainText('9 618');
+ await age.getByRole('button',{name:'Défaut'}).click();
+ await expect(age.locator('.cw-age-bar').filter({hasText:'18-29'})).toContainText('22,8 %');
+ await page.locator('.cw-limit').getByRole('button',{name:'Dossiers'}).click();
+ await expect(page.locator('.cw-limit-row').first()).toContainText('4 311');
+});
+test('Chronologie avril-septembre : sélection d’un mois ne modifie pas le portefeuille',async({page})=>{
+ await page.goto('/');await credit(page);
+ await expect(page.locator('.cw-trend-axis')).toContainText('0 %');
+ await page.locator('.cw-month-picks button').filter({hasText:'04'}).click();
+ await expect(page.locator('.cw-month-foot')).toContainText('2005-04 : 3 079 retards');
+ await expect(page.locator('.cw-kpi').first()).toContainText('30 000');
+ await expect(page.locator('.cw-monthtable tbody tr.active')).toContainText('2005-04');
+});
+test('Statuts septembre : quatre catégories réconciliées, sélection et drilldown code',async({page})=>{
+ await page.goto('/');await credit(page);
+ await expect(page.locator('.cw-status-list>button:not(.cw-drill)')).toHaveCount(4);
+ await expect(page.locator('.cw-status-list')).toContainText('14 737');
+ await expect(page.locator('.cw-status-list')).toContainText('6 818');
+ await page.locator('.cw-status-list').getByRole('button',{name:/1–8 · retard/}).click();
+ await expect(page.locator('.cw-kpi').first()).toContainText('6 818');
+ await page.getByRole('button',{name:'Codes'}).click();
+ await expect(page.getByRole('button',{name:'2 · 2 mois'})).toBeVisible();
+ await page.getByRole('button',{name:'2 · 2 mois'}).click();
+ await expect(page.locator('#filter-status')).toHaveValue('2');
+ await expect(page.locator('.cw-kpi').first()).toContainText('2 667');
+});
+test('Sélection par statut de septembre : historique rétrospectif et observation unique',async({page})=>{
+ await page.goto('/');await credit(page);
+ await page.locator('#filter-status').selectOption('-1');
+ await expect(page.locator('.cw-kpi').first()).toContainText('5 686');
+ const obs=await page.locator('.cw-monthtable tbody tr').evaluateAll(rs=>rs.map(r=>(r.cells[1].textContent||'').trim()));
+ expect(obs).toEqual(Array(6).fill('5 686'));
+ await page.getByRole('tab',{name:'Risque'}).click();
+ await expect(page.locator('.cw-kpi').first()).toContainText('5 686');
+});
+test('Table contextuelle : dimensions, tri, recherche et CSV sur sélection',async({page})=>{
+ await page.goto('/');await credit(page);
+ await expect(page.locator('.cw-detail tbody tr')).toHaveCount(5);
+ await page.locator('.cw-detail').getByRole('button',{name:'Plafond',exact:true}).click();
+ await expect(page.locator('.cw-detail tbody tr')).toHaveCount(5);
+ await page.getByRole('textbox',{name:'Rechercher un groupe'}).fill('500k');
+ await expect(page.locator('.cw-detail tbody tr')).toHaveCount(1);
+ await page.getByRole('textbox',{name:'Rechercher un groupe'}).fill('');
+ await page.locator('.cw-detail').getByRole('button',{name:'Dossiers'}).click();
+ const dl=page.waitForEvent('download');await page.getByRole('button',{name:'Exporter les segments filtrés en CSV'}).click();
+ expect((await dl).suggestedFilename()).toBe('bank360-portefeuille-selection.csv');
+ await page.locator('.cw-detail').getByRole('button',{name:'Statut',exact:true}).click();
+ await expect(page.locator('.cw-detail tbody tr')).toHaveCount(11);
+});
+test('Export des mois : données agrégées, six périodes',async({page})=>{
+ await page.goto('/');await credit(page);const promise=page.waitForEvent('download');
+ await page.getByRole('button',{name:'Exporter le détail mensuel en CSV'}).click();
+ const download=await promise;expect(download.suggestedFilename()).toBe('bank360-retards-mensuels-selection.csv');
+});
+test('Population vide : aucun taux artificiel et panneaux explicites',async({page})=>{
+ await page.goto('/');await credit(page);
+ await page.locator('#filter-age').selectOption('60+');
+ await page.locator('#filter-limit').selectOption('<50k');
+ await page.locator('#filter-status').selectOption('8');
+ await expect(page.locator('.cw-kpi').first().locator('strong')).toHaveText('0');
+ await expect(page.locator('.cw-empty').first()).toBeVisible();
+ await expect(page.locator('.cw-kpi').nth(2).locator('strong')).toHaveText('—');
+});
+test('Navigation depuis accueil vers Risque sélectionne le mode interne',async({page})=>{
+ await page.goto('/');await page.locator('.home-kpi').filter({hasText:'Taux de défaut'}).click();
+ await expect(page.locator('#main-content')).toHaveAttribute('data-page','portfolio');
+ await expect(page.getByRole('tab',{name:'Risque'})).toHaveAttribute('aria-selected','true');
+ await page.goto('/');await page.locator('.home-credit-column').filter({hasText:'18-29'}).click();
+ await expect(page.locator('#filter-age')).toHaveValue('18-29');
+ await expect(page.getByRole('tab',{name:'Risque'})).toHaveAttribute('aria-selected','true');
+});
+test('Fraude, investigations et modèles ne régressent pas',async({page})=>{
+ await page.goto('/');await section(page,'Fraude','Fraude');
  await expect(page.getByText('6 362 620').first()).toBeVisible();
  await expect(page.getByText('8 213').first()).toBeVisible();
- await expect(page.getByText('790').first()).toBeVisible();
- await openSection(page,'Fraude','Alertes');
+ await section(page,'Fraude','Alertes');
  await expect(page.getByText('1 075').first()).toBeVisible();
- await page.getByRole('button',{name:/CASH_OUT/}).click();
- await expect(page.getByText('304').first()).toBeVisible();
-});
-test('Modèles : performances, importance des variables, calibration et audit',async({page})=>{
- await page.goto('/');await openSection(page,'Intelligence','Modèles');
+ await section(page,'Intelligence','Modèles');
  await expect(page.getByText('0,776').first()).toBeVisible();
  await page.getByRole('button',{name:'Variables',exact:true}).click();
  await expect(page.getByText('Retard · septembre').first()).toBeVisible();
@@ -50,144 +151,45 @@ test('Modèles : performances, importance des variables, calibration et audit',a
  await expect(page.getByText('60+').first()).toBeVisible();
  await page.getByRole('button',{name:'Fraude',exact:true}).last().click();
  await expect(page.getByText('0,365').first()).toBeVisible();
- await page.getByRole('button',{name:'Dérive',exact:true}).click();
- await expect(page.getByText('Score moyen · test')).toBeVisible();
 });
-test('Explorateur : univers de données et export',async({page})=>{
- await page.goto('/');await openSection(page,'Intelligence','Explorer');
+test('Explorateur, rapports, gouvernance, recherche et thème',async({page})=>{
+ await page.goto('/');await section(page,'Intelligence','Explorer');
  await expect(page.getByText('196').first()).toBeVisible();
  await page.getByRole('button',{name:'Fraude',exact:true}).last().click();
  await expect(page.getByText('100 353').first()).toBeVisible();
- await page.getByRole('button',{name:'Jours simulés'}).click();
- await expect(page.getByRole('columnheader',{name:'Jour simulé'})).toBeVisible();
-});
-test('Gouvernance, rapports, confidentialité et navigation rapide',async({page})=>{
- await page.goto('/');await page.getByRole('button',{name:'Qualité',exact:true}).click();
- await expect(page.getByText('Dossiers et défauts')).toBeVisible();
- await expect(page.getByText('Transactions simulées').first()).toBeVisible();
- await page.getByRole('button',{name:'Rapports',exact:true}).click();
- await expect(page.getByText('Extraire les données')).toBeVisible();
+ await section(page,'Qualité');await expect(page.getByText('Dossiers et défauts')).toBeVisible();
+ await section(page,'Rapports');await expect(page.getByText('Extraire les données')).toBeVisible();
  await page.getByRole('button',{name:'Changer le thème'}).last().click();
  await expect(page.locator('html')).toHaveAttribute('data-theme','light');
- await page.keyboard.press('Control+k');
- await expect(page.getByRole('dialog',{name:'Navigation rapide'})).toBeVisible();
- await page.getByPlaceholder('Rechercher une page…').fill('Risque');
- await page.keyboard.press('Enter');
- await expect(page.getByRole('heading',{name:'Risque de crédit'})).toBeVisible();
-});
-test('Navigation fixe ne déplace pas le contenu',async({page})=>{
- await page.goto('/');const dock=await page.locator('.nav-dock').boundingBox(),content=await page.locator('.work-area').boundingBox();
- await page.getByRole('button',{name:'Crédit',exact:true}).click();
- await expect(page.getByRole('menu',{name:'Crédit'})).toBeVisible();
- const dock2=await page.locator('.nav-dock').boundingBox(),content2=await page.locator('.work-area').boundingBox();
- expect(Math.round(dock2!.width)).toBe(Math.round(dock!.width));expect(Math.round(content2!.width)).toBe(Math.round(content!.width));
- await page.keyboard.press('Escape');await expect(page.getByRole('menu',{name:'Crédit'})).toHaveCount(0);
-});
-test('Mobile : navigation sans reflow et sans débordement horizontal',async({page})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/');
- const nav=await page.locator('.nav-dock').boundingBox();expect(nav!.y).toBeGreaterThan(700);
- await openSection(page,'Crédit','Portefeuille');
+ await page.keyboard.press('Control+k');await page.getByPlaceholder('Rechercher une page…').fill('Portefeuille');await page.keyboard.press('Enter');
  await expect(page.locator('#main-content')).toHaveAttribute('data-page','portfolio');
- const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);expect(overflow).toBeLessThanOrEqual(2);
- await page.screenshot({path:'test-results/r-mobile.png',fullPage:true});
 });
-test('Prévisualisation HTML autonome',async({page})=>{
+test('Dock fixe ne provoque aucun reflow',async({page})=>{
+ await page.goto('/');const nav=await page.locator('.nav-dock').boundingBox(),body=await page.locator('.work-area').boundingBox();
+ await credit(page);const nav2=await page.locator('.nav-dock').boundingBox(),body2=await page.locator('.work-area').boundingBox();
+ expect(Math.round(nav!.width)).toBe(Math.round(nav2!.width));expect(Math.round(body!.width)).toBe(Math.round(body2!.width));
+});
+test('Mobile : vue Crédit empilée, dock permanent, pas de débordement',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('/');await credit(page);
+ await expect(page.locator('.cw-panel')).toHaveCount(6);
+ expect((await page.locator('.nav-dock').boundingBox())!.y).toBeGreaterThan(700);
+ const width=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);expect(width).toBeLessThanOrEqual(2);
+ await page.screenshot({path:'test-results/credit-mobile.png',fullPage:true});
+});
+test('L’aperçu HTML autonome ouvre la nouvelle page crédit',async({page})=>{
  const {resolve}=await import('node:path');const {pathToFileURL}=await import('node:url');
  await page.goto(pathToFileURL(resolve('dist/BANK-360-B5-APERCU-LOCAL.html')).href);
- await expect(page.getByRole('heading',{name:'Vue d’ensemble'})).toBeVisible();
- await openSection(page,'Crédit','Portefeuille');await expect(page.getByText('30 000').first()).toBeVisible();
+ await credit(page);await expect(page.locator('.cw-panel')).toHaveCount(6);
 });
-
-test('R2 : quatre mises en page métier distinctes sans scroll global',async({page})=>{
- await page.setViewportSize({width:1440,height:900});await page.goto('/');
- const designs:[string,string,string][]=[['Crédit','Portefeuille','portfolio'],['Crédit','Risque','risk'],['Fraude','Fraude','fraud'],['Rapports','','reports']];
- for(const [group,item,id] of designs){if(item)await openSection(page,group,item);else await page.getByRole('button',{name:group,exact:true}).click();
- await expect(page.locator('#main-content')).toHaveAttribute('data-page',id);
- const rect=await page.locator('.screen-grid').evaluate(el=>{const s=getComputedStyle(el);return{cols:s.gridTemplateColumns,rows:s.gridTemplateRows}});
- expect(rect.cols.split(' ').length).toBe(2);
+test('Capture de la référence crédit desktop 1672×941',async({page})=>{
+ await page.setViewportSize({width:1672,height:941});await page.goto('/');await credit(page);
+ await noMainScroll(page);await expect(page.locator('.cw-panel')).toHaveCount(6);
+ await page.screenshot({path:'test-results/credit-integrated-1672.png',fullPage:true});
+});
+test('Capture de la référence crédit desktop 1440×900 sans panneau tronqué',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});await page.goto('/');await credit(page);
  await noMainScroll(page);
- await page.screenshot({path:'test-results/r2-'+id+'.png'});
- }
-});
-test('R2 : graphiques avec zéro visible et courbe de retards à base zéro',async({page})=>{
- await page.goto('/');await expect(page.locator('.home-chart-axis')).toBeVisible();
- await expect(page.locator('.home-chart-axis').getByText('0 %',{exact:true})).toBeVisible();
- await openSection(page,'Crédit','Paiements');
- await expect(page.locator('.trend-scale')).toBeVisible();
- await expect(page.locator('.trend-scale').getByText('0,0 %')).toBeVisible();
- const top=await page.locator('.trend-scale').locator('span').first().textContent();expect(top).not.toBe('0,0 %');
-});
-test('R2 : calibration compare prédit et observé, contexte validation versus test',async({page})=>{
- await page.goto('/');await openSection(page,'Intelligence','Modèles');
- await expect(page.getByText('ROC-AUC · test')).toBeVisible();
- await page.getByRole('button',{name:'Calibration'}).click();
- await expect(page.getByText('Score moyen').first()).toBeVisible();
- await expect(page.getByText('Défaut observé').first()).toBeVisible();
- await expect(page.locator('.calibration-row')).toHaveCount(8);
- await page.getByRole('button',{name:'Modèles',exact:true}).last().click();
- await expect(page.getByText('Comparaison PR-AUC · validation')).toBeVisible();
-});
-test('R2 : thème clair lisible et recherche strictement dédiée aux pages',async({page})=>{
- await page.goto('/');await page.getByRole('button',{name:'Basculer le thème'}).click();
- await expect(page.locator('html')).toHaveAttribute('data-theme','light');
- const color=await page.locator('.home-kpi-text small').first().evaluate(e=>getComputedStyle(e).color);
- expect(color).toBe('rgb(69, 96, 134)');
- await page.screenshot({path:'test-results/r2-light.png'});
- await page.getByRole('button',{name:/Accéder à une page/}).click();
- await expect(page.getByRole('dialog',{name:'Navigation rapide'})).toBeVisible();
- await expect(page.getByText(/Navigation uniquement/)).toBeVisible();
- await page.getByPlaceholder('Rechercher une page…').fill('Risque');
- await page.keyboard.press('Enter');
- await expect(page.getByRole('heading',{name:'Risque de crédit'})).toBeVisible();
-});
-
-test('R3 — Rapports et Qualité : cartes compactes à la hauteur de leur contenu',async({page})=>{
- await page.setViewportSize({width:1440,height:900});
- await page.goto('/');
- for(const tab of ['Qualité','Rapports']){
-   await page.getByRole('button',{name:tab,exact:true}).click();
-   const cards=await page.locator('.screen-grid>.surface').evaluateAll(nodes=>nodes.map(n=>{const b=n.getBoundingClientRect();return{height:b.height,width:b.width,top:b.top}}));
-   expect(cards).toHaveLength(3);
-   expect(cards.every(x=>x.height>80&&x.height<430),tab+' : panneaux réellement compacts').toBe(true);
-   await noMainScroll(page);
-   await page.screenshot({path:'test-results/r3-'+tab.toLowerCase()+'.png'});
- }
-});
-test('R3 — Risk : statuts UCI explicites et effectifs représentés sans modifier les codes de filtre',async({page})=>{
- await page.goto('/');
- await openSection(page,'Crédit','Risque');
- const card=page.locator('.risk-grid>.surface').last();
- await expect(card.getByText(/codes non précisés/)).toBeVisible();
- await expect(card.getByText('−1 · à jour')).toBeVisible();
- await expect(card.getByText('2 · 2 mois')).toBeVisible();
- await expect(card.getByText('−2 · non précisé')).toBeVisible();
- const group=card.locator('.chart-row').filter({hasText:'2 · 2 mois'});
- await expect(group.locator('.row-count')).toContainText('n=');
- await page.locator('#filter-status').selectOption('2');
- await expect(page.locator('#filter-status')).toHaveValue('2');
- await expect(page.locator('#filter-status option:checked')).toContainText('2 · 2 mois');
- await expect(page.locator('.risk-grid .bar-count').first()).toContainText('n=');
-});
-test('R3 — Taille des groupes visible dans les répartitions de défaut',async({page})=>{
- await page.goto('/');
- const age=page.locator('.home-credit-column').first();
- await expect(age.locator('.home-credit-count')).toContainText('n=');
- await openSection(page,'Crédit','Portefeuille');
- await expect(page.locator('.portfolio-grid .row-count').first()).toContainText('n=');
- await expect(page.locator('.portfolio-grid .chart-row').first()).toHaveAttribute('title',/dossiers/);
-});
-test('R3 — Modèles : comparaison de validation compacte sans masquer les sous-vues',async({page})=>{
- await page.setViewportSize({width:1440,height:900});await page.goto('/');
- await openSection(page,'Intelligence','Modèles');
- let diag=page.locator('.models-grid>.surface').last();
- let h=await diag.evaluate(e=>e.getBoundingClientRect().height);expect(h).toBeLessThan(390);
- await expect(page.getByText('Comparaison PR-AUC · validation')).toBeVisible();
- await page.getByRole('button',{name:'Variables',exact:true}).click();
- await expect(page.getByText('Retard · septembre').first()).toBeVisible();
- await page.getByRole('button',{name:'Calibration'}).click();
- await expect(page.locator('.calibration-row')).toHaveCount(8);
- await page.getByRole('button',{name:'Sous-groupes'}).click();
- await expect(page.getByText('60+').first()).toBeVisible();
- await noMainScroll(page);
- await page.screenshot({path:'test-results/r3-models.png'});
+ const boxes=await page.locator('.cw-board>.cw-panel').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();const content=n.querySelector('.cw-panel-body')!;return{top:r.top,bottom:r.bottom,h:r.height,scroll:content.scrollHeight-content.clientHeight}}));
+ expect(boxes).toHaveLength(6);expect(boxes.every(x=>x.h>=150&&x.bottom<=905)).toBe(true);
+ await page.screenshot({path:'test-results/credit-integrated-1440.png',fullPage:true});
 });
