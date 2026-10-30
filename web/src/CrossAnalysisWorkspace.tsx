@@ -62,7 +62,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
  const difference=credit.total&&creditReference.total?100*(credit.rate-creditReference.rate):null;
  const matrix=ages.map(age=>({age,cells:limits.map(limit=>{
   const t=creditTotals(filteredSegments({age,limit,status:filters.status}));
-  return {limit,...t};
+  return {...t,limitBand:limit};
  })}));
  const inspectionTitle=inspectTab==='data'?'Groupes et agrégats':inspectTab==='monthly'?'Retards dans le temps':inspectTab==='models'?'Diagnostics des modèles':'Comparaison des segments';
  const chooseChannel=(value:string)=>{onFraud({...fraud,channel:fraud.channel===value?'Tous':value,day:'Tous',kind:'all'});setFilterFeedback('Fraude : le type remplace le jour, sans croisement fictif.')};
@@ -122,8 +122,8 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
      <div className="x1-matrix" role="group" aria-label="Matrice taux de défaut âge par plafond">
       <div className="x1-matrix-head"><span>Âge / plafond</span>{limits.map(l=><span key={l} title={l}>{l}</span>)}</div>
       {matrix.map(row=><div className="x1-matrix-row" key={row.age}><strong>{row.age}</strong>{row.cells.map(c=>{
-       const active=filters.age===row.age&&filters.limit===c.limit;
-       return <button type="button" key={c.limit} aria-pressed={active} disabled={!c.total} onClick={()=>chooseMatrix(row.age,c.limit)} title={row.age+' · '+c.limit+' : '+fmtInt(c.total)+' dossiers, '+fmtInt(c.defaults)+' défauts, '+(c.total?asPct(c.rate):'aucun dossier')} style={{background:c.total?'rgba(106,144,247,'+(0.13+Math.min(.55,c.rate*.84))+')':undefined}}>{c.total?asPct(c.rate):'—'}</button>
+       const active=filters.age===row.age&&filters.limit===c.limitBand;
+       return <button type="button" key={c.limitBand} aria-pressed={active} disabled={!c.total} onClick={()=>chooseMatrix(row.age,c.limitBand)} title={row.age+' · '+c.limitBand+' : '+fmtInt(c.total)+' dossiers, '+fmtInt(c.defaults)+' défauts, '+(c.total?asPct(c.rate):'aucun dossier')} style={{background:c.total?'rgba(106,144,247,'+(0.13+Math.min(.55,c.rate*.84))+')':undefined}}>{c.total?asPct(c.rate):'—'}</button>
       })}</div>)}
      </div>
      <div className="x1-matrix-foot"><span><i/> Bleu plus intense : taux plus élevé</span><button onClick={()=>{setInspectTab('compare');setExpanded(true)}}>Comparer les tranches <ChevronRight size={13}/></button></div>
@@ -176,7 +176,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
     {inspectTab==='models'&&<div className="x1-inspector-scroll x1-model-inspection">
       <div className="x1-model-toolbar"><div role="group" aria-label="Source de modèles"><button aria-pressed={detail==='credit'} onClick={()=>{setDetail('credit');setModelTab('ranking')}}>Modèles Crédit B3</button><button aria-pressed={detail==='fraud'} onClick={()=>{setDetail('fraud');setModelTab('ranking')}}>Modèles Fraude B4</button></div><div role="tablist" aria-label="Diagnostics des modèles">{(detail==='credit'?[['ranking','Performance'],['deciles','Déciles'],['variables','Variables'],['calibration','Calibration'],['groups','Sous-groupes']]:[['ranking','Performance'],['deciles','Déciles'],['drift','Dérive']] as string[][]).map(([id,label])=><button role="tab" aria-selected={modelTab===id} key={id} onClick={()=>setModelTab(id as ModelTab)}>{label}</button>)}</div></div>
       <p>Évaluation des <strong>jeux de test globaux</strong> : ces diagnostics ne changent pas lorsque les segments Crédit ou Fraude sont filtrés.</p>
-      {modelTab==='ranking'&&<div className="x1-model-kpis">{(detail==='credit'?[['ROC-AUC',b3.holdout_test_metrics.roc_auc],['PR-AUC',b3.holdout_test_metrics.pr_auc],['Brier',b3.holdout_test_metrics.brier],['Rappel',b3.holdout_test_metrics.recall]]:[['ROC-AUC',test.roc_auc],['PR-AUC',test.pr_auc],['Brier',test.brier],['Rappel',test.recall]] as [string,number][]).map(([label,value])=><div key={label}><small>{label} · test</small><b>{label==='Rappel'?asPct(value):format3(value)}</b></div>)}</div>}
+      {modelTab==='ranking'&&<div className="x1-model-kpis">{((detail==='credit'?[['ROC-AUC',b3.holdout_test_metrics.roc_auc],['PR-AUC',b3.holdout_test_metrics.pr_auc],['Brier',b3.holdout_test_metrics.brier],['Rappel',b3.holdout_test_metrics.recall]]:[['ROC-AUC',test.roc_auc],['PR-AUC',test.pr_auc],['Brier',test.brier],['Rappel',test.recall]]) as [string,number][]).map(([label,value])=><div key={label}><small>{label} · test</small><b>{label==='Rappel'?asPct(value):format3(value)}</b></div>)}</div>}
       {modelTab==='deciles'&&<div className="x1-decile-grid">{(detail==='credit'?b3Deciles:b4Deciles).map(d=><div key={d.decile}><small>D{d.decile}</small><b>{asPct(d.rate)}</b></div>)}</div>}
       {modelTab==='variables'&&detail==='credit'&&<div className="x1-model-items">{creditDrivers.filter(x=>x.impact>0).slice(0,8).map(x=><div key={x.name}><span>{driverLabels[x.name]||x.name}</span><b>{format3(x.impact)}</b></div>)}<small>Importance par permutation sur validation, non causale.</small></div>}
       {modelTab==='calibration'&&detail==='credit'&&<table className="x1-inspector-table"><thead><tr><th>Tranche</th><th>Dossiers</th><th>Probabilité prédite</th><th>Défaut observé</th></tr></thead><tbody>{creditCalibration.map(x=><tr key={x.bin}><td>{x.bin}</td><td>{fmtInt(x.n)}</td><td>{asPct(x.predicted)}</td><td>{asPct(x.observed)}</td></tr>)}</tbody></table>}
