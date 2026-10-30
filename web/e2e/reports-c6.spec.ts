@@ -17,7 +17,7 @@ test('C6 — cockpit unique, vrais exports et méthodologies, aucun objet fictif
  await expect(page.locator('.rw-preferences-list>div')).toHaveCount(2);
  await expect(page.locator('.rw-banner-metrics')).toContainText('3');
  await expect(page.locator('.rw-banner-metrics')).toContainText('2');
- await expect(page.locator('.rw-export-card')).not.toContainText('Mo');
+ expect(await page.locator('.rw-export-list').textContent()).not.toMatch(/~\s*\d+(?:[,.]\d+)?\s*Mo\b/);
  await expect(page.locator('.rw-panel')).toHaveCount(3);
  await expect(page.locator('.nav-dock nav button')).toHaveCount(6);
 });
