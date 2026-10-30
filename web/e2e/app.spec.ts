@@ -3,7 +3,7 @@ const noMainScroll=async(page:Page)=>{const v=await page.locator('#main-content'
 const credit=async(page:Page)=>{await page.getByRole('button',{name:'Crédit',exact:true}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page','portfolio')};
 const section=async(page:Page,name:string,target?:string)=>{await page.getByRole('button',{name,exact:true}).click();if(target)await page.getByRole('menuitem',{name:new RegExp(target)}).click()};
 
-test('Architecture : sept pages, six sections, une seule vue Crédit et données séparées',async({page})=>{
+test('Architecture : six pages, six sections, une seule vue Crédit et données séparées',async({page})=>{
  await page.goto('/');await expect(page.getByRole('heading',{name:'Vue d’ensemble'})).toBeVisible();
  await expect(page.locator('.dock-link')).toHaveCount(6);
  await credit(page);await expect(page.getByRole('heading',{name:'Portefeuille & segmentation'})).toBeVisible();
@@ -13,11 +13,11 @@ test('Architecture : sept pages, six sections, une seule vue Crédit et données
  await expect(page.getByText('30 000').first()).toBeVisible();
  await noMainScroll(page);
 });
-test('Mono-écran à 1440×900 : sept routes et crédit trois modes',async({page})=>{
+test('Mono-écran à 1440×900 : six routes et crédit trois modes',async({page})=>{
  await page.setViewportSize({width:1440,height:900});await page.goto('/');await noMainScroll(page);
  await credit(page);for(const tab of ['Vue globale','Risque','Paiements']){await page.getByRole('tab',{name:tab}).click();await noMainScroll(page)}
  await section(page,'Fraude');for(const mode of ['Vue globale','Détection','Alertes']){await page.getByRole('tab',{name:mode}).click();await noMainScroll(page)}
- for(const [group,name] of [['Intelligence','Modèles'],['Intelligence','Explorer']]){await section(page,group,name);await noMainScroll(page)}
+ await section(page,'Intelligence');for(const tab of ['Vue globale','Modèles','Explorer']){await page.getByRole('tablist',{name:'Perspectives Intelligence'}).getByRole('tab',{name:tab}).click();await noMainScroll(page)}
  await section(page,'Qualité');await noMainScroll(page);await section(page,'Rapports');await noMainScroll(page);
 });
 test('Portefeuille : population officielle, KPI pondérés, six panneaux',async({page})=>{
@@ -144,20 +144,21 @@ test('Fraude, investigations et modèles ne régressent pas',async({page})=>{
  await expect(page.getByText('790').first()).toBeVisible();
  await page.getByRole('tab',{name:'Alertes'}).click();
  await expect(page.getByText('1 075').first()).toBeVisible();
- await section(page,'Intelligence','Modèles');
+ await section(page,'Intelligence');
  await expect(page.getByText('0,776').first()).toBeVisible();
- await page.getByRole('button',{name:'Variables',exact:true}).click();
+ await page.getByRole('tab',{name:'Variables'}).click();
  await expect(page.getByText('Retard · septembre').first()).toBeVisible();
- await page.getByRole('button',{name:'Sous-groupes'}).click();
+ await page.getByRole('tab',{name:'Sous-groupes'}).click();
  await expect(page.getByText('60+').first()).toBeVisible();
- await page.getByRole('button',{name:'Fraude',exact:true}).last().click();
+ await page.getByRole('group',{name:'Jeu de données'}).getByRole('button',{name:'Fraude'}).click();
  await expect(page.getByText('0,365').first()).toBeVisible();
 });
 test('Explorateur, rapports, gouvernance, recherche et thème',async({page})=>{
- await page.goto('/');await section(page,'Intelligence','Explorer');
+ await page.goto('/');await section(page,'Intelligence');await page.getByRole('tab',{name:'Explorer'}).click();
  await expect(page.getByText('196').first()).toBeVisible();
- await page.getByRole('button',{name:'Fraude',exact:true}).last().click();
- await expect(page.getByText('100 353').first()).toBeVisible();
+ await page.getByRole('group',{name:'Jeu de données'}).getByRole('button',{name:'Fraude'}).click();
+ await expect(page.getByText('0,365').first()).toBeVisible();
+ await expect(page.locator('.iw-table-window tbody tr')).toHaveCount(5);
  await section(page,'Qualité');await expect(page.getByText('Dossiers et défauts')).toBeVisible();
  await section(page,'Rapports');await expect(page.getByText('Extraire les données')).toBeVisible();
  await page.getByRole('button',{name:'Changer le thème'}).last().click();

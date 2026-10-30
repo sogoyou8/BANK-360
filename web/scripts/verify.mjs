@@ -11,10 +11,15 @@ for(const m of ['2005-04','2005-05','2005-06','2005-07','2005-08','2005-09'])ass
 assert.equal(b3.dataset.population,30000);assert.equal(b4.observed.rows,6362620);assert.equal(b4.observed.frauds,8213);
 assert.equal(b4.holdout_test.alerted,b4.holdout_test.confusion.tp+b4.holdout_test.confusion.fp);
 const src=read('web/src/main.tsx');
-const ids=['home','portfolio','fraud','models','explorer','quality','reports'];
+const ids=['home','portfolio','fraud','models','quality','reports'];
 for(const id of ids){assert.ok(src.includes(`id:'${id}'`),`Page ${id} absente`);assert.ok(src.includes(`page==='${id}'`),`Vue ${id} absente`)}
 const fraudSrc=read('web/src/FraudWorkspace.tsx');
 assert.ok(!src.includes("id:'alerts'"),'Ancienne route Alertes encore présente');
+assert.ok(!src.includes("id:'explorer'"),'Ancienne page Explorateur encore présente');
+const intelligenceSrc=read('web/src/IntelligenceWorkspace.tsx');
+assert.ok(src.includes('IntelligenceWorkspace')&&src.includes('IntelligenceHeader'),'Cockpit Intelligence C4 requis');
+for(const item of ['iw-kpis','iw-deciles','iw-diagnostics','iw-explorer','Vue globale','Jours simulés','creditCalibration','creditAudit'])assert.ok(intelligenceSrc.includes(item),'Intelligence C4 absente : '+item);
+assert.ok(!intelligenceSrc.includes('Math.random(')&&!intelligenceSrc.includes('idTransaction'),'Aucune ligne de client inventée');
 assert.ok(src.includes("FraudWorkspace")&&src.includes("FraudFilterBar"),'Cockpit fraude unifié requis');
 for(const key of ['fw-trend','fw-channels','fw-quality','fw-days','fw-investigation','fw-detail'])assert.ok(fraudSrc.includes(key),'Module Fraude absent : '+key);
 const types=rows(read('reports/b4/B4-alerts-by-type.csv'));
@@ -33,11 +38,11 @@ assert.ok(creditSrc.includes('Aucun dossier pour cette sélection'),'État vide 
 for(const phase of ['B1 ·','B2 ·','B3 ·','B4 ·','EXPERIENCE','PROJET'])assert.ok(!src.includes(phase),`Étiquette interne inutile ${phase}`);
 for(const name of ['B3-calibration.csv','B3-feature-importance.csv','B3-subgroup-audit.csv'])assert.ok(read('web/src/riskEvidence.ts').includes(name));
 assert.ok(!src.includes('Math.random('));assert.ok(!src.includes('new Date()'));
-console.log('B5 Crédit + Fraude unifiés: 7 pages / 6 sections, sources réconciliées, diagnostics et agrégats uniquement — PASS');
+console.log('B5 Crédit + Fraude + Intelligence unifiés: 6 pages / 6 sections et agrégats vérifiés — PASS');
 
 assert.ok(src.includes('function CalibrationView'), 'Calibration prédite et observée requise');
 assert.ok(src.includes('chart-scale'), 'Repères des axes requis');
-assert.ok(src.includes('Comparaison PR-AUC · validation'), 'Séparation validation/test requise');
+assert.ok(intelligenceSrc.includes('Comparaison PR-AUC · validation'), 'Séparation validation/test requise');
 assert.ok(!src.includes('Rechercher une analyse'), 'Recherche limitée à la navigation');
 
 assert.ok(src.includes('paymentStatusLabel'), 'Labels des codes de remboursement requis');
