@@ -391,3 +391,19 @@ test('C3 — compact desktop geometries and mobile theme parity',async({page})=>
  await expect(page.locator('html')).toHaveAttribute('data-theme','light');
  await page.screenshot({path:'test-results/fraud-c3-mobile.png',fullPage:true});
 });
+
+test('C3 — six daily aggregate rows and all channel rows fit without an internal scrollbar',async({page})=>{
+ for(const [width,height] of [[1672,941],[1440,900],[1366,768]] as const){
+  await page.setViewportSize({width,height});await page.goto('/');await section(page,'Fraude');
+  const dims=await page.locator('.fw-detail-table').evaluate(el=>{
+   const box=el.getBoundingClientRect(),first=el.querySelector('tbody tr:first-child')!.getBoundingClientRect(),last=el.querySelector('tbody tr:last-child')!.getBoundingClientRect();
+   return {scroll:el.scrollHeight-el.clientHeight,firstTop:first.top,lastBottom:last.bottom,top:box.top,bottom:box.bottom};
+  });
+  expect(dims.scroll,'no unnecessary 6-row scroll at '+width+'×'+height).toBeLessThanOrEqual(2);
+  expect(dims.firstTop).toBeGreaterThanOrEqual(dims.top-1);
+  expect(dims.lastBottom).toBeLessThanOrEqual(dims.bottom+1);
+  await page.getByRole('button',{name:'Canaux',exact:true}).click();
+  await expect(page.locator('.fw-detail-table tbody tr')).toHaveCount(2);
+  await noMainScroll(page);
+ }
+});
