@@ -3,7 +3,7 @@
 ## Statut
 
 - Branche : `feature/b5-c6-reports-unified-cockpit`
-- Revue : [PR #22](https://github.com/sogoyou8/BANK-360/pull/22), **brouillon, non fusionnée**
+- **Statut final** : [PR #22](https://github.com/sogoyou8/BANK-360/pull/22) **fusionnée dans `main` le 30 octobre 2026** (commit `89866a23f44c2e397fc25ac7e054c447bac2a31d`) ; **page 06 gelée sans C6.4**. Les statuts de revue C6.1–C6.3 ci-dessous constituent l'historique antérieur à cette décision.
 - Périmètre : uniquement la page **06 — Rapports & préférences**, et ses tests/documentation
 - **Pages 01–05 gelées**, aucune modification de leurs composants ou CSS
 - Aucun déploiement public ni preview publiée
@@ -143,4 +143,17 @@ Captures Chromium dans l'artefact bank360-b5-browser-evidence du run B5 :
 
 **Périmètre C6.3 :** fichiers ReportsWorkspace.tsx, reports-workspace.css, reports-c6.spec.ts et cette documentation, exclusivement sur la branche C6.
 
-**Statut : C6.3 techniquement validé et capturé ; prêt pour revue locale.** La [PR #22](https://github.com/sogoyou8/BANK-360/pull/22) demeure en brouillon sur sa branche, **non fusionnée, non déployée**. La page 06 ne sera gelée qu'après validation du rendu local par l'utilisateur.
+**Statut de recette C6.3 (historique, avant la fusion)** : 89/89 tests Chromium réussis et rendu local accepté. La clôture définitive est consignée ci-dessous.
+
+
+## Clôture définitive C6 — aucune C6.4 (30 octobre 2026)
+
+Après revue de la capture locale à 1648 × 928, l'utilisateur a demandé la **clôture de C6 sans intervention supplémentaire**.
+
+- **PR [#22](https://github.com/sogoyou8/BANK-360/pull/22) fusionnée** dans `main`, commit `89866a23f44c2e397fc25ac7e054c447bac2a31d`.
+- **[CI B5 post-fusion](https://github.com/sogoyou8/BANK-360/actions/runs/41055392969) : SUCCESS, 89/89 tests Chromium réussis**, compilation React/TypeScript, vérifications de contrats et production des captures passées.
+- **[CI B1 post-fusion](https://github.com/sogoyou8/BANK-360/actions/runs/41055392974) : SUCCESS**.
+- **[CI B3 dernier commit de PR](https://github.com/sogoyou8/BANK-360/actions/runs/41053333668) : SUCCESS** ; les scripts expérimentaux n'ont pas changé lors de C6.
+- Les pages 01–05 sont restées inchangées pendant C6 ; les six pages sont désormais gelées. Voir le **[registre officiel 01–06](B5-gel-pages-01-06.md)**.
+- **Aucun déploiement public n'a été déclenché**. Le workflow B5 produit des artefacts téléchargeables, pas une publication du site.
+- Prochaine étape distincte : validation globale du projet Data BANK 360 et préparation portfolio. Le gel des six pages **ne signifie pas** que toutes les phases du projet sont achevées.
