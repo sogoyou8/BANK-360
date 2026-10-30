@@ -63,3 +63,19 @@ Ajouts dans \`web/e2e/intelligence-c4.spec.ts\` : vérification géométrique de
 - **PR #20 non fusionnée**, empilée au-dessus de C3 (PR #19) ; **aucun déploiement / publication**.
 
 Le **gel définitif de C4** attend la recette visuelle locale et l'approbation explicite de l'utilisateur.
+
+
+## C4.10 — Explorateur : lignes complètes et géométrie vérifiée
+
+**Objectif :** éviter la dernière ligne partiellement coupée dans la fenêtre interne du tableau, y compris après redimensionnement, filtre, changement de contexte ou défilement jusqu'en bas.
+
+**Correctif ciblé :**
+- \`IntelligenceWorkspace.tsx\` : un conteneur \`.iw-table-slot\` conserve la flexibilité verticale du panneau. Un \`ResizeObserver\` mesure le conteneur, l'en-tête et la hauteur effective d'une ligne, puis dimensionne la fenêtre \`.iw-table-window\` à un nombre entier de lignes. Il reste moins d'une ligne de réserve, sans changer les dimensions des caractères ni la hauteur des autres panneaux.
+- \`intelligence-workspace.css\` : la fenêtre conserve le défilement interne, un en-tête sticky et un positionnement du scroll aligné sur les lignes. Le footer demeure visible et les styles restent propres à C4.
+- **Aucune source UCI/PaySim, aucun indicateur, calcul, graphique ou composant des pages 01–03 n'a été modifié.**
+
+**Recette étendue :** deux nouveaux tests dans \`web/e2e/intelligence-c4.spec.ts\` vérifient, à 1920×1080, 1672×941, 1648×928, 1440×900, 1366×768, 1280×720 et 390×844, les lignes complètes à l'ouverture, l'absence de ligne tronquée en bas au scroll maximal, l'absence de débordement horizontal, les filtres et changements de contexte Crédit/Fraude/Jours simulés, et la préservation du cockpit mono-écran desktop. Les nouvelles captures portent le nom \`intelligence-c410-[largeur]x[hauteur].png\` et sont conservées dans l'artefact GitHub Actions \`bank360-b5-browser-evidence\`.
+
+**Résultat confirmé : 58/58 tests Chromium réussis**, plus les workflows B1 et B3 réussis, [run GitHub Actions 41010207008](https://github.com/sogoyou8/BANK-360/actions/runs/41010207008). Le premier passage C4.10 avait révélé un décalage fractionnaire au scroll maximal (57/58) ; une correction du calcul de hauteur a abouti à 58/58.
+
+**Statut :** C4.10 terminé techniquement. La PR #20 reste ouverte, empilée sur la branche C3 / PR #19 ; aucune fusion ni aucun déploiement. Gel uniquement après approbation visuelle locale explicite.
