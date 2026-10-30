@@ -49,11 +49,11 @@ test('X1 — PaySim channel and day are EXCLUSIVE (never fake joint dimensions)'
  await page.getByLabel('Type Analyse 360').selectOption('TRANSFER');
  await expect(page.locator('.x1-summary>div').nth(3)).toContainText('486');
  await expect(page.getByLabel('Jour Analyse 360')).toHaveValue('Tous');
- await expect(page.locator('.x1-fraud-panel')).toContainText('clic = changer d\'axe');
+ await expect(page.locator('.x1-fraud-panel')).toContainText('clic = changer d’axe');
  await page.getByLabel('Jour Analyse 360').selectOption('28');
  await expect(page.getByLabel('Type Analyse 360')).toHaveValue('Tous');
  await expect(page.locator('.x1-summary>div').nth(3)).toContainText('299');
- await expect(page.locator('.x1-fraud-panel')).toContainText('clic = changer d\'axe');
+ await expect(page.locator('.x1-fraud-panel')).toContainText('clic = changer d’axe');
  await expect(page.locator('.x1-model-note')).toContainText('tests globaux, non filtrables');
  await expect(page.getByRole('tab',{name:'Crédit'})).toHaveAttribute('aria-selected','true');
  await page.getByRole('tab',{name:'Fraude'}).click();
