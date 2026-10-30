@@ -9,7 +9,7 @@ test('X1 — two main destinations and frozen classic shell remain available',as
  await expect(page.getByRole('heading',{name:'Analyse 360 · vision croisée'})).toBeVisible();
  await page.getByRole('button',{name:'Gouvernance & preuves',exact:true}).click();
  await expect(page.getByTestId('x1-governance')).toBeVisible();
- await page.getByRole('button',{name:'Analyse 360',exact:true}).click();
+ await page.locator('.nav-dock').getByRole('button',{name:'Analyse 360',exact:true}).click();
  await expect(page.getByTestId('x1-analysis')).toBeVisible();
  await page.getByRole('button',{name:'Revenir aux six pages classiques'}).click();
  await expect(page.locator('.nav-dock .dock-link')).toHaveCount(6);
@@ -24,7 +24,7 @@ test('X1 — credit age and limit filter the SAME cohort, six months, rows and w
  await expect(credit.locator('.x1-mini-kpis')).toContainText('2 197');
  await expect(credit.locator('.x1-month-bars>div')).toHaveCount(6);
  const months=await credit.locator('.x1-month-bars>div').evaluateAll(xs=>xs.map(x=>x.getAttribute('title')));
- expect(months.every(x=>x?.includes('9 618 observations'))).toBe(true);
+ expect(months.every(x=>Number((x?.split('/')?.[1]||'').replace('observations','').replace(/\s/g,''))===9618)).toBe(true);
  await page.getByLabel('Plafond Analyse 360').selectOption('100k-199k');
  await expect(page.locator('.x1-detail-body tbody tr').first()).toContainText('18-29');
  await expect(page.locator('.x1-detail-body tbody tr').first()).toContainText('100k-199k');
@@ -32,7 +32,7 @@ test('X1 — credit age and limit filter the SAME cohort, six months, rows and w
  const kpi=Number((await page.locator('.x1-summary>div').first().locator('b').innerText()).replace(/\s/g,''));
  expect(counts.reduce((a,b)=>a+b,0)).toBe(kpi);
  const x=await credit.locator('.x1-month-bars>div').first().getAttribute('title');
- expect(x).toContain(kpi.toLocaleString('fr-FR').replace(/\u202f/g,' ')); // allow Intl grouping
+ expect(Number((x?.split('/')?.[1]||'').replace('observations','').replace(/\s/g,''))).toBe(kpi);
  await page.getByRole('button',{name:'Réinitialiser Crédit'}).click();
  await expect(page.locator('.x1-summary>div').first()).toContainText('30 000');
 });
