@@ -382,6 +382,8 @@ test('C3 — compact desktop geometries and mobile theme parity',async({page})=>
    expect(p.height,width+'x'+height+' panel visible').toBeGreaterThanOrEqual(165);
    expect(p.bottom,width+'x'+height+' panel within main').toBeLessThanOrEqual(result.viewBottom+1);
   }
+  const labelOverflow=await page.locator('.fw-quality-legend small').evaluateAll(xs=>xs.map(el=>el.scrollWidth-el.clientWidth));
+  expect(labelOverflow.every(x=>x<=1),'no truncated fraud quality legend at '+width+'×'+height).toBe(true);
   await page.screenshot({path:'test-results/fraud-c3-'+width+'x'+height+'.png',fullPage:true});
  }
  await page.setViewportSize({width:390,height:844});await page.goto('/');await section(page,'Fraude');
