@@ -139,6 +139,6 @@ test('C5 — dark/light appearance remains operable; other page shells preserved
  await expect(page.getByRole('heading',{name:'Rapports & préférences'})).toBeVisible();
  await page.getByRole('button',{name:'Intelligence',exact:true}).click();
  await expect(page.getByRole('heading',{name:'Modèles & explorateur de données'})).toBeVisible();
- await page.getByRole('button',{name:'Fraude',exact:true}).click();
+ await page.locator('.nav-dock').getByRole('button',{name:'Fraude',exact:true}).click();
  await expect(page.getByRole('heading',{name:'Détection de fraude & analyse des alertes'})).toBeVisible();
 });
