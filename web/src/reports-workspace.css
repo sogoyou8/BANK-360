@@ -232,3 +232,62 @@
  .rw-export-bottom{margin:6px 11px 3px}
 }
 @media(prefers-reduced-motion:reduce){.rw-root *{transition:none!important;animation:none!important}}
+
+/* C6.3 — single grouped finish: non-overlapping methodology/preferences and honest source density. */
+@media(min-width:901px){
+ /* Reserve enough vertical space for two preference rows, their labels and real buttons. */
+ .rw-perspective-methodology .rw-grid{
+  grid-template-rows:minmax(0,1fr) minmax(168px,.55fr);
+ }
+ .rw-perspective-methodology .rw-preferences-panel .rw-panel-title{flex-shrink:0}
+ .rw-perspective-methodology .rw-preferences-list{justify-content:flex-start;flex:1 1 auto}
+ .rw-perspective-methodology .rw-preferences-list>div{
+  flex:1 1 0;min-height:43px;
+ }
+ /* Fewer exports = more room for the related methods and actual settings. */
+ .rw-scope-credit.rw-perspective-overview .rw-grid{
+  grid-template-columns:minmax(0,1.09fr) minmax(0,1.11fr)
+ }
+ .rw-scope-fraud.rw-perspective-overview .rw-grid{
+  grid-template-columns:minmax(0,.94fr) minmax(0,1.26fr)
+ }
+}
+.rw-context-summary{
+ flex:0 0 auto;min-width:0;
+ margin:13px 15px 4px;padding:12px 14px;
+ border-radius:13px;border:1px solid #7c9fd65c;
+ background:linear-gradient(135deg,#24416e91,#12294f90);
+ box-shadow:inset 1px 1px #ffffff0e;
+ color:#c2d7f4
+}
+.rw-context-heading{display:flex;align-items:center;gap:9px;color:#9ccaff;font-size:12px}
+.rw-context-heading svg{flex:none}
+.rw-context-summary p{font-size:10px;line-height:1.45;margin:8px 0;color:#b6cbec}
+.rw-context-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.rw-context-meta>span{display:flex;flex-direction:column;gap:5px;border-top:1px solid #7a9bcd38;padding-top:8px;min-width:0}
+.rw-context-meta small{font-size:9px;color:#94aed7}
+.rw-context-meta b{font-size:11px;color:#f2f7ff;font-weight:650;overflow-wrap:anywhere}
+:root[data-theme=light] .rw-context-summary{background:#e8f1ff;color:#365477;border-color:#a8bfe4}
+:root[data-theme=light] .rw-context-summary p,:root[data-theme=light] .rw-context-meta small{color:#4c668a}
+:root[data-theme=light] .rw-context-meta b{color:#1d416e}
+@media(min-width:901px) and (max-height:850px){
+ .rw-perspective-methodology .rw-grid{grid-template-rows:minmax(0,1fr) minmax(150px,.5fr)}
+ .rw-perspective-methodology .rw-preferences-list>div{min-height:40px}
+ .rw-context-summary{margin:7px 11px 3px;padding:9px 11px}
+ .rw-context-summary p{margin:5px 0;font-size:9px}
+ .rw-context-meta>span{padding-top:5px;gap:3px}
+ .rw-context-meta b{font-size:10px}
+}
+@media(min-width:901px) and (max-height:750px){
+ .rw-perspective-methodology .rw-grid{grid-template-rows:minmax(0,1fr) minmax(134px,.5fr)}
+ .rw-perspective-methodology .rw-preferences-list>div{min-height:35px}
+ .rw-context-summary{margin:4px 11px 1px;padding:6px 9px}
+ .rw-context-heading{font-size:10px}
+ .rw-context-summary p{font-size:9px;line-height:1.25;margin:4px 0}
+ .rw-context-meta>span{padding-top:4px;gap:2px}
+ .rw-context-meta small,.rw-context-meta b{font-size:9px}
+}
+@media(max-width:900px){
+ .rw-context-summary{margin:5px 11px 8px}
+ .rw-context-summary p{white-space:normal}
+}
