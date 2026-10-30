@@ -1,12 +1,15 @@
-import {useMemo,useState} from 'react';
-import {Activity,ArrowLeftRight,BarChart3,CheckCircle2,Database,Download,FilterX,Info,Layers3,ShieldAlert,ShieldCheck,Wallet} from 'lucide-react';
+import {useEffect,useMemo,useState} from 'react';
+import {Activity,ArrowLeftRight,BarChart3,CheckCircle2,Database,Download,FilterX,Info,Layers3,ShieldAlert,ShieldCheck,Wallet,Maximize2,Minimize2,X,Table2,Grid3X3,ChevronRight} from 'lucide-react';
 import {ages,limits,segments,b3,b4,b3Deciles,b4Deciles,fraudDays,fraudTypes,filteredSegments,groupSegments,creditTotals,paymentSeries,fmtInt,fmtPct,fmtNtd,initialFilters,type CreditFilters} from './data';
 import {exportReport,type ExportFormat,type ReportDataset} from './reportExports';
 import {type FraudScope} from './FraudWorkspace';
+import {creditDrivers,creditCalibration,creditAudit,driverLabels} from './riskEvidence';
 import './cross-analysis.css';
 
 type Props={filters:CreditFilters,onFilters:(next:CreditFilters)=>void,fraud:FraudScope,onFraud:(next:FraudScope)=>void,onGovernance:()=>void};
 type Detail='credit'|'fraud';
+type InspectTab='data'|'monthly'|'models'|'compare';
+type ModelTab='ranking'|'deciles'|'variables'|'calibration'|'groups'|'drift';
 const asPct=(n:number)=>fmtPct(n,1);
 const statusCodes=[...new Set(segments.map(s=>s.september_status))].sort((a,b)=>Number(a)-Number(b));
 const statusLabel=(v:string)=>v==='-1'?'−1 · à jour':v==='-2'||v==='0'?v.replace('-','−')+' · non précisé':v+' · '+v+' mois';
@@ -26,6 +29,14 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
  const [detail,setDetail]=useState<Detail>('credit');
  const [format,setFormat]=useState<ExportFormat>('csv');
  const [selectionInfo,setSelectionInfo]=useState(false);
+ const [inspectTab,setInspectTab]=useState<InspectTab>('data');
+ const [expanded,setExpanded]=useState(false);
+ const [modelTab,setModelTab]=useState<ModelTab>('ranking');
+ const [selectedRow,setSelectedRow]=useState<string|null>(null);
+ const [filterFeedback,setFilterFeedback]=useState('');
+ useEffect(()=>{setSelectedRow(null)},[filters,fraud.channel,fraud.day,detail]);
+ useEffect(()=>{if(!filterFeedback)return;const timeout=window.setTimeout(()=>setFilterFeedback(''),3500);return()=>window.clearTimeout(timeout)},[filterFeedback]);
+ useEffect(()=>{if(!expanded)return;const onKey=(e:KeyboardEvent)=>{if(e.key==='Escape')setExpanded(false)};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[expanded]);
  const creditRows=useMemo(()=>filteredSegments(filters),[filters]);
  const credit=useMemo(()=>creditTotals(creditRows),[creditRows]);
  const ageGroups=useMemo(()=>groupSegments(filteredSegments({...filters,age:'Tout'}),'age_band'),[filters]);
@@ -38,9 +49,24 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
  const fraudValues=activeFraud||{transactions:test.n,frauds:test.frauds,alerts:test.alerted,tp:test.confusion.tp,fp:test.confusion.fp,fn:test.confusion.fn};
  const fraudPrecision=fraudValues.alerts?fraudValues.tp/fraudValues.alerts:null;
  const fraudRecall=fraudValues.frauds?fraudValues.tp/fraudValues.frauds:null;
- const chooseCredit=(key:'age'|'limit'|'status',value:string)=>onFilters({...filters,[key]:filters[key]===value?'Tout':value});
- const chooseChannel=(value:string)=>onFraud({...fraud,channel:fraud.channel===value?'Tous':value,day:'Tous'});
- const chooseDay=(value:string)=>onFraud({...fraud,day:fraud.day===value?'Tous':value,channel:'Tous'});
+ const chooseCredit=(key:'age'|'limit'|'status',value:string)=>{
+  const next={...filters,[key]:filters[key]===value?'Tout':value};
+  onFilters(next);setFilterFeedback('Crédit : âge, plafond, retards et tableau recalculés ensemble.');
+ };
+ const chooseMatrix=(age:string,limit:string)=>{
+  const selected=filters.age===age&&filters.limit===limit;
+  onFilters({...filters,age:selected?'Tout':age,limit:selected?'Tout':limit});
+  setDetail('credit');setFilterFeedback(selected?'Sélection retirée.':'Croisement âge × plafond actif, retards et dossiers liés.');
+ };
+ const creditReference=creditTotals(filteredSegments({...filters,age:'Tout',limit:'Tout'}));
+ const difference=credit.total&&creditReference.total?100*(credit.rate-creditReference.rate):null;
+ const matrix=ages.map(age=>({age,cells:limits.map(limit=>{
+  const t=creditTotals(filteredSegments({age,limit,status:filters.status}));
+  return {limit,...t};
+ })}));
+ const inspectionTitle=inspectTab==='data'?'Groupes et agrégats':inspectTab==='monthly'?'Retards dans le temps':inspectTab==='models'?'Diagnostics des modèles':'Comparaison des segments';
+ const chooseChannel=(value:string)=>{onFraud({...fraud,channel:fraud.channel===value?'Tous':value,day:'Tous',kind:'all'});setFilterFeedback('Fraude : le type remplace le jour, sans croisement fictif.')};
+ const chooseDay=(value:string)=>{onFraud({...fraud,day:fraud.day===value?'Tous':value,channel:'Tous',kind:'all'});setFilterFeedback('Fraude : le jour remplace le type, sans croisement fictif.')};
  const monthMax=Math.max(.01,...monthly.map(x=>x.rate));
  const ageMax=Math.max(.001,...ageGroups.map(x=>x.rate));
  const limitMax=Math.max(.001,...limitGroups.map(x=>x.rate));
@@ -48,7 +74,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
  const dayMax=Math.max(1,...fraudDays.map(x=>x.alerts));
  const selectedFraudLabel=fraud.channel!=='Tous'?fraud.channel:fraud.day!=='Tous'?'J'+fraud.day:'Test chronologique';
  const hasCredit=Object.values(filters).some(x=>x!=='Tout');
- const hasFraud=fraud.channel!=='Tous'||fraud.day!=='Tous'||fraud.kind!=='all';
+ const hasFraud=fraud.channel!=='Tous'||fraud.day!=='Tous';
  const rows=detail==='credit'?creditRows.map((r,i)=>({key:'uci-'+i,a:r.age_band,b:r.credit_limit_band,c:statusLabel(r.september_status),d:r.client_count,e:r.default_count,f:r.client_count?r.default_count/r.client_count:null})):
  (fraud.day!=='Tous'?fraudDays.filter(x=>String(x.day)===fraud.day):fraud.channel!=='Tous'?fraudTypes.filter(x=>x.type===fraud.channel):fraudTypes.filter(x=>x.alerts>0))
  .map((r,i)=>({key:'paysim-'+i,a:'day' in r?'J'+r.day:r.type,b:r.transactions,c:r.frauds,d:r.alerts,e:r.tp,f:r.alerts?r.tp/r.alerts:null}));
@@ -86,25 +112,31 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
   </div>
   <div className="x1-analysis-grid">
    <Card className="x1-credit-panel" title="Crédit · portefeuille et paiements" note="UCI 2005 · mêmes sous-groupes pour défauts et six mois" extra={<span className="x1-scope-pill">{hasCredit?'Sélection filtrée':'30 000 dossiers historiques'}</span>}>
-    <div className="x1-mini-kpis">
-     <Kpi label="Dossiers" value={fmtInt(credit.total)} detail="Population sélectionnée"/>
-     <Kpi label="Défauts" value={fmtInt(credit.defaults)} detail={asPct(credit.rate)} tone="violet"/>
-     <Kpi label="Plafond moyen" value={credit.total?fmtNtd(credit.avgLimit):'—'} detail="Pondéré par dossiers"/>
-     <Kpi label="Retards · septembre" value={fmtInt(monthly[5].delayed)} detail={monthly[5].observations?asPct(monthly[5].rate):'—'} tone="mint"/>
+    <div className="x1-comparison" aria-live="polite">
+     <div><small>Défauts · sélection</small><b>{credit.total?asPct(credit.rate):'—'}</b><small>{fmtInt(credit.total)} dossiers · {fmtInt(credit.defaults)} défauts</small></div>
+     <div><small>Référence même statut · tous âges et plafonds</small><b>{creditReference.total?asPct(creditReference.rate):'—'}</b><small>{difference===null?'Aucune comparaison':(difference>=0?'+':'')+new Intl.NumberFormat('fr-FR',{maximumFractionDigits:1,minimumFractionDigits:1}).format(difference)+' point(s)'}</small></div>
+     <button className="x1-compare-open" onClick={()=>{setInspectTab('compare');setExpanded(true)}} aria-label="Comparer la sélection au portefeuille"><ChevronRight size={17}/></button>
     </div>
-    <div className="x1-credit-charts">
-     <div className="x1-chart"><h3>Défauts par âge <small>Comparer / choisir</small></h3>{ageGroups.length?<Bars items={ageGroups} label="Taux de défaut par âge" max={ageMax} selected={filters.age} onClick={v=>chooseCredit('age',v)}/>:<div className="x1-empty">Aucun dossier</div>}</div>
-     <div className="x1-chart"><h3>Défauts par plafond <small>Comparer / choisir</small></h3>{limitGroups.length?<Bars items={limitGroups} label="Taux de défaut par plafond" max={limitMax} selected={filters.limit} onClick={v=>chooseCredit('limit',v)}/>:<div className="x1-empty">Aucun dossier</div>}</div>
+    <div className="x1-matrix-section">
+     <div className="x1-subtitle"><h3>Carte des défauts · âge × plafond</h3><span>Cliquer une cellule pour croiser</span></div>
+     <div className="x1-matrix" role="group" aria-label="Matrice taux de défaut âge par plafond">
+      <div className="x1-matrix-head"><span>Âge / plafond</span>{limits.map(l=><span key={l} title={l}>{l}</span>)}</div>
+      {matrix.map(row=><div className="x1-matrix-row" key={row.age}><strong>{row.age}</strong>{row.cells.map(c=>{
+       const active=filters.age===row.age&&filters.limit===c.limit;
+       return <button type="button" key={c.limit} aria-pressed={active} disabled={!c.total} onClick={()=>chooseMatrix(row.age,c.limit)} title={row.age+' · '+c.limit+' : '+fmtInt(c.total)+' dossiers, '+fmtInt(c.defaults)+' défauts, '+(c.total?asPct(c.rate):'aucun dossier')} style={{background:c.total?'rgba(106,144,247,'+(0.13+Math.min(.55,c.rate*.84))+')':undefined}}>{c.total?asPct(c.rate):'—'}</button>
+      })}</div>)}
+     </div>
+     <div className="x1-matrix-foot"><span><i/> Bleu plus intense : taux plus élevé</span><button onClick={()=>{setInspectTab('compare');setExpanded(true)}}>Comparer les tranches <ChevronRight size={13}/></button></div>
     </div>
-    <div className="x1-month-chart"><div className="x1-subtitle"><h3>Retards mensuels</h3><span>Avril–sept. 2005 · mêmes filtres UCI</span></div><div className="x1-month-bars">{monthly.map(m=><div key={m.period} title={m.period+' · '+fmtInt(m.delayed)+' retards / '+fmtInt(m.observations)+' observations'}><b>{m.observations?asPct(m.rate):'—'}</b><span><i style={{height:Math.max(m.rate?2:0,100*m.rate/monthMax)+'%'}}/></span><small>{m.period.slice(-2)}</small></div>)}</div></div>
+    <div className="x1-month-chart"><div className="x1-subtitle"><h3>Retards mensuels</h3><button onClick={()=>{setInspectTab('monthly');setExpanded(true)}}>Voir les 6 mois <Maximize2 size={12}/></button></div><div className="x1-month-bars">{monthly.map(m=><div key={m.period} title={m.period+' · '+fmtInt(m.delayed)+' retards / '+fmtInt(m.observations)+' observations'}><b>{m.observations?asPct(m.rate):'—'}</b><span><i style={{height:Math.max(m.rate?2:0,100*m.rate/monthMax)+'%'}}/></span><small>{m.period.slice(-2)}</small></div>)}</div></div>
    </Card>
    <Card className="x1-fraud-panel" title="Fraude · surveillance simulée" note="PaySim · test chronologique, données indépendantes" extra={<span className="x1-scope-pill">{selectedFraudLabel}</span>}>
-    <div className="x1-mini-kpis">
-     <Kpi label="Alertes" value={fmtInt(fraudValues.alerts)} detail="Test sélectionné" tone="rose"/>
-     <Kpi label="Vraies" value={fmtInt(fraudValues.tp)} detail="Vrais positifs" tone="mint"/>
-     <Kpi label="Précision" value={fraudPrecision===null?'—':asPct(fraudPrecision)} detail="Vraies / alertes" tone="violet"/>
-     <Kpi label="Rappel" value={fraudRecall===null?'—':asPct(fraudRecall)} detail="Vraies / fraudes"/>
+    <div className="x1-comparison x1-fraud-comparison" aria-live="polite">
+     <div><small>Alertes · {selectedFraudLabel}</small><b>{fmtInt(fraudValues.alerts)}</b><small>{fmtInt(fraudValues.tp)} vraies · {fmtInt(fraudValues.fp)} fausses</small></div>
+     <div><small>Précision · sélection / test global</small><b>{fraudPrecision===null?'—':asPct(fraudPrecision)}</b><small>Référence : {asPct(test.confusion.tp/test.alerted)} · Rappel : {fraudRecall===null?'—':asPct(fraudRecall)}</small></div>
+     <button className="x1-compare-open" onClick={()=>{setDetail('fraud');setInspectTab('compare');setExpanded(true)}} aria-label="Inspecter la qualité des alertes"><ChevronRight size={17}/></button>
     </div>
+    <div className="x1-source-axis" role="status">{fraud.channel!=='Tous'?'Type '+fraud.channel+' sélectionné · jours affichés pour le test global':fraud.day!=='Tous'?'Jour J'+fraud.day+' sélectionné · types affichés pour le test global':'Deux axes alternatifs : type OU jour, sans jointure entre les deux.'}</div>
     <div className="x1-fraud-charts">
      <div className="x1-chart"><h3>Alertes par type <small>{fraud.day!=='Tous'?'Vue globale · clic = changer d’axe':'Choisir un type'}</small></h3>
       <div className="x1-horizontal-bars">{fraudTypes.filter(x=>x.alerts>0).map(t=><button key={t.type} aria-pressed={fraud.channel===t.type} onClick={()=>chooseChannel(t.type)} title={t.type+' : '+fmtInt(t.alerts)+' alertes du test global'}>
@@ -114,12 +146,44 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
       <div className="x1-day-bars">{fraudDays.map(d=><button key={d.day} aria-pressed={fraud.day===String(d.day)} onClick={()=>chooseDay(String(d.day))} title={'J'+d.day+' : '+fmtInt(d.alerts)+' alertes du test global'}><b>{d.alerts}</b><span><i style={{height:(100*d.alerts/dayMax)+'%'}}/></span><small>J{d.day}</small></button>)}</div>
      </div>
     </div>
-    <div className="x1-model-note"><Activity size={15}/><span>B3 PR-AUC {format3(b3.holdout_test_metrics.pr_auc)} · B4 PR-AUC {format3(test.pr_auc)} — <strong>tests globaux, non filtrables par segment</strong></span></div>
+    <button className="x1-model-note" onClick={()=>{setInspectTab('models');setExpanded(true)}}><Activity size={15}/><span>Modèles B3 / B4 : PR-AUC {format3(b3.holdout_test_metrics.pr_auc)} / {format3(test.pr_auc)} · <strong>tests globaux non filtrés</strong></span><ChevronRight size={15}/></button>
    </Card>
   </div>
-  <Card className="x1-detail" title="Exploration détaillée" note={detail==='credit'?'Groupes UCI · âges, plafonds et statuts croisés':'PaySim · une dimension disponible par regroupement'} extra={<div className="x1-detail-actions"><div role="tablist" aria-label="Source du tableau"><button role="tab" aria-selected={detail==='credit'} onClick={()=>setDetail('credit')}>Crédit</button><button role="tab" aria-selected={detail==='fraud'} onClick={()=>setDetail('fraud')}>Fraude</button></div><label>Format <select aria-label="Format export X1" value={format} onChange={e=>setFormat(e.target.value as ExportFormat)}><option value="csv">CSV</option><option value="xlsx">XLSX</option></select></label><button onClick={exportCurrent}><Download size={13}/> Exporter</button></div>}>
-   <div className="x1-detail-body"><table><thead><tr>{(detail==='credit'?['Âge','Plafond','Statut','Dossiers','Défauts','Taux défaut']:['Type / jour','Transactions','Fraudes','Alertes','Vraies','Précision']).map(x=><th key={x}>{x}</th>)}</tr></thead><tbody>{rows.map(r=><tr key={r.key}><td>{r.a}</td><td>{r.b}</td><td>{r.c}</td><td>{fmtInt(r.d)}</td><td>{fmtInt(r.e)}</td><td>{r.f===null?'—':asPct(r.f)}</td></tr>)}{!rows.length&&<tr><td colSpan={6}>Aucune donnée dans ce sous-groupe.</td></tr>}</tbody></table></div>
-   <footer className="x1-detail-note"><Info size={13}/><span>{detail==='credit'?fmtInt(creditRows.length)+' groupes UCI filtrés · taux pondérés à partir de dossiers':'PaySim : regroupement par type OU par jour, jamais par les deux'}</span><button onClick={()=>setSelectionInfo(v=>!v)} aria-expanded={selectionInfo}>Limites <Layers3 size={13}/></button>{selectionInfo&&<div role="note" className="x1-limit-popover">UCI et PaySim n'ont aucune clé de jointure. Les déciles B3/B4 ne sont pas reliés aux groupes ; les taux modèles restent sur le test global.</div>}</footer>
-  </Card>
+
+  {filterFeedback&&<div className="x1-selection-feedback" role="status">{filterFeedback}</div>}
+  <section className={'x1-inspector '+(expanded?'x1-inspector-expanded':'')} aria-label="Inspecteur analytique" data-testid="x1-inspector">
+   {expanded&&<button className="x1-inspector-backdrop" aria-label="Fermer inspecteur" onClick={()=>setExpanded(false)}/>}
+   <div className="x1-inspector-surface">
+    <header className="x1-inspector-head">
+     <div><h2>Explorer les relations</h2><small>{inspectionTitle} · {detail==='credit'?'UCI historique 2005':'PaySim · simulation'}</small></div>
+     <div className="x1-inspector-tabs" role="tablist" aria-label="Type d'inspection">
+      {([['data','Données'],['monthly','Retards'],['compare','Comparaison'],['models','Modèles']] as const).map(([id,label])=><button role="tab" key={id} aria-selected={inspectTab===id} onClick={()=>{setInspectTab(id);if(id==='monthly')setDetail('credit')}}>{label}</button>)}
+     </div>
+     <button className="x1-inspector-size" aria-label={expanded?'Réduire l’inspecteur':'Agrandir l’inspecteur'} onClick={()=>setExpanded(v=>!v)}>{expanded?<Minimize2 size={16}/>:<Maximize2 size={16}/>}<span>{expanded?'Réduire':'Agrandir'}</span></button>
+    </header>
+    {inspectTab==='data'&&<>
+     <div className="x1-inspector-data-toolbar"><div role="tablist" aria-label="Source du tableau"><button role="tab" aria-selected={detail==='credit'} onClick={()=>setDetail('credit')}>Crédit</button><button role="tab" aria-selected={detail==='fraud'} onClick={()=>setDetail('fraud')}>Fraude</button></div><label>Format <select aria-label="Format export X1" value={format} onChange={e=>setFormat(e.target.value as ExportFormat)}><option value="csv">CSV</option><option value="xlsx">XLSX</option></select></label><button onClick={exportCurrent}><Download size={14}/> Exporter la sélection</button></div>
+     <div className="x1-inspector-scroll" tabIndex={0} role="region" aria-label="Groupes agrégés filtrés"><table className="x1-inspector-table"><thead><tr>{(detail==='credit'?['Âge','Plafond','Statut','Dossiers','Défauts','Taux défaut']:['Type / jour','Transactions','Fraudes','Alertes','Vraies','Précision']).map(x=><th key={x}>{x}</th>)}</tr></thead><tbody>{rows.map(r=><tr key={r.key} className={selectedRow===r.key?'selected':''} tabIndex={0} onClick={()=>setSelectedRow(selectedRow===r.key?null:r.key)} onKeyDown={e=>{if(e.key==='Enter')setSelectedRow(selectedRow===r.key?null:r.key)}}><td>{r.a}</td><td>{r.b}</td><td>{r.c}</td><td>{fmtInt(r.d)}</td><td>{fmtInt(r.e)}</td><td>{r.f===null?'—':asPct(r.f)}</td></tr>)}{!rows.length&&<tr><td colSpan={6}>Aucune donnée pour cette sélection.</td></tr>}</tbody></table></div>
+     <footer className="x1-inspector-foot"><Info size={13}/>{detail==='credit'?fmtInt(creditRows.length)+' groupes UCI filtrés · taux pondérés par effectif':'PaySim : regroupement par type OU par jour, jamais les deux'}<button onClick={()=>setSelectionInfo(v=>!v)} aria-expanded={selectionInfo}>Limites <Layers3 size={13}/></button>{selectionInfo&&<span className="x1-inspector-limit">Sources indépendantes, pas de jointure UCI/PaySim. Modèles B3/B4 = test global.</span>}</footer>
+    </>}
+    {inspectTab==='monthly'&&<div className="x1-inspector-scroll x1-inspector-evidence"><p>Les six mois décrivent les <strong>mêmes dossiers UCI</strong> observés à plusieurs dates. Âge, plafond et statut s’appliquent simultanément.</p><table className="x1-inspector-table"><thead><tr><th>Mois 2005</th><th>Observations</th><th>Retards</th><th>Taux</th></tr></thead><tbody>{monthly.map(m=><tr key={m.period}><td>{m.period}</td><td>{fmtInt(m.observations)}</td><td>{fmtInt(m.delayed)}</td><td>{m.observations?asPct(m.rate):'—'}</td></tr>)}</tbody></table></div>}
+    {inspectTab==='compare'&&<div className="x1-inspector-scroll x1-compare-panel">
+     {detail==='credit'?<><p>Comparer un segment avec la référence utilisant le <strong>même statut de septembre</strong>, sans moyenner les taux.</p>
+      <div className="x1-inspector-compare-kpis"><div><small>Référence</small><b>{creditReference.total?asPct(creditReference.rate):'—'}</b><small>{fmtInt(creditReference.total)} dossiers</small></div><div><small>Sélection</small><b>{credit.total?asPct(credit.rate):'—'}</b><small>{fmtInt(credit.total)} dossiers</small></div><div><small>Écart</small><b>{difference===null?'—':(difference>0?'+':'')+difference.toFixed(1).replace('.',',')+' pt'}</b><small>Différence descriptive, pas causale</small></div></div>
+      <div className="x1-inspector-compare-charts"><div><h3>Répartition par âge</h3><Bars items={ageGroups} label="Taux de défaut par âge" max={ageMax} selected={filters.age} onClick={v=>chooseCredit('age',v)}/></div><div><h3>Répartition par plafond</h3><Bars items={limitGroups} label="Taux de défaut par plafond" max={limitMax} selected={filters.limit} onClick={v=>chooseCredit('limit',v)}/></div></div>
+      </>:<><p>Regroupement <strong>{selectedFraudLabel}</strong> du test PaySim. Les types et les jours sont deux axes distincts.</p><div className="x1-inspector-compare-kpis"><div><small>Alertes sélectionnées</small><b>{fmtInt(fraudValues.alerts)}</b></div><div><small>Précision</small><b>{fraudPrecision===null?'—':asPct(fraudPrecision)}</b></div><div><small>Rappel</small><b>{fraudRecall===null?'—':asPct(fraudRecall)}</b></div></div></>}
+    </div>}
+    {inspectTab==='models'&&<div className="x1-inspector-scroll x1-model-inspection">
+      <div className="x1-model-toolbar"><div role="group" aria-label="Source de modèles"><button aria-pressed={detail==='credit'} onClick={()=>{setDetail('credit');setModelTab('ranking')}}>Modèles Crédit B3</button><button aria-pressed={detail==='fraud'} onClick={()=>{setDetail('fraud');setModelTab('ranking')}}>Modèles Fraude B4</button></div><div role="tablist" aria-label="Diagnostics des modèles">{(detail==='credit'?[['ranking','Performance'],['deciles','Déciles'],['variables','Variables'],['calibration','Calibration'],['groups','Sous-groupes']]:[['ranking','Performance'],['deciles','Déciles'],['drift','Dérive']] as string[][]).map(([id,label])=><button role="tab" aria-selected={modelTab===id} key={id} onClick={()=>setModelTab(id as ModelTab)}>{label}</button>)}</div></div>
+      <p>Évaluation des <strong>jeux de test globaux</strong> : ces diagnostics ne changent pas lorsque les segments Crédit ou Fraude sont filtrés.</p>
+      {modelTab==='ranking'&&<div className="x1-model-kpis">{(detail==='credit'?[['ROC-AUC',b3.holdout_test_metrics.roc_auc],['PR-AUC',b3.holdout_test_metrics.pr_auc],['Brier',b3.holdout_test_metrics.brier],['Rappel',b3.holdout_test_metrics.recall]]:[['ROC-AUC',test.roc_auc],['PR-AUC',test.pr_auc],['Brier',test.brier],['Rappel',test.recall]] as [string,number][]).map(([label,value])=><div key={label}><small>{label} · test</small><b>{label==='Rappel'?asPct(value):format3(value)}</b></div>)}</div>}
+      {modelTab==='deciles'&&<div className="x1-decile-grid">{(detail==='credit'?b3Deciles:b4Deciles).map(d=><div key={d.decile}><small>D{d.decile}</small><b>{asPct(d.rate)}</b></div>)}</div>}
+      {modelTab==='variables'&&detail==='credit'&&<div className="x1-model-items">{creditDrivers.filter(x=>x.impact>0).slice(0,8).map(x=><div key={x.name}><span>{driverLabels[x.name]||x.name}</span><b>{format3(x.impact)}</b></div>)}<small>Importance par permutation sur validation, non causale.</small></div>}
+      {modelTab==='calibration'&&detail==='credit'&&<table className="x1-inspector-table"><thead><tr><th>Tranche</th><th>Dossiers</th><th>Probabilité prédite</th><th>Défaut observé</th></tr></thead><tbody>{creditCalibration.map(x=><tr key={x.bin}><td>{x.bin}</td><td>{fmtInt(x.n)}</td><td>{asPct(x.predicted)}</td><td>{asPct(x.observed)}</td></tr>)}</tbody></table>}
+      {modelTab==='groups'&&detail==='credit'&&<table className="x1-inspector-table"><thead><tr><th>Âge</th><th>Effectif</th><th>Rappel</th><th>Taux faux positifs</th></tr></thead><tbody>{creditAudit.filter(x=>x.field==='age_band').map(x=><tr key={x.group}><td>{x.group}</td><td>{fmtInt(x.n)}</td><td>{x.suppressed?'Masqué':x.recall===null?'—':asPct(x.recall)}</td><td>{x.suppressed?'Masqué':x.fpr===null?'—':asPct(x.fpr)}</td></tr>)}</tbody></table>}
+      {modelTab==='drift'&&detail==='fraud'&&<div className="x1-model-items">{([['Entraînement',b4.prevalence_by_partition.train],['Validation',b4.prevalence_by_partition.validation],['Test',b4.prevalence_by_partition.test]] as const).map(([label,value])=><div key={label}><span>Prévalence · {label}</span><b>{asPct(value)}</b></div>)}<small>Simulation PaySim · risque de dérive chronologique.</small></div>}
+     </div>}
+   </div>
+  </section>
  </div>;
 }
