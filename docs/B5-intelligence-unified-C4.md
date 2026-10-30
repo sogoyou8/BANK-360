@@ -111,3 +111,16 @@ Un bouton permet de copier ces mesures en texte depuis le navigateur local. Le d
 **Résultat : 62/62 tests Chromium PASS**, contrôles B1/B3 et compilation réussis, [GitHub Actions 41017977297](https://github.com/sogoyou8/BANK-360/actions/runs/41017977297).
 
 **Limite** : le succès en navigateur automatisé ne confirme pas encore le rendu physique sur le PC de l'utilisateur : effectuer un \`git pull\` C4 puis contrôler la page Intelligence en 1440 × 722 et l'option \`?c4diag=1\`. Ne pas fusionner les PR #19/#20 ni déployer sans validation explicite.
+
+
+## C4.13 — Adaptation à la deuxième géométrie locale (1440 × 810 CSS)
+
+**Diagnostic reçu de l'utilisateur** : viewport 1440 × 810, écran 1440 × 810, fenêtre extérieure 1428 × 798, DPR 2, échelle visuelle 1, zoom CSS déclaré 1 ; panneau 310 px, slot 193 px, table 179 px, header 25 px, ligne 22 px ; sept lignes visibles, aucune ligne coupée, **29,9 px manquants** pour neuf lignes, aucun scroll global.
+
+**Cause vérifiée** : le correctif C4.12 était limité à des hauteurs CSS 690–750 px ; le viewport local est passé à 810 px et utilisait donc la grille standard C4. La variation n'est pas imputable au DPR seul.
+
+**C4.13** : nouvelle règle CSS *uniquement* pour les desktops de largeur 1320–1450 px et de hauteur 781–850 px, dans \`web/src/intelligence-workspace.css\`. Elle réduit modérément la hauteur de l'en-tête C4, des KPI et des espacements, puis réalloue la grille vers le panneau Explorateur, avec un header et des filtres compacts. Hauteur des lignes du tableau inchangée ; aucun changement aux pages 01–03, aux données ou aux métriques B3/B4. Les autres tailles conservent les règles antérieures.
+
+**Contrôle automatisé** : \`web/e2e/intelligence-c4.spec.ts\` vérifie neuf lignes entières, aucune ligne coupée, zéro scroll global et l'absence de chevauchement du graphique Modèles, de Brier/Rappel et du pied de panneau à 1440×800, 1440×810, 1440×840 et 1366×810. Test supplémentaire à 1440×810 DPR 2. Captures \`intelligence-c413-*.png\` dans les artefacts B5 de GitHub Actions. **64/64 tests Chromium réussis** à la première exécution de C4.13 ([GitHub Actions 41018938534](https://github.com/sogoyou8/BANK-360/actions/runs/41018938534)).
+
+**À confirmer sur le PC de l'utilisateur** : synchroniser la branche C4, actualiser \`/?c4diag=1\` dans la page Intelligence et relever le nombre de lignes à viewport CSS 1440×810. Aucune fusion des PR #19/#20 ni déploiement avant validation explicite.
