@@ -249,3 +249,53 @@ test('C4.10 — filtres, onglets, recherche et export préservent le découpage 
  await expect.poll(async()=>(await check()).visible).toBeGreaterThanOrEqual(9);
  await noScroll(page);
 });
+
+
+test('C4.11 — diagnostic viewport CSS explicite, actif uniquement sur demande',async({page})=>{
+ await page.setViewportSize({width:1648,height:928});
+ await intelligence(page);
+ await expect(page.getByTestId('iw-viewport-diagnostic')).toHaveCount(0);
+ await page.goto('/?c4diag=1');
+ await page.getByRole('button',{name:'Intelligence',exact:true}).click();
+ const diag=page.getByTestId('iw-viewport-diagnostic');
+ await expect(diag).toBeVisible();
+ await expect(page.getByTestId('iw-css-viewport')).toHaveText('1648 × 928');
+ await expect.poll(async()=>Number(await page.getByTestId('iw-full-rows').textContent())).toBeGreaterThanOrEqual(9);
+ await expect(diag).toContainText('Espace manquant pour 9');
+ await page.screenshot({path:'test-results/intelligence-c411-diagnostic-1648x928.png',fullPage:true});
+ await page.setViewportSize({width:1318,height:742});
+ await expect(page.getByTestId('iw-css-viewport')).toHaveText('1318 × 742');
+ await expect.poll(async()=>{
+  const count=Number(await page.getByTestId('iw-full-rows').textContent());
+  return count>0;
+ }).toBe(true);
+ const reading=await page.locator('.iw-table-window').evaluate(viewport=>{
+  const slot=viewport.parentElement!;
+  const head=viewport.querySelector('thead')!.getBoundingClientRect();
+  const row=viewport.querySelector('tbody tr')!.getBoundingClientRect();
+  const available=slot.getBoundingClientRect().height;
+  const realCount=[...viewport.querySelectorAll('tbody tr')].filter(x=>{
+   const r=x.getBoundingClientRect(),v=viewport.getBoundingClientRect();
+   return r.top>=head.bottom-1&&r.bottom<=v.bottom+1;
+  }).length;
+  return {realCount,shortfall:Math.max(0,Math.ceil(head.height+9*row.height-available))};
+ });
+ expect(Number(await page.getByTestId('iw-full-rows').textContent())).toBe(reading.realCount);
+ if(reading.realCount<9)expect(reading.shortfall).toBeGreaterThan(0);
+ await page.screenshot({path:'test-results/intelligence-c411-diagnostic-1318x742.png',fullPage:true});
+});
+
+test('C4.11 — DPR 125 % sans changement du viewport CSS ne réduit pas le nombre de lignes',async({browser})=>{
+ const context=await browser.newContext({viewport:{width:1648,height:928},deviceScaleFactor:1.25});
+ try{
+  const page=await context.newPage();
+  await page.goto('/?c4diag=1');
+  await page.getByRole('button',{name:'Intelligence',exact:true}).click();
+  await expect(page.getByTestId('iw-css-viewport')).toHaveText('1648 × 928');
+  const resolution=await page.evaluate(()=>({w:innerWidth,h:innerHeight,dpr:devicePixelRatio}));
+  expect(resolution).toEqual({w:1648,h:928,dpr:1.25});
+  await expect.poll(async()=>Number(await page.getByTestId('iw-full-rows').textContent())).toBeGreaterThanOrEqual(9);
+  await expect(page.getByTestId('iw-viewport-diagnostic')).toContainText('1.25');
+  await page.screenshot({path:'test-results/intelligence-c411-dpr125.png',fullPage:true});
+ }finally{await context.close()}
+});
