@@ -38,7 +38,7 @@ Sur desktop (largeur d'au moins 1120 px et hauteur utile d'au moins 720 px), cha
 
 ## Finition R2
 
-Les dix vues utilisent désormais des compositions différentes selon l'activité (synthèse, crédit, risques, fraude, gouvernance, rapports), et non une grille de cartes répétée. Les graphiques quantitatifs affichent zéro et des repères numériques, la série des paiements utilise une échelle démarrant à zéro, et l'écran des modèles distingue explicitement métriques de **test** et comparaisons de **validation**. La calibration met côte à côte score moyen prédit et taux réellement observé. Les contrôles de navigation ont un matériau translucide, les surfaces analytiques sont plus opaques, et le thème clair a été renforcé. La recherche sert exclusivement à accéder à une page.
+Les huit vues utilisent désormais des compositions différentes selon l'activité (synthèse, crédit, risques, fraude, gouvernance, rapports), et non une grille de cartes répétée. Les graphiques quantitatifs affichent zéro et des repères numériques, la série des paiements utilise une échelle démarrant à zéro, et l'écran des modèles distingue explicitement métriques de **test** et comparaisons de **validation**. La calibration met côte à côte score moyen prédit et taux réellement observé. Les contrôles de navigation ont un matériau translucide, les surfaces analytiques sont plus opaques, et le thème clair a été renforcé. La recherche sert exclusivement à accéder à une page.
 
 ## R3 — Finition métier ciblée
 

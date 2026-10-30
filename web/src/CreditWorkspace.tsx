@@ -12,9 +12,9 @@ const toPct=(v:number)=>fmtPct(v,1);
 const codeLabel=(code:string)=>code==='-1'?'−1 · à jour':code==='-2'?'−2 · non précisé':code==='0'?'0 · non précisé':`${code} · ${code} mois`;
 const bucketMatch=(s:string,b:Bucket)=>b==='all'||(b==='minus2'&&s==='-2')||(b==='current'&&s==='-1')||(b==='zero'&&s==='0')||(b==='delayed'&&Number(s)>=1);
 const BUCKETS:{id:Bucket,label:string,color:string}[]=[
- {id:'minus2',label:'Code −2',color:'#69e1d3'},
+ {id:'minus2',label:'−2 · non précisé',color:'#69e1d3'},
  {id:'current',label:'−1 · à jour',color:'#a48afd'},
- {id:'zero',label:'Code 0',color:'#70a8ff'},
+ {id:'zero',label:'0 · non précisé',color:'#70a8ff'},
  {id:'delayed',label:'1–8 · retard',color:'#f28bb6'}
 ];
 function exportCsv(filename:string,rows:Record<string,string|number>[],keys:string[]){

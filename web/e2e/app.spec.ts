@@ -193,3 +193,15 @@ test('Capture de la référence crédit desktop 1440×900 sans panneau tronqué'
  expect(boxes).toHaveLength(6);expect(boxes.every(x=>x.h>=150&&x.bottom<=905)).toBe(true);
  await page.screenshot({path:'test-results/credit-integrated-1440.png',fullPage:true});
 });
+
+test('Les six mois y compris septembre sont intégralement visibles sans scroll interne à 1440 et 1672',async({page})=>{
+ for(const width of [1440,1672]){
+  await page.setViewportSize({width,height:width===1440?900:941});await page.goto('/');await credit(page);
+  const v=await page.locator('.cw-monthtable').evaluate(el=>{
+    const view=el.querySelector('.cw-table-scroll')!.getBoundingClientRect();const last=el.querySelector('tbody tr:last-child')!.getBoundingClientRect();
+    return {scroll:el.querySelector('.cw-table-scroll')!.scrollTop,last:last.bottom,limit:view.bottom};
+  });
+  expect(v.scroll).toBe(0);
+  expect(v.last).toBeLessThanOrEqual(v.limit+1);
+ }
+});

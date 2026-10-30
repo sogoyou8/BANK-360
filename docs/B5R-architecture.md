@@ -1,4 +1,6 @@
-# BANK 360 — B5.R · Refonte UX/UI et cohérence fonctionnelle
+# BANK 360 — B5.R · Architecture historique (avant Crédit unifié)
+
+**Historique :** cette étape décrivait dix pages. Depuis le 30 octobre 2026, le plan Crédit a fusionné trois routes en une page : **8 pages / 6 sections**, voir [B5-credit-unified.md](B5-credit-unified.md). Conserver ce document pour l'évolution de l'architecture.
 
 ## Contrat et périmètre
 

@@ -67,3 +67,6 @@
  .app:has(.credit-workspace) .view-head{height:67px;min-height:67px}
  .app:has(.credit-workspace) .view-head h1{font-size:29px}
 }
+
+/* Six monthly rows must remain legible without scrolling at the reference desktop sizes. */
+@media(min-width:1121px){.cw-monthtable .cw-table-scroll th{padding:6px 5px}.cw-monthtable .cw-table-scroll td{padding:5px 5px}.cw-monthtable .cw-month-foot{padding-top:5px}}
