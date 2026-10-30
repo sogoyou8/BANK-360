@@ -3,7 +3,7 @@ const noMainScroll=async(page:Page)=>{const v=await page.locator('#main-content'
 const credit=async(page:Page)=>{await page.getByRole('button',{name:'Crédit',exact:true}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page','portfolio')};
 const section=async(page:Page,name:string,target?:string)=>{await page.getByRole('button',{name,exact:true}).click();if(target)await page.getByRole('menuitem',{name:new RegExp(target)}).click()};
 
-test('Architecture : huit pages, six sections, une seule vue Crédit et données séparées',async({page})=>{
+test('Architecture : sept pages, six sections, une seule vue Crédit et données séparées',async({page})=>{
  await page.goto('/');await expect(page.getByRole('heading',{name:'Vue d’ensemble'})).toBeVisible();
  await expect(page.locator('.dock-link')).toHaveCount(6);
  await credit(page);await expect(page.getByRole('heading',{name:'Portefeuille & segmentation'})).toBeVisible();
@@ -13,10 +13,11 @@ test('Architecture : huit pages, six sections, une seule vue Crédit et données
  await expect(page.getByText('30 000').first()).toBeVisible();
  await noMainScroll(page);
 });
-test('Mono-écran à 1440×900 : huit routes et crédit trois modes',async({page})=>{
+test('Mono-écran à 1440×900 : sept routes et crédit trois modes',async({page})=>{
  await page.setViewportSize({width:1440,height:900});await page.goto('/');await noMainScroll(page);
  await credit(page);for(const tab of ['Vue globale','Risque','Paiements']){await page.getByRole('tab',{name:tab}).click();await noMainScroll(page)}
- for(const [group,name] of [['Fraude','Fraude'],['Fraude','Alertes'],['Intelligence','Modèles'],['Intelligence','Explorer']]){await section(page,group,name);await noMainScroll(page)}
+ await section(page,'Fraude');for(const mode of ['Vue globale','Détection','Alertes']){await page.getByRole('tab',{name:mode}).click();await noMainScroll(page)}
+ for(const [group,name] of [['Intelligence','Modèles'],['Intelligence','Explorer']]){await section(page,group,name);await noMainScroll(page)}
  await section(page,'Qualité');await noMainScroll(page);await section(page,'Rapports');await noMainScroll(page);
 });
 test('Portefeuille : population officielle, KPI pondérés, six panneaux',async({page})=>{
@@ -138,10 +139,10 @@ test('Navigation depuis accueil vers Risque sélectionne le mode interne',async(
  await expect(page.getByRole('tab',{name:'Risque'})).toHaveAttribute('aria-selected','true');
 });
 test('Fraude, investigations et modèles ne régressent pas',async({page})=>{
- await page.goto('/');await section(page,'Fraude','Fraude');
+ await page.goto('/');await section(page,'Fraude');
  await expect(page.getByText('6 362 620').first()).toBeVisible();
- await expect(page.getByText('8 213').first()).toBeVisible();
- await section(page,'Fraude','Alertes');
+ await expect(page.getByText('790').first()).toBeVisible();
+ await page.getByRole('tab',{name:'Alertes'}).click();
  await expect(page.getByText('1 075').first()).toBeVisible();
  await section(page,'Intelligence','Modèles');
  await expect(page.getByText('0,776').first()).toBeVisible();
@@ -306,4 +307,87 @@ test('C2.2 — three perspectives retain fitted tables and long status list stil
  await sc.evaluate(e=>e.scrollTop=e.scrollHeight);
  const end=await sc.evaluate(e=>({last:e.querySelector('tbody tr:last-child')!.getBoundingClientRect().bottom,limit:e.getBoundingClientRect().bottom}));
  expect(end.last).toBeLessThanOrEqual(end.limit+1);
+});
+
+test('C3 — Fraud has one route, six panels, four true KPI and three perspectives',async({page})=>{
+ await page.setViewportSize({width:1672,height:941});await page.goto('/');
+ await section(page,'Fraude');
+ await expect(page.locator('.fw-panel')).toHaveCount(6);
+ await expect(page.locator('.fw-kpi')).toHaveCount(4);
+ const kpis=await page.locator('.fw-kpi strong').allTextContents();
+ expect(kpis.map(x=>x.replace(/\s/g,''))).toEqual(['6362620','790','413','1075']);
+ for(const tab of ['Vue globale','Détection','Alertes']){
+  await page.getByRole('tab',{name:tab}).click();
+  await expect(page.getByRole('tab',{name:tab})).toHaveAttribute('aria-selected','true');
+  await expect(page.locator('.fw-panel')).toHaveCount(6);
+ }
+ await noMainScroll(page);
+ await page.screenshot({path:'test-results/fraud-c3-1672x941.png',fullPage:true});
+});
+test('C3 — source-derived channels and days reconcile; no individual transactions',async({page})=>{
+ await page.goto('/');await section(page,'Fraude');
+ await expect(page.locator('.fw-day')).toHaveCount(6);
+ await expect(page.locator('.fw-channel-row')).toHaveCount(2);
+ await expect(page.locator('.fw-invest-row')).toHaveCount(2);
+ const days=await page.locator('.fw-trend-labels button b').allTextContents();
+ expect(days.map(v=>Number(v.replace(/\D/g,'')))).toEqual([76,93,147,299,102,73]);
+ await expect(page.locator('.fw-ring')).toHaveAttribute('aria-label',/413 vraies alertes et 377 fausses/);
+ await expect(page.locator('.fw-quality-legend')).toContainText('1 075');
+ const src=await page.locator('.fraud-workspace').innerText();
+ for(const fake of ['TXN_','CUST_','Score modèle','Montant moyen','2025-09-30'])expect(src).not.toContain(fake);
+});
+test('C3 — channel, day, and alert status are never silently joined',async({page})=>{
+ await page.goto('/');await section(page,'Fraude');
+ await page.getByLabel('Canal',{exact:true}).selectOption('TRANSFER');
+ await expect(page.getByLabel('Canal',{exact:true})).toHaveValue('TRANSFER');
+ await expect(page.locator('.fw-ring')).toHaveAttribute('aria-label',/125 vraies alertes et 361 fausses/);
+ await expect(page.locator('.fw-channel-summary')).toContainText('Sélectionne un canal');
+ await page.getByLabel('Jour simulé').selectOption('28');
+ await expect(page.getByLabel('Canal',{exact:true})).toHaveValue('Tous');
+ await expect(page.locator('.fw-ring')).toHaveAttribute('aria-label',/85 vraies alertes et 214 fausses/);
+ await page.getByLabel('Statut alerte').selectOption('tp');
+ await expect(page.locator('.fw-channel-row').first()).toContainText('125');
+ await expect(page.locator('.fw-channel-summary')).toContainText('pas de jointure jour × canal');
+ await page.getByRole('button',{name:'Réinitialiser'}).click();
+ await expect(page.getByLabel('Statut alerte')).toHaveValue('all');
+ await expect(page.locator('.fw-ring')).toHaveAttribute('aria-label',/413 vraies alertes et 377 fausses/);
+});
+test('C3 — aggregation exploration, search, keyboard, and exports',async({page})=>{
+ await page.goto('/');await section(page,'Fraude');
+ await page.getByRole('button',{name:'Canaux',exact:true}).click();
+ await expect(page.locator('.fw-detail-table tbody tr')).toHaveCount(2);
+ await page.getByLabel('Rechercher un agrégat').fill('CASH_OUT');
+ await expect(page.locator('.fw-detail-table tbody tr')).toHaveCount(1);
+ await page.locator('.fw-detail-table tbody tr').first().focus();
+ await page.keyboard.press('Enter');
+ await expect(page.getByLabel('Canal',{exact:true})).toHaveValue('CASH_OUT');
+ const download=page.waitForEvent('download');
+ await page.getByRole('button',{name:'Exporter les canaux en CSV'}).click();
+ const file=await download;
+ expect(file.suggestedFilename()).toContain('canaux');
+ await expect(page.locator('.fw-quality')).toContainText('288');
+});
+test('C3 — compact desktop geometries and mobile theme parity',async({page})=>{
+ for(const [width,height] of [[1672,941],[1440,900],[1366,768]] as const){
+  await page.setViewportSize({width,height});await page.goto('/');await section(page,'Fraude');
+  const result=await page.evaluate(()=>{
+   const main=document.querySelector('#main-content') as HTMLElement;
+   const panels=[...document.querySelectorAll('.fw-panel')].map(el=>{const rect=el.getBoundingClientRect();return{bottom:rect.bottom,height:rect.height,client:(el.querySelector('.fw-panel-body') as HTMLElement).clientHeight,scroll:(el.querySelector('.fw-panel-body') as HTMLElement).scrollHeight}});
+   return{mainScroll:main.scrollHeight-main.clientHeight,overflow:document.documentElement.scrollWidth-innerWidth,panels,viewBottom:main.getBoundingClientRect().bottom}
+  });
+  expect(result.mainScroll,width+'x'+height+' no global scroll').toBeLessThanOrEqual(3);
+  expect(result.overflow,width+'x'+height+' no horizontal overflow').toBeLessThanOrEqual(2);
+  expect(result.panels).toHaveLength(6);
+  for(const p of result.panels){
+   expect(p.height,width+'x'+height+' panel visible').toBeGreaterThanOrEqual(165);
+   expect(p.bottom,width+'x'+height+' panel within main').toBeLessThanOrEqual(result.viewBottom+1);
+  }
+  await page.screenshot({path:'test-results/fraud-c3-'+width+'x'+height+'.png',fullPage:true});
+ }
+ await page.setViewportSize({width:390,height:844});await page.goto('/');await section(page,'Fraude');
+ await expect(page.locator('.fw-panel')).toHaveCount(6);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+ await page.getByRole('button',{name:'Basculer le thème'}).click();
+ await expect(page.locator('html')).toHaveAttribute('data-theme','light');
+ await page.screenshot({path:'test-results/fraud-c3-mobile.png',fullPage:true});
 });
