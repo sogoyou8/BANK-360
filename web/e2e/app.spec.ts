@@ -17,7 +17,7 @@ test('Mono-écran à 1440×900 : six routes et crédit trois modes',async({page}
  await page.setViewportSize({width:1440,height:900});await page.goto('/');await noMainScroll(page);
  await credit(page);for(const tab of ['Vue globale','Risque','Paiements']){await page.getByRole('tab',{name:tab}).click();await noMainScroll(page)}
  await section(page,'Fraude');for(const mode of ['Vue globale','Détection','Alertes']){await page.getByRole('tab',{name:mode}).click();await noMainScroll(page)}
- await section(page,'Intelligence');for(const tab of ['Vue globale','Modèles','Explorer']){await page.getByRole('tab',{name:tab}).click();await noMainScroll(page)}
+ await section(page,'Intelligence');for(const tab of ['Vue globale','Modèles','Explorer']){await page.getByRole('tablist',{name:'Perspectives Intelligence'}).getByRole('tab',{name:tab}).click();await noMainScroll(page)}
  await section(page,'Qualité');await noMainScroll(page);await section(page,'Rapports');await noMainScroll(page);
 });
 test('Portefeuille : population officielle, KPI pondérés, six panneaux',async({page})=>{
