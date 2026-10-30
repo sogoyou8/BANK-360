@@ -29,6 +29,74 @@ function downloadCsv(name:string,rows:Row[],columns:Column[]){
  const anchor=document.createElement('a');anchor.href=uri;anchor.download=name;document.body.append(anchor);anchor.click();anchor.remove();setTimeout(()=>URL.revokeObjectURL(uri),1000);
 }
 function Panel({title,extra,children,className}:{title:string,extra?:React.ReactNode,children:React.ReactNode,className:string}){return <section className={'iw-panel '+className} aria-label={title}><header className="iw-panel-header"><h2>{title}</h2>{extra}</header><div className="iw-panel-content">{children}</div></section>}
+
+type C4ViewportReading={
+ viewport:string;screen:string;outer:string;dpr:number;visualScale:number;cssZoom:string;
+ panelHeight:number;slotHeight:number;tableHeight:number;headerHeight:number;rowHeight:number;
+ visibleRows:number;cutRows:number;neededHeight:number;globalOverflow:number;
+};
+function C4ViewportDiagnostic({tableSlotRef,tableViewportRef}:{tableSlotRef:React.RefObject<HTMLDivElement>,tableViewportRef:React.RefObject<HTMLDivElement>}){
+ const [reading,setReading]=useState<C4ViewportReading|null>(null);
+ const [copied,setCopied]=useState(false);
+ useEffect(()=>{
+  const slot=tableSlotRef.current,viewport=tableViewportRef.current;
+  if(!slot||!viewport)return;
+  const measure=()=>{
+   const panel=viewport.closest('.iw-explorer');
+   const head=viewport.querySelector('thead');
+   const first=viewport.querySelector('tbody tr');
+   if(!panel||!head||!first)return;
+   const outer=viewport.getBoundingClientRect(),headRect=head.getBoundingClientRect();
+   const firstRect=first.getBoundingClientRect();
+   const rows=[...viewport.querySelectorAll('tbody tr')].map(x=>x.getBoundingClientRect());
+   const actual=rows.filter(x=>x.top>=headRect.bottom-1&&x.bottom<=outer.bottom+1).length;
+   const clipped=rows.filter(x=>x.bottom>headRect.bottom+1&&x.top<outer.bottom-1&&x.bottom>outer.bottom+1).length;
+   const headerHeight=headRect.height,rowHeight=firstRect.height,available=slot.getBoundingClientRect().height;
+   setReading({
+    viewport:window.innerWidth+' × '+window.innerHeight,
+    screen:window.screen.width+' × '+window.screen.height,
+    outer:window.outerWidth+' × '+window.outerHeight,
+    dpr:Math.round(window.devicePixelRatio*100)/100,
+    visualScale:Math.round((window.visualViewport?.scale??1)*100)/100,
+    cssZoom:getComputedStyle(document.documentElement).zoom,
+    panelHeight:Math.round(panel.getBoundingClientRect().height),
+    slotHeight:Math.round(available),
+    tableHeight:Math.round(outer.height),
+    headerHeight:Math.round(headerHeight*10)/10,
+    rowHeight:Math.round(rowHeight*10)/10,
+    visibleRows:actual,
+    cutRows:clipped,
+    neededHeight:Math.max(0,Math.ceil((headerHeight+9*rowHeight-available)*10)/10),
+    globalOverflow:Math.round(Math.max(0,document.documentElement.scrollHeight-window.innerHeight))
+   });
+  };
+  measure();
+  const observer=new ResizeObserver(measure);
+  observer.observe(slot);observer.observe(viewport);
+  window.addEventListener('resize',measure);
+  window.visualViewport?.addEventListener('resize',measure);
+  return()=>{observer.disconnect();window.removeEventListener('resize',measure);window.visualViewport?.removeEventListener('resize',measure)};
+ },[tableSlotRef,tableViewportRef]);
+ const payload=reading?'BANK 360 / C4.11 — affichage local\n'+Object.entries(reading).map(([key,value])=>key+': '+value).join('\n'):'Aucune mesure disponible';
+ return <aside className="iw-viewport-diagnostic" aria-label="Diagnostic affichage C4" data-testid="iw-viewport-diagnostic">
+  <div className="iw-diagnostic-title"><strong>Diagnostic C4 · affichage réel</strong><span>Activé par ?c4diag=1</span></div>
+  {reading?<dl>
+   <dt>Fenêtre CSS</dt><dd data-testid="iw-css-viewport">{reading.viewport}</dd>
+   <dt>Écran / fenêtre extérieure</dt><dd>{reading.screen} / {reading.outer}</dd>
+   <dt>DPR / échelle visuelle</dt><dd>{reading.dpr} / {reading.visualScale}</dd>
+   <dt>Zoom CSS déclaré</dt><dd>{reading.cssZoom}</dd>
+   <dt>Panneau / zone utile</dt><dd>{reading.panelHeight} / {reading.slotHeight} px</dd>
+   <dt>En-tête / hauteur ligne</dt><dd>{reading.headerHeight} / {reading.rowHeight} px</dd>
+   <dt>Lignes complètes</dt><dd data-testid="iw-full-rows">{reading.visibleRows}</dd>
+   <dt>Lignes coupées en bas</dt><dd>{reading.cutRows}</dd>
+   <dt>Espace manquant pour 9</dt><dd>{reading.neededHeight} px</dd>
+   <dt>Défilement global</dt><dd>{reading.globalOverflow} px</dd>
+  </dl>:<p>Mesure indisponible</p>}
+  <button type="button" onClick={()=>{void navigator.clipboard.writeText(payload).then(()=>setCopied(true)).catch(()=>setCopied(false))}}>{copied?'Diagnostic copié':'Copier le diagnostic'}</button>
+  <small>Le DPR seul ne permet pas de distinguer zoom navigateur et mise à l'échelle Windows. Ctrl+0 rétablit le zoom navigateur à 100 %.</small>
+ </aside>;
+}
+
 export default function IntelligenceWorkspace({perspective,onPerspective,context,onContext,filters,onFilters,diagnostic,onDiagnostic}:{perspective:IntelligencePerspective,onPerspective:(v:IntelligencePerspective)=>void,context:IntelligenceContext,onContext:(v:IntelligenceContext)=>void,filters:CreditFilters,onFilters:(v:CreditFilters)=>void,diagnostic:DiagnosticView,onDiagnostic:(v:DiagnosticView)=>void}){
  const [selectedDecile,setSelectedDecile]=useState<number|null>(null);
  const [selectedRow,setSelectedRow]=useState<string|null>(null);
@@ -131,5 +199,6 @@ export default function IntelligenceWorkspace({perspective,onPerspective,context
    <div className="iw-explorer-footer" aria-live="polite">{detail?<><CheckCircle2 size={14}/>Groupe sélectionné : {columns.slice(0,3).map(col=>display(detail[col.key],col.unit)).join(' · ')} · {columns.slice(-2).map(col=>col.label+' '+display(detail[col.key],col.unit)).join(' · ')}</>:<><Info size={13}/>{isCredit?'196 groupes UCI au total · taux pondérés par effectif':isDays?'Six jours simulés · aucune date calendaire':'Types PaySim · test chronologique'}</>}<span>Export CSV des lignes visibles</span></div>
   </Panel>
  </div>
+ {new URLSearchParams(window.location.search).get('c4diag')==='1'&&<C4ViewportDiagnostic tableSlotRef={tableSlotRef} tableViewportRef={tableViewportRef}/>}
  </div>;
 }
