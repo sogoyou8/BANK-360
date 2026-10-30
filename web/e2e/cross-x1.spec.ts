@@ -49,11 +49,11 @@ test('X1 — PaySim channel and day are EXCLUSIVE (never fake joint dimensions)'
  await page.getByLabel('Type Analyse 360').selectOption('TRANSFER');
  await expect(page.locator('.x1-summary>div').nth(3)).toContainText('486');
  await expect(page.getByLabel('Jour Analyse 360')).toHaveValue('Tous');
- await expect(page.locator('.x1-fraud-panel')).toContainText('non filtrable par type');
+ await expect(page.locator('.x1-fraud-panel')).toContainText('clic = changer d\'axe');
  await page.getByLabel('Jour Analyse 360').selectOption('28');
  await expect(page.getByLabel('Type Analyse 360')).toHaveValue('Tous');
  await expect(page.locator('.x1-summary>div').nth(3)).toContainText('299');
- await expect(page.locator('.x1-fraud-panel')).toContainText('non filtrable par jour');
+ await expect(page.locator('.x1-fraud-panel')).toContainText('clic = changer d\'axe');
  await expect(page.locator('.x1-model-note')).toContainText('tests globaux, non filtrables');
  await expect(page.getByRole('tab',{name:'Crédit'})).toHaveAttribute('aria-selected','true');
  await page.getByRole('tab',{name:'Fraude'}).click();
@@ -113,4 +113,29 @@ test('X1 — main geometry fits, controls are visible, and mobile remains scroll
  await expect(page.locator('.x1-filterrail')).toBeVisible();
  await expect(page.locator('.x1-detail')).toBeVisible();
  await page.screenshot({path:'test-results/x1-analysis-mobile-390x844.png',fullPage:true});
+});
+
+
+test('X1 — comparison dimensions stay visible after self-filter, while both risk models remain global',async({page})=>{
+ await openX1(page);
+ const age=page.getByRole('group',{name:'Taux de défaut par âge'});
+ const plaf=page.getByRole('group',{name:'Taux de défaut par plafond'});
+ await expect(age.getByRole('button')).toHaveCount(5);
+ await expect(plaf.getByRole('button')).toHaveCount(5);
+ const metrics=await page.locator('.x1-model-note').innerText();
+ await age.getByRole('button').first().click();
+ await expect(page.getByLabel('Âge Analyse 360')).toHaveValue('18-29');
+ await expect(age.getByRole('button')).toHaveCount(5);
+ await expect(plaf.getByRole('button')).toHaveCount(5);
+ await plaf.getByRole('button').nth(2).click();
+ await expect(page.getByLabel('Plafond Analyse 360')).toHaveValue('100k-199k');
+ await expect(age.getByRole('button')).toHaveCount(5);
+ await expect(page.locator('.x1-model-note')).toHaveText(metrics);
+ // The real PaySim scope is independent from the UCI credit subset.
+ await expect(page.locator('.x1-summary>div').nth(3)).toContainText('790');
+ await page.locator('.x1-horizontal-bars').getByRole('button',{name:'TRANSFER'}).click();
+ await expect(page.getByLabel('Type Analyse 360')).toHaveValue('TRANSFER');
+ await page.locator('.x1-day-bars').getByRole('button',{name:/J28/}).click();
+ await expect(page.getByLabel('Type Analyse 360')).toHaveValue('Tous');
+ await expect(page.getByLabel('Jour Analyse 360')).toHaveValue('28');
 });
