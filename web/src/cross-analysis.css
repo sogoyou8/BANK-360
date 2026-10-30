@@ -325,3 +325,18 @@
  .x1-model-toolbar>div{overflow-x:auto;max-width:100%}
  .x1-inspector-size span{display:none}
 }
+
+
+/* X1.5 — evidence details are readable and measurable, not a bare source link. */
+.x1-proof-row[aria-expanded=true]{background:#2d4f856e;border-color:#8ab7fa90;align-items:flex-start}
+.x1-proof-details{display:grid;gap:5px;padding-top:9px;margin-top:6px;border-top:1px solid #95afe94a}
+.x1-proof-details em{font-style:normal;font-size:10px;line-height:1.4;white-space:normal;color:#c8dafa;overflow-wrap:anywhere}
+.x1-proof-details strong{color:#9dd9ff;font-weight:700;margin-right:7px}
+.x1-gov-quality .x1-gov-rows{justify-content:flex-start}
+.x1-gov-rows:has(.x1-proof-row[aria-expanded=true]){overflow-y:auto}
+.x1-gov-banner>span small{overflow-wrap:anywhere}
+@media(min-width:901px) and (max-height:820px){
+ .x1-gov-banner>span{min-width:110px}
+ .x1-gov-quality .x1-proof-details{gap:3px}
+ .x1-proof-row[aria-expanded=true]{padding:7px}
+}
