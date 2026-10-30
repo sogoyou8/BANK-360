@@ -98,3 +98,16 @@ Un bouton permet de copier ces mesures en texte depuis le navigateur local. Le d
 **Protocole local** : ouvrir \`http://127.0.0.1:5174/?c4diag=1\`, aller dans Intelligence, relever les mesures ou cliquer sur « Copier le diagnostic », puis essayer \`Ctrl+0\` dans le navigateur et comparer les deux relevés. Le DPR ne doit pas être assimilé automatiquement à un zoom de navigateur. En cas de viewport réellement inférieur aux dimensions de la cible, conserver le design et le nombre de lignes physiquement disponibles ; en cas de 1648×928 CSS et de moins de neuf lignes, inspecter l'espace manquant indiqué pour effectuer une correction locale fondée sur des mesures.
 
 **Aucune fusion de PR et aucun déploiement.** Les pages 01–03, les métriques B3/B4 et les données agrégées restent inchangées. PR #20 toujours dépendante de la PR #19.
+
+
+## C4.12 — Correction fondée sur les mesures locales (30 octobre 2026)
+
+**Observation utilisateur C4.11, viewport CSS 1440 × 722** : DPR 2, scale visuelle 1, zoom CSS déclaré 1. Panneau Explorateur 251 px, slot 138 px, tableau aligné 122 px ; en-tête 22 px, ligne 20 px ; **5 lignes complètes** et zéro coupure. Il manque **63,9 px** de hauteur de slot pour atteindre neuf lignes. Le DPR seul ne permet pas d'attribuer cette différence au zoom navigateur.
+
+**Adaptation ciblée** : nouvelle règle CSS \`@media (min-width:1320px) and (max-width:1450px) and (min-height:690px) and (max-height:750px)\`. Le cockpit Intelligence compacte légèrement son en-tête, les KPI, ses espacements et la hauteur non analytique des panneaux, puis réalloue la grille vers l'Explorateur. Conserve les données, les polices du tableau, le scroll par ligne entière, le pied du panneau, les onglets et les deux mini-KPI sans chevauchement. Le rendu hors de cette plage reste inchangé.
+
+**Tests ajoutés** : Playwright mesure les neuf lignes complètes, l'absence de ligne coupée et de scroll global, l'absence de collision dans Diagnostics et les dimensions des panneaux à **1440 × 722**, **1440 × 740** et **1366 × 720**. Un deuxième test réplique **1440 × 722 CSS à DPR=2**. Captures sous \`test-results/intelligence-c412-*.png\` dans l'artefact \`bank360-b5-browser-evidence\`.
+
+**Résultat : 62/62 tests Chromium PASS**, contrôles B1/B3 et compilation réussis, [GitHub Actions 41017977297](https://github.com/sogoyou8/BANK-360/actions/runs/41017977297).
+
+**Limite** : le succès en navigateur automatisé ne confirme pas encore le rendu physique sur le PC de l'utilisateur : effectuer un \`git pull\` C4 puis contrôler la page Intelligence en 1440 × 722 et l'option \`?c4diag=1\`. Ne pas fusionner les PR #19/#20 ni déployer sans validation explicite.
