@@ -342,7 +342,7 @@ test('C3 — channel, day, and alert status are never silently joined',async({pa
  await expect(page.getByLabel('Canal',{exact:true})).toHaveValue('TRANSFER');
  await expect(page.locator('.fw-ring')).toHaveAttribute('aria-label',/125 vraies alertes et 361 fausses/);
  await expect(page.locator('.fw-channel-summary')).toContainText('Sélectionne un canal');
- await page.getByLabel('Jour simulé').selectOption('28');
+ await page.getByLabel('Jour simulé',{exact:true}).selectOption('28');
  await expect(page.getByLabel('Canal',{exact:true})).toHaveValue('Tous');
  await expect(page.locator('.fw-ring')).toHaveAttribute('aria-label',/85 vraies alertes et 214 fausses/);
  await page.getByLabel('Statut alerte').selectOption('tp');
