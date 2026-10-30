@@ -169,3 +169,89 @@ test('C5.8 — reference 1648×928 Aurora rails, banner and panels align with ap
  expect(Math.abs(g.lower.bottom-g.left.bottom)).toBeLessThanOrEqual(2);
  await page.screenshot({path:'test-results/quality-c58-target-1648x928.png',fullPage:true});
 });
+
+test('C5.9.1 — filtered scopes keep compact, readable cards with a precise scope note',async({page})=>{
+ for(const [width,height] of [[1648,928],[1440,810],[1366,768],[1280,720]] as const){
+  await page.setViewportSize({width,height});await openQuality(page);
+  const group=page.getByRole('group',{name:'Sources analysées'});
+  for(const [scope,count,needle] of [['Crédit',3,'UCI 2005'],['Fraude',2,'PaySim simulées']] as const){
+   await group.getByRole('button',{name:scope,exact:true}).click();
+   await expect(page.locator('.qw-check-card')).toHaveCount(count);
+   await expect(page.getByTestId('quality-scope-note')).toContainText(needle);
+   const g=await page.evaluate(()=>{
+    const p=document.querySelector('.qw-checks-panel')!;
+    const cards=[...document.querySelectorAll('.qw-check-card')].map(x=>x.getBoundingClientRect());
+    const source=document.querySelector('.qw-source-card')!.getBoundingClientRect();
+    const pbox=p.getBoundingClientRect(),note=document.querySelector('.qw-scope-note')!.getBoundingClientRect();
+    return {heights:cards.map(x=>x.height),sourceHeight:source.height,firstTop:cards[0].top,lastBottom:cards.at(-1)!.bottom,noteTop:note.top,noteBottom:note.bottom,
+     panelBottom:pbox.bottom,overflow:p.scrollHeight-p.clientHeight,global:document.documentElement.scrollHeight-innerHeight};
+   });
+   expect(Math.max(...g.heights)-Math.min(...g.heights),'uniform cards').toBeLessThanOrEqual(1);
+   expect(g.heights.every(h=>h>=50&&h<=105),'cards must neither stretch nor collapse at '+width+'x'+height).toBe(true);
+   expect(g.sourceHeight,'single source must not stretch excessively').toBeLessThanOrEqual(105);
+   expect(g.noteTop,'note below final card').toBeGreaterThanOrEqual(g.lastBottom-1);
+   expect(g.noteBottom,'note inside panel').toBeLessThanOrEqual(g.panelBottom+1);
+   expect(g.overflow,'no internal clipping').toBeLessThanOrEqual(2);
+   expect(g.global,'no global scrolling').toBeLessThanOrEqual(3);
+   await page.screenshot({path:'test-results/quality-c59-'+scope.toLowerCase()+'-'+width+'x'+height+'.png',fullPage:true});
+  }
+ }
+});
+
+test('C5.9.2 — each perspective changes meaningful source-backed content inside the same cockpit',async({page})=>{
+ for(const [width,height] of [[1648,928],[1440,810],[1280,720]] as const){
+  await page.setViewportSize({width,height});await openQuality(page);
+  const tabs=page.getByRole('tablist',{name:'Perspectives Qualité'});
+  for(const [tab,focus,expected] of [
+   ['Contrôles','quality-controls-focus','critère, la mesure et la source'],
+   ['Sources','quality-sources-focus','sans rapprochement de données individuelles'],
+   ['Limites','quality-limits-focus','aucun usage bancaire opérationnel']
+  ] as const){
+   await tabs.getByRole('tab',{name:tab}).click();
+   await expect(page.getByTestId(focus)).toContainText(expected);
+   const g=await page.evaluate(()=>{
+    const bounds=(s:string)=>document.querySelector(s)!.getBoundingClientRect();
+    const panels=[...document.querySelectorAll('.qw-panel')].map(e=>({scroll:e.scrollHeight-e.clientHeight,box:e.getBoundingClientRect()}));
+    const footer=bounds('.statusline'),root=bounds('.qw-root');
+    return {scroll:document.querySelector('#main-content')!.scrollHeight-document.querySelector('#main-content')!.clientHeight,
+      total:document.documentElement.scrollHeight-innerHeight,overflowX:document.documentElement.scrollWidth-innerWidth,
+      panels:panels.map(x=>({scroll:x.scroll,bottom:x.box.bottom,top:x.box.top})),rootBottom:root.bottom,footerTop:footer.top};
+   });
+   expect(g.scroll,'page stays mono-screen '+width+'x'+height+' '+tab).toBeLessThanOrEqual(3);
+   expect(g.total).toBeLessThanOrEqual(3);
+   expect(g.overflowX).toBeLessThanOrEqual(3);
+   expect(g.rootBottom).toBeLessThanOrEqual(g.footerTop+3);
+   for(const p of g.panels){expect(p.scroll,'panel content not clipped '+tab+' '+width+'x'+height).toBeLessThanOrEqual(3);}
+   await page.screenshot({path:'test-results/quality-c59-'+tab.toLowerCase()+'-'+width+'x'+height+'.png',fullPage:true});
+  }
+  await tabs.getByRole('tab',{name:'Vue globale'}).click();
+  await expect(page.getByTestId('quality-controls-focus')).toHaveCount(0);
+  await expect(page.getByTestId('quality-sources-focus')).toHaveCount(0);
+  await expect(page.getByTestId('quality-limits-focus')).toHaveCount(0);
+ }
+});
+
+test('C5.9.3 — evidence inspection traps keyboard focus, restores trigger and never invents a record',async({page})=>{
+ await page.setViewportSize({width:1440,height:810});await openQuality(page);
+ const opener=page.getByRole('button',{name:'Inspecter le contrôle Historique de paiement'});
+ await opener.focus();await opener.click();
+ const dialog=page.getByRole('dialog',{name:'Historique de paiement'});
+ await expect(dialog).toBeVisible();
+ await expect(dialog).toContainText('uci350_payment_months.csv');
+ await expect(dialog).toContainText('180 000 observations');
+ await expect(dialog).toContainText('30 000 par mois');
+ await expect(dialog).toContainText('pas 180 000 clients distincts');
+ const closeTop=dialog.getByRole('button',{name:'Fermer le détail'});
+ const closeBottom=dialog.getByRole('button',{name:'Fermer l’inspection'});
+ await expect(closeTop).toBeFocused();
+ await page.keyboard.press('Shift+Tab');await expect(closeBottom).toBeFocused();
+ await page.keyboard.press('Tab');await expect(closeTop).toBeFocused();
+ await page.screenshot({path:'test-results/quality-c59-evidence-dialog-1440x810.png',fullPage:true});
+ await closeBottom.click();await expect(dialog).toHaveCount(0);
+ await expect(opener).toBeFocused();
+ await opener.click();await page.keyboard.press('Escape');await expect(dialog).toHaveCount(0);
+ await expect(opener).toBeFocused();
+ await opener.click();
+ await page.locator('.qw-dialog-layer').click({position:{x:5,y:5}});
+ await expect(dialog).toHaveCount(0);
+});
