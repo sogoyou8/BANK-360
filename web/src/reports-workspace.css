@@ -96,6 +96,18 @@
 :root[data-theme=light] .rw-export-copy span,:root[data-theme=light] .rw-method-card small,:root[data-theme=light] .rw-panel-title p,:root[data-theme=light] .rw-export-bottom,:root[data-theme=light] .rw-preferences-list small{color:#4d6388}
 :root[data-theme=light] .rw-banner{background:#d9f8ef;color:#1b5a52}
 :root[data-theme=light] .rw-banner h2,:root[data-theme=light] .rw-banner-metrics strong,:root[data-theme=light] .rw-banner-metrics b,:root[data-theme=light] .rw-banner-metrics small,:root[data-theme=light] .rw-banner p{color:#245f58}
+/* C6.1 — Exact Aurora target geometry on wide desktop; never affects pages 01–05. */
+@media(min-width:1500px){
+ .app:has(.rw-root) .app-layout{padding-left:17px;padding-right:22px;gap:23px}
+ .app:has(.rw-root) .nav-dock{width:87px;min-width:87px}
+ .app:has(.rw-root) .dock-link{width:57px;height:57px}
+}
+@media(min-width:1500px) and (min-height:851px){
+ .rw-header{height:164px;min-height:164px}
+ .rw-heading-row{padding-top:10px}
+ .rw-grid{grid-template-rows:minmax(0,1.4fr) minmax(0,1fr)}
+ .rw-export-panel .rw-panel-title{min-height:89px;flex-basis:89px}
+}
 @media(max-height:850px) and (min-width:901px){
  .rw-root{gap:8px}
  .rw-header{height:126px;min-height:126px;gap:5px}
