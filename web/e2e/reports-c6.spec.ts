@@ -197,3 +197,27 @@ test('C6.1 — approved Aurora reference keeps dock rails and balanced content a
  expect(g.preferences.y,'preferences below methodology').toBeGreaterThan(g.method.bottom);
  await page.screenshot({path:'test-results/reports-c61-reference-1672x941.png',fullPage:true});
 });
+
+
+test('C6.2 — 1648x928 approved Aurora target keeps 54/46 panel balance and original footer',async({page})=>{
+ await page.setViewportSize({width:1648,height:928});await openReports(page);
+ const g=await page.evaluate(()=>{
+  const bounds=(q:string)=>document.querySelector(q)!.getBoundingClientRect();
+  const a=bounds('.rw-export-panel'),b=bounds('.rw-method-panel'),c=bounds('.rw-preferences-panel'),
+   banner=bounds('.rw-banner'),footer=bounds('.statusline'),main=document.querySelector('#main-content')!;
+  return {a:{x:a.x,width:a.width,top:a.top,bottom:a.bottom},b:{x:b.x,width:b.width,top:b.top,bottom:b.bottom},
+   c:{top:c.top,bottom:c.bottom},banner:{x:banner.x,top:banner.top,bottom:banner.bottom},
+   footerTop:footer.top,scroll:main.scrollHeight-main.clientHeight,overall:document.documentElement.scrollHeight-innerHeight};
+ });
+ expect(Math.abs(g.banner.x-133),'left rail x').toBeLessThanOrEqual(5);
+ expect(Math.abs(g.banner.top-251),'banner vertical reference').toBeLessThanOrEqual(12);
+ expect(Math.abs(g.a.top-357),'panels vertical reference').toBeLessThanOrEqual(12);
+ expect(g.a.width/g.b.width,'left/right column ratio').toBeGreaterThan(1.15);
+ expect(g.a.width/g.b.width,'left/right column ratio').toBeLessThan(1.25);
+ expect(g.b.x-g.a.x-g.a.width,'card gap').toBeGreaterThanOrEqual(9);
+ expect(g.a.bottom).toBeLessThanOrEqual(g.footerTop+1);
+ expect(g.c.bottom).toBeLessThanOrEqual(g.footerTop+1);
+ expect(g.scroll).toBeLessThanOrEqual(3);
+ expect(g.overall).toBeLessThanOrEqual(3);
+ await page.screenshot({path:'test-results/reports-c62-target-1648x928.png',fullPage:true});
+});
