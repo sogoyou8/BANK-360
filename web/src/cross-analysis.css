@@ -411,7 +411,13 @@
    The full inspector remains available through Agrandir (same page, same state). */
 @media(min-width:901px) and (max-height:750px){
  .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-scroll{
-  overflow:hidden;
+  overflow:hidden;position:relative;
+ }
+ .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-scroll:has(.x1-inspector-table)::after{
+  content:"Agrandir pour consulter les lignes complètes";
+  position:absolute;left:11px;right:11px;top:30px;
+  padding:3px 8px;color:#a7c9f7;background:#173567;
+  border:1px solid #769fe35a;border-radius:5px;text-align:center;font-size:10px;
  }
  .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table tbody{
   visibility:hidden;
