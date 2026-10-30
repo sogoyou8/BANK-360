@@ -83,6 +83,14 @@ export default function ReportsWorkspace({filters,onResetFilters,theme,onToggleT
  };
  const sourceLabel=scope==='all'?'UCI historique 2005 et PaySim simulé':scope==='credit'?'UCI · données historiques 2005':'PaySim · données entièrement simulées';
  const contextNote=scope==='all'?'Exports calculés sur des sources indépendantes, jamais jointes.':scope==='credit'?'Les exports Crédit utilisent les filtres d’âge, de plafond et de statut septembre.':'Les alertes PaySim sont agrégées et ne représentent pas des transactions bancaires réelles.';
+ const contextDetails=scope==='credit'?
+  {title:'Périmètre Crédit',description:'UCI · Taïwan 2005 · groupes historiques, sans dossiers individuels',
+   meta:[{label:'Lignes exportables',value:fmtInt(exportItems[0].rows.length+exportItems[1].rows.length)},
+    {label:'Filtres',value:anyCreditFilter?'Sélection de crédit active':'Toutes les tranches'}]}:
+  scope==='fraud'?
+  {title:'Périmètre Fraude',description:'PaySim · simulation · résultats agrégés du test chronologique',
+   meta:[{label:'Lignes exportables',value:fmtInt(exportItems[2].rows.length)},
+    {label:'Source',value:'Rapport B4'}]}:null;
  return <section className={'rw-root rw-perspective-'+perspective+' rw-scope-'+scope} aria-label="Rapports et préférences" data-testid="reports-workspace">
   <header className="rw-header">
    <div className="rw-heading-row">
@@ -106,6 +114,11 @@ export default function ReportsWorkspace({filters,onResetFilters,theme,onToggleT
     <div className={'rw-export-list rw-export-count-'+exportsVisible.length}>
      {exportsVisible.map(item=><ExportCard key={item.id} item={item} format={formats[item.id]} onFormat={f=>setFormats(v=>({...v,[item.id]:f}))} onExport={()=>onDownload(item)}/>)}
     </div>
+    {contextDetails&&<aside className="rw-context-summary" data-testid="reports-context-summary" aria-label="Périmètre des exports sélectionnés">
+     <div className="rw-context-heading"><Info size={17}/><strong>{contextDetails.title}</strong></div>
+     <p>{contextDetails.description}</p>
+     <div className="rw-context-meta">{contextDetails.meta.map(entry=><span key={entry.label}><small>{entry.label}</small><b>{entry.value}</b></span>)}</div>
+    </aside>}
     <div className="rw-export-bottom"><Info size={17}/><span>{perspective==='exports'?'Formats réels : CSV UTF-8 et XLSX Open XML. '+contextNote:'Les exports respectent les filtres du contexte sélectionné. '+contextNote}</span></div>
     <span className="rw-message" role="status" aria-live="polite">{message}</span>
    </section>
