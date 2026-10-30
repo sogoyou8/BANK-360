@@ -10,7 +10,7 @@
 - [x] **B2 — Power BI Credit Risk : TERMINÉ ET RECETTÉ (28/10/2026)**. PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels, CI réussie et validation visuelle/interactive Power BI Desktop sur captures et vidéos. Les indicateurs sectoriels EBA restent un chantier distinct.
 - [x] **B3 — Credit Risk Analytics : TERMINÉ (28/10/2026)**. Étude de prédiction de défaut historique, trois approches comparées, train/validation/test 18k/6k/6k, audit de biais descriptifs et résultats agrégés ; aucun scoring bancaire réel.
 - [x] **B4 — Fraud Analytics : TERMINÉ (28/10/2026), simulation PaySim uniquement**. 6 362 620 transactions simulées, modèles comparés, validation chronologique, métriques, contrôles de fuite, déciles et audits d'alertes. Aucune décision, aucun scoring réel ou déploiement.
-- [x] **B5 — Cockpit Web React : ÉVOLUTION CRÉDIT UNIFIÉ (30/10/2026)**. **8 pages dans 6 sections** : les anciennes pages Portefeuille, Risque et Paiements sont réunies dans une seule vue Crédit à trois perspectives internes et six modules liés ; design glass/neumorphism, mono-écran desktop et tests GitHub. **Validation visuelle locale et publication encore ouvertes.**
+- [x] **B5 — Cockpit Web React : CRÉDIT UNIFIÉ RECETTÉ / C3 FRAUDE EN REVUE (30/10/2026)**. Page Crédit figée après validation locale ; branche C3 proposée à **7 pages / 6 sections**, avec Fraude & alertes en une seule vue à trois perspectives, six panneaux et seuls agrégats PaySim vérifiés. **PR C3 à valider visuellement ; aucune publication.**
 - [ ] B6 : finalisation et portfolio
 
 ### Recette B1 sur données historiques réelles
@@ -101,13 +101,13 @@ python -m bank360 validate --db examples/demo-output/data/bank360.sqlite
 
 ## B5 — Application Web Aurora Spatial Atlas · refonte B5.R
 
-- [Architecture Crédit unifié](docs/B5-credit-unified.md) : 8 pages / 6 sections, une page Crédit interactive avec filtres croisés, statut septembre, six mois historiques et exports. L'[architecture B5.R historique](docs/B5R-architecture.md) décrivait l'étape précédente à dix pages.
+- [Architecture Crédit unifié](docs/B5-credit-unified.md) et [Fraude unifiée C3](docs/B5-fraud-unified-C3.md) : 7 pages / 6 sections dans la branche C3, une page Crédit interactive avec filtres croisés, statut septembre, six mois historiques et exports. L'[architecture B5.R historique](docs/B5R-architecture.md) décrivait l'étape précédente à dix pages.
 - Interface sans indicateurs fictifs d'activité temps réel, sans références aux étapes de développement, aucune géolocalisation client ; données historiques UCI et simulations PaySim distinctes.
 
 ## B5 — Application Web Aurora Spatial Atlas
 
 - **Source :** [web/](web/) · [Cadrage et commandes](docs/B5-implementation.md) · [Recette technique](docs/B5-validation-finale.md).
-- **8 pages intégrées** : Vue d'ensemble ; Crédit unifié (Portefeuille, Risque et Paiements en trois perspectives) ; Détection de fraude ; Analyse des alertes ; Modèles & performance ; Explorateur ; Qualité & traçabilité ; Rapports & préférences. **6 grandes sections fixes**.
+- **7 pages proposées en C3 (sous réserve de fusion)** : Vue d'ensemble ; Crédit unifié (Portefeuille, Risque et Paiements en trois perspectives) ; Fraude & alertes unifiées (Vue globale, Détection et Alertes) ; Modèles & performance ; Explorateur ; Qualité & traçabilité ; Rapports & préférences. **6 grandes sections fixes**.
 - **Identité** : Aurora + Spatial Workspace + Atlas (interface sombre vitrée, option claire, design responsive et panneaux contextuels). Aucun faux graphique temps réel ni point géographique inventé.
 - **Données intégrées à la compilation** : CSV agrégés B2 (UCI historiques) et JSON/CSV B3/B4 (PaySim simulé) ; sources séparées, aucun dossier ni transaction individuelle publiés.
 - **CI :** [build TypeScript + test données + 5 scénarios Playwright réussis](https://github.com/sogoyou8/BANK-360/actions/runs/40710999940), y compris **prévisualisation HTML autonome testée hors ligne**.
