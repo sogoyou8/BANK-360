@@ -79,3 +79,22 @@ Le **gel définitif de C4** attend la recette visuelle locale et l'approbation e
 **Résultat confirmé : 58/58 tests Chromium réussis**, plus les workflows B1 et B3 réussis, [run GitHub Actions 41010207008](https://github.com/sogoyou8/BANK-360/actions/runs/41010207008). Le premier passage C4.10 avait révélé un décalage fractionnaire au scroll maximal (57/58) ; une correction du calcul de hauteur a abouti à 58/58.
 
 **Statut :** C4.10 terminé techniquement. La PR #20 reste ouverte, empilée sur la branche C3 / PR #19 ; aucune fusion ni aucun déploiement. Gel uniquement après approbation visuelle locale explicite.
+
+
+## C4.11 — Mesurer le viewport réel avant tout nouvel ajustement CSS
+
+**Contexte.** Sur les deux captures de revue, l'image locale mesure 2048×1152 pixels, contre 1672×941 pour la cible. Ces dimensions physiques ne révèlent pas à elles seules la taille du viewport CSS, ni le zoom du navigateur et la mise à l'échelle Windows. Le passage C4.10 avait déjà confirmé au moins neuf lignes complètes à 1648×928 en Chromium. **Ne pas imposer une réduction arbitraire des polices ou hauteurs de panneaux sans une mesure locale.**
+
+**Implémentation ciblée.** Un diagnostic visuel opt-in s'ouvre dans le cockpit Intelligence lorsque l'URL comporte \`?c4diag=1\`, sans changer l'interface normale. Il mesure :
+- viewport CSS (\`innerWidth × innerHeight\`) ; écran et taille extérieure ;
+- \`devicePixelRatio\`, \`visualViewport.scale\` et zoom CSS déclaré (ces valeurs ne permettent pas d'isoler à elles seules le zoom navigateur du zoom Windows) ;
+- hauteurs du panneau Explorateur, de son slot, de la table, de l'en-tête et d'une ligne ;
+- lignes intégralement visibles, lignes partiellement coupées, et pixels supplémentaires nécessaires à neuf lignes ;
+- éventuel défilement global.
+Un bouton permet de copier ces mesures en texte depuis le navigateur local. Le diagnostic ne s'affiche pas dans les autres pages ni sans le paramètre.
+
+**Recette ajoutée.** Les tests C4.11 vérifient l'absence d'interface diagnostique dans l'application normale, les relevés réels à 1648×928 et 1318×742, et un contexte Chromium avec \`deviceScaleFactor=1.25\` tout en gardant un viewport CSS inchangé. **60/60 tests Chromium réussis**, plus les contrôles B1/B3 réussis : [GitHub Actions 41011906097](https://github.com/sogoyou8/BANK-360/actions/runs/41011906097). Trois captures de diagnostic sont dans l'artefact \`bank360-b5-browser-evidence\` : \`intelligence-c411-diagnostic-1648x928.png\`, \`intelligence-c411-diagnostic-1318x742.png\` et \`intelligence-c411-dpr125.png\`.
+
+**Protocole local** : ouvrir \`http://127.0.0.1:5174/?c4diag=1\`, aller dans Intelligence, relever les mesures ou cliquer sur « Copier le diagnostic », puis essayer \`Ctrl+0\` dans le navigateur et comparer les deux relevés. Le DPR ne doit pas être assimilé automatiquement à un zoom de navigateur. En cas de viewport réellement inférieur aux dimensions de la cible, conserver le design et le nombre de lignes physiquement disponibles ; en cas de 1648×928 CSS et de moins de neuf lignes, inspecter l'espace manquant indiqué pour effectuer une correction locale fondée sur des mesures.
+
+**Aucune fusion de PR et aucun déploiement.** Les pages 01–03, les métriques B3/B4 et les données agrégées restent inchangées. PR #20 toujours dépendante de la PR #19.
