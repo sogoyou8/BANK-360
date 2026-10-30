@@ -128,7 +128,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
      </div>
      <div className="x1-matrix-foot"><span><i/> Bleu plus intense : taux plus élevé</span><button onClick={()=>{setInspectTab('compare');setExpanded(true)}}>Comparer les tranches <ChevronRight size={13}/></button></div>
     </div>
-    <div className="x1-month-chart"><div className="x1-subtitle"><h3>Retards mensuels</h3><button onClick={()=>{setInspectTab('monthly');setExpanded(true)}}>Voir les 6 mois <Maximize2 size={12}/></button></div><div className="x1-month-bars">{monthly.map(m=><div key={m.period} title={m.period+' · '+fmtInt(m.delayed)+' retards / '+fmtInt(m.observations)+' observations'}><b>{m.observations?asPct(m.rate):'—'}</b><span><i style={{height:Math.max(m.rate?2:0,100*m.rate/monthMax)+'%'}}/></span><small>{m.period.slice(-2)}</small></div>)}</div></div>
+    <div className="x1-month-inline"><div><strong>Retards · septembre</strong><span>{fmtInt(monthly[5].delayed)} dossiers · {monthly[5].observations?asPct(monthly[5].rate):'—'}</span></div><button onClick={()=>{setInspectTab('monthly');setExpanded(true)}}>Comparer les six mois <Maximize2 size={12}/></button></div>
    </Card>
    <Card className="x1-fraud-panel" title="Fraude · surveillance simulée" note="PaySim · test chronologique, données indépendantes" extra={<span className="x1-scope-pill">{selectedFraudLabel}</span>}>
     <div className="x1-comparison x1-fraud-comparison" aria-live="polite">
