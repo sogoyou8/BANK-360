@@ -74,6 +74,7 @@ test('C6 — real XLSX is a ZIP Open XML spreadsheet, with source cell values',a
  await card.getByRole('button',{name:'Télécharger Alertes par canal en XLSX'}).click();
  const download=await wait;
  expect(download.suggestedFilename()).toBe('bank360-alertes.xlsx');
+ await download.saveAs('test-results/reports-c6-alertes-real.xlsx');
  const bytes=await readFile(await download.path());
  expect(bytes.subarray(0,4).equals(Buffer.from([0x50,0x4b,0x03,0x04]))).toBe(true);
  const text=bytes.toString('utf8');
@@ -177,4 +178,22 @@ test('C6 — mobile 390×844 is readable with a usable export selector',async({p
  await page.getByTestId('report-export-payments').getByRole('group',{name:'Format Historique des paiements'}).getByRole('button',{name:'XLSX'}).click();
  await expect(page.getByTestId('report-export-payments').getByRole('button',{name:'Télécharger Historique des paiements en XLSX'})).toBeVisible();
  await page.screenshot({path:'test-results/reports-c6-mobile-390x844.png',fullPage:true});
+});
+
+test('C6.1 — approved Aurora reference keeps dock rails and balanced content at 1672×941',async({page})=>{
+ await page.setViewportSize({width:1672,height:941});await openReports(page);
+ const g=await page.evaluate(()=>{
+  const read=(selector:string)=>{const b=document.querySelector(selector)!.getBoundingClientRect();return{x:b.x,y:b.y,w:b.width,right:b.right,bottom:b.bottom};};
+  return {dock:read('.nav-dock'),banner:read('.rw-banner'),exports:read('.rw-export-panel'),method:read('.rw-method-panel'),preferences:read('.rw-preferences-panel')};
+ });
+ expect(Math.abs(g.dock.x-17),'dock x reference').toBeLessThanOrEqual(3);
+ expect(Math.abs(g.dock.w-87),'dock width').toBeLessThanOrEqual(3);
+ expect(Math.abs(g.banner.x-135),'banner left rail').toBeLessThanOrEqual(4);
+ expect(Math.abs(g.banner.right-1642),'banner right rail').toBeLessThanOrEqual(4);
+ expect(g.banner.y,'banner below full header').toBeGreaterThanOrEqual(245);
+ expect(g.exports.y,'panels below banner').toBeGreaterThanOrEqual(g.banner.bottom+8);
+ expect(Math.abs(g.exports.y-g.method.y),'main panel top alignment').toBeLessThanOrEqual(2);
+ expect(g.method.bottom,'method should be taller than preferences').toBeLessThan(g.preferences.bottom);
+ expect(g.preferences.y,'preferences below methodology').toBeGreaterThan(g.method.bottom);
+ await page.screenshot({path:'test-results/reports-c61-reference-1672x941.png',fullPage:true});
 });
