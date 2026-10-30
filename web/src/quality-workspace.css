@@ -205,6 +205,18 @@
  .qw-dialog{padding:16px}
  .qw-evidence-row{grid-template-columns:1fr;gap:5px}
 }
+/* C5.8 — Geometry of the approved 1648 × 928 reference. */
+@media(min-width:1500px){
+ .app:has(.qw-root) .app-layout{padding-left:17px;padding-right:22px;gap:23px}
+ .app:has(.qw-root) .nav-dock{width:87px;min-width:87px}
+ .app:has(.qw-root) .dock-link{width:57px;height:57px}
+ .qw-root{padding-top:13px;padding-bottom:13px}
+}
+/* C5.8 — Preserve the full description of every audit on touch devices. */
+@media(max-width:900px){
+ .qw-check-copy small,.qw-source-copy small{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-height:1.35;overflow:hidden;text-overflow:ellipsis}
+ .qw-check-card{min-height:76px}
+}
 @media(prefers-reduced-motion:reduce){
  .qw-root *{animation:none!important;transition:none!important}
 }
