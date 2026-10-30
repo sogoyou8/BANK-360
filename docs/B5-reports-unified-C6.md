@@ -86,3 +86,16 @@ Dernier ajustement visuel sur grand écran, **sans modification des pages 01–0
 Les captures automatisées vérifient l'intégrité du cockpit à 1920×1080, 1672×941, 1648×928, 1440×900, 1440×810, 1366×768, 1280×720 et 390×844, y compris les filtres et perspectives.
 
 **Statut : C6.1 prêt à être inspecté localement.** PR #22 ouverte en brouillon, non fusionnée, aucun déploiement. Seule la validation explicite de la capture locale permettra de geler la page 06.
+
+## C6.2 — Dernière correction de proportion et recette à 1648 × 928 (30 octobre 2026)
+
+- Rapport des colonnes de la **Vue globale** adapté à la maquette : grand panneau Exports ≈ **54–55 %**, Méthodologie et Préférences ≈ **45–46 %**, au lieu du partage antérieur 57/43.
+- Titre, bandeau et cartes réalignés verticalement pour se rapprocher de la cible originale à **1648 × 928**.
+- Styles limités à `web/src/reports-workspace.css` dans un media query desktop ≥ 1500 px ; aucun impact sur les pages 01–05 gelées.
+- Test Playwright supplémentaire `C6.2` dans `web/e2e/reports-c6.spec.ts`, vérifiant proportion des colonnes, rails, absence de chevauchement, aucune barre de défilement globale et footer visible.
+- **[Run B5 #41048958089](https://github.com/sogoyou8/BANK-360/actions/runs/41048958089)** : **88/88 tests Chromium réussis** ; compilation et contrôles du cockpit passés.
+- Les workflows B1 et B3 du même commit sont réussis.
+- Capture réelle : `test-results/reports-c62-target-1648x928.png` dans l'artefact `bank360-b5-browser-evidence` de la run B5 ; également `reports-c6-1440x810.png` et les captures mobiles/contextuelles.
+- Le fichier XLSX PaySim réel est toujours généré ; colonnes et valeurs reconnues par un lecteur OOXML indépendant, aucun montant, identifiant ou score de transaction inventé.
+
+**Décision : C6.2 est techniquement prête à la revue locale. PR #22 reste en brouillon, sans fusion ni déploiement public.** La page 06 ne sera gelée qu'après validation de l'utilisateur sur sa machine.
