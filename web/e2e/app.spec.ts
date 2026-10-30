@@ -510,7 +510,7 @@ test('C3.10 — statistiques des canaux lisibles sans débordement sur desktop e
      valueFont:parseFloat(getComputedStyle(number).fontSize),
      bottom:rect.bottom,left:rect.left,right:rect.right,
      clipped:el.scrollWidth>el.clientWidth+1};
-   }));
+   });
    return {stats,boxBottom:box.bottom}
   }));
   expect(readability).toHaveLength(2);
