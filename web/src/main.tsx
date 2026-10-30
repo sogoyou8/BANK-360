@@ -19,8 +19,10 @@ import FraudWorkspace,{FraudFilterBar,initialFraudScope,type FraudScope,type Fra
 import IntelligenceWorkspace,{IntelligenceHeader,type IntelligencePerspective,type IntelligenceContext,type DiagnosticView} from './IntelligenceWorkspace';
 import QualityWorkspace from './QualityWorkspace';
 import ReportsWorkspace from './ReportsWorkspace';
+import CrossAnalysisWorkspace from './CrossAnalysisWorkspace';
+import CrossGovernanceWorkspace from './CrossGovernanceWorkspace';
 
-type Page='home'|'portfolio'|'fraud'|'models'|'quality'|'reports';
+type Page='home'|'portfolio'|'fraud'|'models'|'quality'|'reports'|'cross'|'cross-governance';
 type Domain='credit'|'fraud';
 type IconType=typeof Home;
 const pageInfo:{id:Page,title:string,short:string,domain:string,icon:IconType}[]=[
@@ -29,7 +31,9 @@ const pageInfo:{id:Page,title:string,short:string,domain:string,icon:IconType}[]
  {id:'fraud',title:'Détection de fraude & analyse des alertes',short:'Fraude',domain:'Fraude',icon:Fingerprint},
  {id:'models',title:'Modèles & explorateur de données',short:'Intelligence',domain:'Intelligence',icon:BrainCircuit},
  {id:'quality',title:'Qualité & traçabilité',short:'Qualité',domain:'Gouvernance',icon:Database},
- {id:'reports',title:'Rapports & préférences',short:'Rapports',domain:'Gouvernance',icon:FileBarChart2}
+ {id:'reports',title:'Rapports & préférences',short:'Rapports',domain:'Gouvernance',icon:FileBarChart2},
+ {id:'cross',title:'Analyse 360 · vision croisée',short:'Analyse 360',domain:'Analyse',icon:ChartNoAxesCombined},
+ {id:'cross-governance',title:'Gouvernance & preuves',short:'Preuves',domain:'Gouvernance',icon:ShieldCheck}
 ];
 const byId=Object.fromEntries(pageInfo.map(x=>[x.id,x])) as Record<Page,typeof pageInfo[number]>;
 const groups:{id:string,title:string,icon:IconType,items:Page[]}[]=[
@@ -39,6 +43,10 @@ const groups:{id:string,title:string,icon:IconType,items:Page[]}[]=[
  {id:'intelligence',title:'Intelligence',icon:BrainCircuit,items:['models']},
  {id:'quality',title:'Qualité',icon:Database,items:['quality']},
  {id:'reports',title:'Rapports',icon:FileBarChart2,items:['reports']}
+];
+const crossGroups:{id:string,title:string,icon:IconType,items:Page[]}[]=[
+ {id:'cross',title:'Analyse 360',icon:ChartNoAxesCombined,items:['cross']},
+ {id:'cross-governance',title:'Gouvernance & preuves',icon:ShieldCheck,items:['cross-governance']}
 ];
 const asInt=(n:number)=>fmtInt(n);
 const asPct=(n:number,decimals=1)=>fmtPct(n,decimals);
@@ -111,7 +119,7 @@ function FilterBar({value,onChange,withStatus=false}:{value:CreditFilters,onChan
 function Empty(){return <div className="empty"><Info size={18}/> Aucun résultat pour cette sélection.</div>}
 
 function App(){
- const [page,setPage]=useState<Page>('home');
+ const [page,setPage]=useState<Page>(()=>new URLSearchParams(window.location.search).get('x1')==='1'?'cross':'home');
  const [menu,setMenu]=useState<string|null>(null);
  const [searchOpen,setSearchOpen]=useState(false),[query,setQuery]=useState('');
  const [theme,setTheme]=useState<'dark'|'light'>('dark');
@@ -126,6 +134,8 @@ function App(){
  useEffect(()=>{document.documentElement.dataset.theme=theme},[theme]);
  useEffect(()=>{const handler=(e:KeyboardEvent)=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();setSearchOpen(true)}if(e.key==='Escape'){setSearchOpen(false);setMenu(null)}};window.addEventListener('keydown',handler);return()=>window.removeEventListener('keydown',handler)},[]);
  const go=(id:Page|'risk'|'payments'|'alerts'|'explorer')=>{if(id==='risk'||id==='payments'){setCreditMode(id);setPage('portfolio')}else if(id==='alerts'){setFraudMode('alerts');setPage('fraud')}else if(id==='explorer'){setIntelligencePerspective('explorer');setPage('models')}else{if(id==='fraud')setFraudMode('overview');if(id==='models')setIntelligencePerspective('overview');setPage(id)}setMenu(null);setSearchOpen(false);setQuery('')};
+ const crossMode=page==='cross'||page==='cross-governance';
+ const currentGroups=crossMode?crossGroups:groups;
  const selected=byId[page];
  const credit=useMemo(()=>filteredSegments(filters),[filters]);
  const total=useMemo(()=>creditTotals(credit),[credit]);
@@ -146,9 +156,9 @@ function App(){
   <div className="ambient ambient-one"/><div className="ambient ambient-two"/>
   {menu&&<button className="nav-dismiss" aria-label="Fermer les sous-pages" onClick={()=>setMenu(null)}/>}
   <div className="app-layout">
-   <aside className="nav-dock" aria-label="Navigation BANK 360"><div className="dock-emblem" aria-label="BANK 360"><div/></div><nav aria-label="Sections">{groups.map(g=>{const Icon=g.icon;const active=g.items.includes(page);const open=menu===g.id;return <div className="dock-group" key={g.id}><button type="button" className={'dock-link '+(active?'active':'')} title={g.title} aria-label={g.title} aria-expanded={g.items.length>1?open:undefined} onClick={()=>g.items.length===1?go(g.items[0]):setMenu(open?null:g.id)}><Icon size={20}/></button>{open&&g.items.length>1&&<div className="dock-popover" role="menu" aria-label={g.title}><span className="popover-heading">{g.title}</span>{g.items.map(id=>{const item=byId[id],SubIcon=item.icon;return <button key={id} role="menuitem" className={page===id?'selected':''} onClick={()=>go(id)}><SubIcon size={16}/>{item.short}<ChevronRight size={14}/></button>})}</div>}</div>})}</nav><div className="dock-footer" title="BANK 360"><span>B</span></div></aside>
+   <aside className={'nav-dock '+(crossMode?'x1-active':'')} aria-label="Navigation BANK 360"><div className="dock-emblem" aria-label="BANK 360"><div/></div><nav aria-label="Sections">{currentGroups.map(g=>{const Icon=g.icon;const active=g.items.includes(page);const open=menu===g.id;return <div className="dock-group" key={g.id}><button type="button" className={'dock-link '+(active?'active':'')} title={g.title} aria-label={g.title} aria-expanded={g.items.length>1?open:undefined} onClick={()=>g.items.length===1?go(g.items[0]):setMenu(open?null:g.id)}><Icon size={20}/></button>{open&&g.items.length>1&&<div className="dock-popover" role="menu" aria-label={g.title}><span className="popover-heading">{g.title}</span>{g.items.map(id=>{const item=byId[id],SubIcon=item.icon;return <button key={id} role="menuitem" className={page===id?'selected':''} onClick={()=>go(id)}><SubIcon size={16}/>{item.short}<ChevronRight size={14}/></button>})}</div>}</div>})}</nav><div className="dock-footer" title="BANK 360"><span>B</span></div></aside>
    <div className="work-area">
-    <header className="topbar"><div className="wordmark">BANK <span>360</span></div><div className="top-divider"/><button className="search-trigger" onClick={()=>setSearchOpen(true)}><Search size={17}/><span>Accéder à une page</span><kbd>Ctrl K</kbd></button><div className="top-spacer"/><span className="archive-label"><span/>Données historisées</span><button className="top-icon" title="Changer le thème" aria-label="Basculer le thème" onClick={()=>setTheme(theme==='dark'?'light':'dark')}>{theme==='dark'?<Sun size={18}/>:<Moon size={18}/>}</button><button className="top-icon" title="Provenance des données" aria-label="Ouvrir la traçabilité" onClick={()=>go('quality')}><ShieldCheck size={18}/></button><div className="profile-bubble" aria-label="BANK 360">B</div></header>
+    <header className="topbar"><div className="wordmark">BANK <span>360</span></div><div className="top-divider"/><button className="search-trigger" onClick={()=>setSearchOpen(true)}><Search size={17}/><span>Accéder à une page</span><kbd>Ctrl K</kbd></button><button type="button" className="x1-switch" aria-label={crossMode?"Revenir aux six pages classiques":"Ouvrir Analyse 360"} onClick={()=>setPage(crossMode?"home":"cross")}>{crossMode?"Version classique":"Analyse 360"}</button><div className="top-spacer"/><span className="archive-label"><span/>Données historisées</span><button className="top-icon" title="Changer le thème" aria-label="Basculer le thème" onClick={()=>setTheme(theme==='dark'?'light':'dark')}>{theme==='dark'?<Sun size={18}/>:<Moon size={18}/>}</button><button className="top-icon" title="Provenance des données" aria-label="Ouvrir la traçabilité" onClick={()=>crossMode?setPage('cross-governance'):go('quality')}><ShieldCheck size={18}/></button><div className="profile-bubble" aria-label="BANK 360">B</div></header>
     <div className="view-head"><div className="view-name"><span className="view-overline">{selected.domain}</span>{page==='fraud'?<div className="fw-heading-copy"><h1>{selected.title}</h1><small>Transactions simulées · détection et investigation agrégées</small></div>:page==='models'?<div className="iw-title"><h1>{selected.title}</h1><small>Performance des modèles, diagnostics et lecture agrégée des groupes.</small></div>:<h1>{selected.title}</h1>}</div><div className="view-tools">{page==='fraud'&&<FraudFilterBar scope={fraudScope} onScope={setFraudScope}/>} {showScope&&<SourceTag kind="credit"/>} {scopedCredit&&<FilterBar value={filters} onChange={setFilters} withStatus/>} {page==='models'&&<IntelligenceHeader perspective={intelligencePerspective} onPerspective={setIntelligencePerspective} context={intelligenceContext} onContext={v=>{setIntelligenceContext(v);setModelView('ranking')}}/>} </div></div>
     <main className="view" id="main-content" data-page={page}>
     {page==='home'&&<HomeOverview
@@ -162,6 +172,8 @@ onCalibration={()=>{go('models');setIntelligenceContext('fraud');setModelView('d
     {page==='models'&&<IntelligenceWorkspace perspective={intelligencePerspective} onPerspective={setIntelligencePerspective} context={intelligenceContext} onContext={setIntelligenceContext} filters={filters} onFilters={setFilters} diagnostic={modelView} onDiagnostic={setModelView}/>}
      {page==='quality'&&<QualityWorkspace checks={checks}/>}
     {page==='reports'&&<ReportsWorkspace filters={filters} onResetFilters={()=>setFilters(initialFilters)} theme={theme} onToggleTheme={()=>setTheme(t=>t==='dark'?'light':'dark')} checks={checks}/>}
+    {page==='cross'&&<CrossAnalysisWorkspace filters={filters} onFilters={setFilters} fraud={fraudScope} onFraud={setFraudScope} onGovernance={()=>setPage('cross-governance')}/>}
+    {page==='cross-governance'&&<CrossGovernanceWorkspace filters={filters} onReset={()=>setFilters(initialFilters)} theme={theme} onTheme={()=>setTheme(t=>t==='dark'?'light':'dark')} checks={checks} onAnalysis={()=>setPage('cross')}/>}
     </main>
     <div className="statusline"><span>UCI · historique 2005</span><span className="status-divider"/><span>PaySim · simulation</span><span className="status-spacer"/><span>Analyse descriptive</span></div>
    </div>
