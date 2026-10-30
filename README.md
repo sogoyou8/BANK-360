@@ -1,6 +1,6 @@
 # BANK 360 — Banking Intelligence & Risk Analytics
 
-**DATA 05 — B0 / B1 / B2 / B3 / B4 / B5** · 28 octobre 2026
+**DATA 05 — B0 / B1 / B2 / B3 / B4 / B5** · actualisé le 30 octobre 2026
 
 ## Situation réelle
 
@@ -10,7 +10,7 @@
 - [x] **B2 — Power BI Credit Risk : TERMINÉ ET RECETTÉ (28/10/2026)**. PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels, CI réussie et validation visuelle/interactive Power BI Desktop sur captures et vidéos. Les indicateurs sectoriels EBA restent un chantier distinct.
 - [x] **B3 — Credit Risk Analytics : TERMINÉ (28/10/2026)**. Étude de prédiction de défaut historique, trois approches comparées, train/validation/test 18k/6k/6k, audit de biais descriptifs et résultats agrégés ; aucun scoring bancaire réel.
 - [x] **B4 — Fraud Analytics : TERMINÉ (28/10/2026), simulation PaySim uniquement**. 6 362 620 transactions simulées, modèles comparés, validation chronologique, métriques, contrôles de fuite, déciles et audits d'alertes. Aucune décision, aucun scoring réel ou déploiement.
-- [x] **B5 — Cockpit Web React : CRÉDIT UNIFIÉ RECETTÉ / C3 FRAUDE EN REVUE (30/10/2026)**. Page Crédit figée après validation locale ; branche C3 proposée à **7 pages / 6 sections**, avec Fraude & alertes en une seule vue à trois perspectives, six panneaux et seuls agrégats PaySim vérifiés. **PR C3 à valider visuellement ; aucune publication.**
+- [x] **B5 — Cockpit Web React : PAGES 01–04 VALIDÉES ET GELÉES (30/10/2026)**. Version de référence **6 pages / 6 sections** : 01 Vue d'ensemble, 02 Crédit unifié (Portefeuille & segmentation), 03 Fraude & alertes unifiées, 04 Intelligence unifiée (Modèles & explorateur) ; pages 05 Qualité et 06 Rapports hors du présent gel. **PR #19 puis #20 fusionnées dans `main`, 64/64 tests Chromium réussis sur `main`, aucun déploiement public effectué.** Voir [registre de gel B5](docs/B5-gel-pages-01-04.md).
 - [ ] B6 : finalisation et portfolio
 
 ### Recette B1 sur données historiques réelles
