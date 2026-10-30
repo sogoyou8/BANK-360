@@ -3,7 +3,7 @@
 ## Périmètre et statut
 
 **Branche** : \`feature/b5-c5-quality-unified-cockpit\` (depuis \`main\`)  
-**Revue** : [PR #21](https://github.com/sogoyou8/BANK-360/pull/21), brouillon ouvert, **aucune fusion et aucun déploiement**.  
+**Revue clôturée** : [PR #21](https://github.com/sogoyou8/BANK-360/pull/21), **fusionnée dans `main`** après validation C5.9 ; aucun déploiement public.  
 **Référence** : image cible Aurora de la page « Qualité & traçabilité », 1648 × 928.
 
 **Pages 01–04 : gelées.** La page 06 Rapports ne change pas.
@@ -56,7 +56,7 @@ Les tests additionnels dans \`web/e2e/quality-c5.spec.ts\` vérifient l'origine 
 
 Les captures réelles Chromium sont disponibles dans l'artefact \`bank360-b5-browser-evidence\`, sous \`test-results/quality-c5-*.png\` et \`quality-c58-target-1648x928.png\`. Ce ne sont pas des images générées.
 
-**Ne pas fusionner** avant comparaison de l'application locale avec l'image cible et validation explicite de l'utilisateur. Aucune preview publique, GitHub Pages ou Vercel ne fait partie de C5.
+**Recette clôturée après revue locale de l'utilisateur** : image cible comparée au cockpit Aurora. PR #21 fusionnée ; pas de publication Vercel, GitHub Pages ni preview publique.
 
 
 ## C5.9 — Recette finale regroupée (30 octobre 2026)
@@ -100,4 +100,4 @@ Captures réelles dans l'artefact \`bank360-b5-browser-evidence\` :
 
 Comparaison manuelle des captures à la maquette : dock, topbar, titre, bandeau, trois panneaux et quatre cartes de la Vue globale préservés ; les versions filtrées restent compactes et les perspectives affichent bien les preuves et mises en garde attendues. Contrôles automatisés : absence de scroll global sur desktop et de coupure de panneau, trois perspectives distinctes, inspection accessible et conservation du mobile.
 
-**Statut : C5.9 validé techniquement et visuellement sur captures Chromium, prêt pour revue locale.** La page 05 n'est pas officiellement gelée ni fusionnée tant que l'utilisateur n'a pas validé le rendu local ; la PR #21 reste en brouillon et aucun déploiement public n'est effectué.
+**Statut final — 30 octobre 2026 : C5.9 validé visuellement sur le poste utilisateur, fusionné et gelé.** PR [#21](https://github.com/sogoyou8/BANK-360/pull/21) fusionnée dans `main` (commit `2fcd7852462d4258df5cdaa95b10f8f298612506`). **76/76 tests Chromium réussis après fusion** ([GitHub Actions 41033332558](https://github.com/sogoyou8/BANK-360/actions/runs/41033332558)), B1 réussi ([41033332711](https://github.com/sogoyou8/BANK-360/actions/runs/41033332711)). Pages 01–05 désormais gelées ; voir le [registre officiel](B5-gel-pages-01-05.md). Aucun déploiement public déclenché.
