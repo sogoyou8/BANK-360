@@ -173,7 +173,7 @@ onCalibration={()=>{go('models');setIntelligenceContext('fraud');setModelView('d
      {page==='quality'&&<QualityWorkspace checks={checks}/>}
     {page==='reports'&&<ReportsWorkspace filters={filters} onResetFilters={()=>setFilters(initialFilters)} theme={theme} onToggleTheme={()=>setTheme(t=>t==='dark'?'light':'dark')} checks={checks}/>}
     {page==='cross'&&<CrossAnalysisWorkspace filters={filters} onFilters={setFilters} fraud={fraudScope} onFraud={setFraudScope} onGovernance={()=>setPage('cross-governance')}/>}
-    {page==='cross-governance'&&<CrossGovernanceWorkspace filters={filters} onReset={()=>setFilters(initialFilters)} theme={theme} onTheme={()=>setTheme(t=>t==='dark'?'light':'dark')} checks={checks} onAnalysis={()=>setPage('cross')}/>}
+    {page==='cross-governance'&&<CrossGovernanceWorkspace filters={filters} fraud={fraudScope} onReset={()=>setFilters(initialFilters)} theme={theme} onTheme={()=>setTheme(t=>t==='dark'?'light':'dark')} checks={checks} onAnalysis={()=>setPage('cross')}/>}
     </main>
     <div className="statusline"><span>UCI · historique 2005</span><span className="status-divider"/><span>PaySim · simulation</span><span className="status-spacer"/><span>Analyse descriptive</span></div>
    </div>
