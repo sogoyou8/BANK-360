@@ -12,8 +12,9 @@ test('C4 — une route Intelligence, trois perspectives, quatre KPI et trois pan
  await expect(page.locator('.iw-kpi strong')).toHaveText(['0,776','0,549','196','22,1 %']);
  await expect(page.getByRole('tab',{name:'Vue globale'})).toHaveAttribute('aria-selected','true');
  for(const mode of ['Modèles','Explorer','Vue globale']){
-  await page.getByRole('tab',{name:mode}).click();
-  await expect(page.getByRole('tab',{name:mode})).toHaveAttribute('aria-selected','true');
+  const tab=page.getByRole('tablist',{name:'Perspectives Intelligence'}).getByRole('tab',{name:mode});
+  await tab.click();
+  await expect(tab).toHaveAttribute('aria-selected','true');
   await expect(page.locator('#main-content')).toHaveAttribute('data-page','models');
   await expect(page.locator('.iw-panel')).toHaveCount(3);
  }
