@@ -61,7 +61,7 @@ test('Canal fraude : approfondissement préselectionné dans les investigations'
  await page.locator('.home-fraud-channel').filter({hasText:'CASH OUT'}).click();
  await expect(page.locator('#main-content')).toHaveAttribute('data-page','fraud');
  await expect(page.getByRole('tab',{name:'Alertes'})).toHaveAttribute('aria-selected','true');
- await expect(page.getByText('CASH_OUT').first()).toBeVisible();
+ await expect(page.locator('.fw-channel-row').filter({hasText:'CASH_OUT'})).toBeVisible();
  await expect(page.getByText('304').first()).toBeVisible();
 });
 
