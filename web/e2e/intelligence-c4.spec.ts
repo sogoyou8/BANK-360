@@ -122,3 +122,54 @@ test('C4 — thème clair, mobile, dock et scroll limité au tableau',async({pag
  await expect(page.locator('html')).toHaveAttribute('data-theme','light');
  await page.screenshot({path:'test-results/intelligence-c4-mobile-light.png',fullPage:true});
 });
+
+test('C4.8.1–C4.8.2 — Diagnostics : aucune collision avec Référence, deux mini-KPI et note',async({page})=>{
+ for(const [width,height] of [[1920,1080],[1672,941],[1648,928],[1440,900],[1366,768],[1280,720]] as const){
+  await page.setViewportSize({width,height});await intelligence(page);
+  const layout=await page.locator('.iw-diagnostics').evaluate(panel=>{
+   const box=(el:Element)=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right,height:r.height}};
+   const rows=[...panel.querySelectorAll('.iw-ranking-row')].map(box);
+   const cards=box(panel.querySelector('.iw-mini-kpis')!);
+   const note=box(panel.querySelector('.iw-diag-footnote')!);
+   const body=box(panel.querySelector('.iw-panel-content')!);
+   const panelRect=box(panel);
+   const title=box(panel.querySelector('.iw-panel-header')!);
+   return {rows,cards,note,body,panelRect,title,
+    scroll:(panel.querySelector('.iw-panel-content') as HTMLElement).scrollHeight-(panel.querySelector('.iw-panel-content') as HTMLElement).clientHeight};
+  });
+  expect(layout.rows).toHaveLength(3);
+  expect(layout.rows.every(r=>r.height>=13),'all model rows visible '+width+'x'+height).toBe(true);
+  for(let i=1;i<3;i++)expect(layout.rows[i].top,'separated rows at '+width+'x'+height).toBeGreaterThanOrEqual(layout.rows[i-1].bottom-1);
+  expect(layout.cards.top,'mini KPI must be below Reference '+width+'x'+height).toBeGreaterThanOrEqual(layout.rows[2].bottom+2);
+  expect(layout.note.top,'footnote must not overlap mini KPI '+width+'x'+height).toBeGreaterThanOrEqual(layout.cards.bottom-1);
+  expect(layout.note.bottom,'footnote within panel '+width+'x'+height).toBeLessThanOrEqual(layout.panelRect.bottom);
+  expect(layout.scroll,'no clipped diagnostic body '+width+'x'+height).toBeLessThanOrEqual(2);
+  await noScroll(page);
+ }
+});
+
+test('C4.8.3–C4.8.4 — visual target proportions, at least nine table rows on reference desktop',async({page})=>{
+ for(const [width,height] of [[1920,1080],[1672,941],[1648,928],[1440,900],[1366,768],[1280,720]] as const){
+  await page.setViewportSize({width,height});await intelligence(page);
+  const geometry=await page.evaluate(()=>{
+   const rect=(sel:string)=>document.querySelector(sel)!.getBoundingClientRect();
+   const upper=rect('.iw-deciles'),lower=rect('.iw-explorer'),table=rect('.iw-table-window');
+   const title=document.querySelector('.iw-title h1')!;
+   const rows=[...document.querySelectorAll('.iw-table-window tbody tr')].filter(el=>{
+    const r=el.getBoundingClientRect();return r.top>=table.top&&r.bottom<=table.bottom+1;
+   }).length;
+   return {upper:upper.height,lower:lower.height,
+     visibleRows:rows,headingSize:parseFloat(getComputedStyle(title).fontSize),
+     horizontalOverflow:document.documentElement.scrollWidth-innerWidth,
+     tableScroll:(document.querySelector('.iw-table-window') as HTMLElement).scrollHeight-(document.querySelector('.iw-table-window') as HTMLElement).clientHeight};
+  });
+  const minRows=height>=900?9:height>=760?6:4;
+  expect(geometry.visibleRows,'table rows at '+width+'x'+height).toBeGreaterThanOrEqual(minRows);
+  expect(geometry.upper/geometry.lower,'top / explorer panel ratio '+width+'x'+height).toBeGreaterThanOrEqual(.59);
+  expect(geometry.upper/geometry.lower,'top / explorer panel ratio '+width+'x'+height).toBeLessThan(1.05);
+  expect(geometry.headingSize,'heading legible at '+width+'x'+height).toBeGreaterThanOrEqual(width>1450?26:20);
+  expect(geometry.horizontalOverflow,'no horizontal page scroll').toBeLessThanOrEqual(2);
+  await noScroll(page);
+  await page.screenshot({path:'test-results/intelligence-c48-'+width+'x'+height+'.png',fullPage:true});
+ }
+});
