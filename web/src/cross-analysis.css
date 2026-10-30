@@ -167,3 +167,10 @@
  .x1-filter-group label{min-width:80px}
  .x1-gov-banner>span b{font-size:15px}
 }
+
+
+/* Seamless opt-in entry, retaining all six frozen classic navigation contracts. */
+.x1-switch{border:1px solid #7b9ef583;background:linear-gradient(135deg,#405bb0,#264e9a);color:#f4f9ff;border-radius:11px;padding:9px 13px;font-size:11px;white-space:nowrap;font-weight:650;box-shadow:0 3px 15px #4279e735}
+.x1-switch:hover{background:#4f76cf}
+@media(max-width:900px){.x1-switch{font-size:10px;padding:7px}}
+@media(max-width:520px){.x1-switch{padding:7px 6px;font-size:9px}}
