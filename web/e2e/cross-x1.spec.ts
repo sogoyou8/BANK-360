@@ -185,6 +185,19 @@ test('X1.5 — all chart text and matrix stay within their actual containers in 
    const inspector=document.querySelector('.x1-inspector')!;
    const titles=[...document.querySelectorAll('.x1-credit-panel h3,.x1-fraud-panel h3')];
    const rowCells=[...document.querySelectorAll('.x1-matrix-row button')];
+   const matrixRows=[...document.querySelectorAll('.x1-matrix-row')].map(get);
+   const matrixHeading=get(matrix.querySelector('.x1-subtitle')!);
+   const matrixHeader=get(matrix.querySelector('.x1-matrix-head')!);
+   const matrixFooter=get(matrix.querySelector('.x1-matrix-foot')!);
+   const matrixRowLabels=[...document.querySelectorAll('.x1-matrix-row strong')].map(get);
+   const matrixTextGeometry=
+    matrixRows.length===5&&matrixRows.every((r,i)=>r.height>=16&&
+     matrixRowLabels[i].top>=r.top-1&&matrixRowLabels[i].bottom<=r.bottom+1&&
+     (!i||matrixRows[i-1].bottom<=r.top+1))&&
+    matrixHeading.bottom<=matrixHeader.top+2&&
+    matrixHeader.bottom<=matrixRows[0].top+2&&
+    matrixRows[4].bottom<=matrixFooter.top+2;
+
    const dayValues=[...document.querySelectorAll('.x1-day-bars button')];
    const horizontalValues=[...document.querySelectorAll('.x1-horizontal-bars button')];
    const inside=(parent:Element,child:Element)=>{
@@ -195,7 +208,7 @@ test('X1.5 — all chart text and matrix stay within their actual containers in 
     chartOverlap:get(matrix).bottom-get(month).top,
     creditEnd:get(credit).bottom,monthBottom:get(month).bottom,
     inspectorTop:get(inspector).top,fraudEnd:get(fraud).bottom,
-    cells:rowCells.length,cellsInside:rowCells.every(e=>inside(matrix,e)),
+    cells:rowCells.length,cellsInside:rowCells.every(e=>inside(matrix,e)),matrixTextGeometry,
     headingsInside:titles.every(x=>inside(x.closest('.x1-card')!,x)),
     dayInside:dayValues.every(x=>inside(fraud,x)),
     horizontalInside:horizontalValues.every(x=>inside(fraud,x)),
@@ -210,6 +223,7 @@ test('X1.5 — all chart text and matrix stay within their actual containers in 
   expect(g.fraudEnd,'fraud panel versus inspector '+note).toBeLessThanOrEqual(g.inspectorTop+2);
   expect(g.cells,'25 matrix combinations '+note).toBe(25);
   expect(g.cellsInside,'matrix cell bounds '+note).toBe(true);
+  expect(g.matrixTextGeometry,'five complete matrix lines, no label/footer collision '+note).toBe(true);
   expect(g.headingsInside,'titles fit '+note).toBe(true);
   expect(g.dayInside,'day buttons fit '+note).toBe(true);
   expect(g.horizontalInside,'fraud rows fit '+note).toBe(true);
