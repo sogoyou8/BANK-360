@@ -113,7 +113,7 @@ export default function FraudWorkspace({mode,onMode,scope,onScope}:{mode:FraudMo
       <span className="fw-channel-main"><span className="fw-channel-name"><Fingerprint size={14}/>{c.type}</span><span className="fw-channel-track"><i style={{width:(100*n/channelsMax)+'%'}}/></span><strong>{int(n)}</strong><small>{pct(totalChannel?n/totalChannel:0)}</small></span>
       <span className="fw-channel-metrics"><span>Vraies <b>{int(c.tp)}</b></span><span>Fausses <b>{int(c.fp)}</b></span><span>Précision <b>{pct(c.precision)}</b></span><span>Rappel <b>{pct(c.recall)}</b></span></span>
      </button>})}</div>
-     <div className="fw-channel-summary">{scope.day!=='Tous'?'Canaux du test complet : pas de jointure jour × canal.':'Sélectionner un canal actualise la qualité, sans modifier les jours.'}</div>
+     <div className="fw-channel-summary">{scope.day!=='Tous'?'Canaux du test complet : pas de jointure jour × canal.':'Sélectionne un canal pour actualiser la qualité, sans modifier les jours.'}</div>
     </Panel>
     <Panel title="Qualité de détection" role="fw-quality" extra={<div className="fw-quality-tools"><span className="fw-head-caption" title="PR-AUC mesurée uniquement sur le test chronologique global">PR-AUC test {value(test.pr_auc)}</span><button className="fw-icon" onClick={()=>onMode('alerts')} title="Perspective Alertes" aria-label="Examiner la qualité de détection"><ChevronRight size={16}/></button></div>}>
      <div className="fw-quality-layout">
