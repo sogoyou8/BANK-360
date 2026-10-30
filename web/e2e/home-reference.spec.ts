@@ -41,7 +41,7 @@ test('Référence 1440 × 900 : mono écran, panneau vigilance entièrement visi
 });
 
 test('Accueil : les quatre KPI sont de vrais liens de navigation',async({page})=>{
- const checks:[string,string][]=[['Dossiers de crédit','portfolio'],['Taux de défaut','portfolio'],['Transactions analysées','fraud'],['Alertes de test','alerts']];
+ const checks:[string,string][]=[['Dossiers de crédit','portfolio'],['Taux de défaut','portfolio'],['Transactions analysées','fraud'],['Alertes de test','fraud']];
  for(const [name,destination] of checks){await page.goto('/');await page.locator('.home-kpi').filter({hasText:name}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page',destination)}
 });
 
@@ -59,7 +59,8 @@ test('Graphique crédit : les âges réutilisent le filtre réel dans Risque',as
 test('Canal fraude : approfondissement préselectionné dans les investigations',async({page})=>{
  await page.goto('/');
  await page.locator('.home-fraud-channel').filter({hasText:'CASH OUT'}).click();
- await expect(page.locator('#main-content')).toHaveAttribute('data-page','alerts');
+ await expect(page.locator('#main-content')).toHaveAttribute('data-page','fraud');
+ await expect(page.getByRole('tab',{name:'Alertes'})).toHaveAttribute('aria-selected','true');
  await expect(page.getByText('CASH_OUT').first()).toBeVisible();
  await expect(page.getByText('304').first()).toBeVisible();
 });
@@ -67,7 +68,8 @@ test('Canal fraude : approfondissement préselectionné dans les investigations'
 test('Vigilances : navigation directe vers les alertes, la dérive et la provenance',async({page})=>{
  await page.goto('/');
  await page.getByRole('button',{name:'Examiner les fraudes non détectées'}).click();
- await expect(page.locator('#main-content')).toHaveAttribute('data-page','alerts');
+ await expect(page.locator('#main-content')).toHaveAttribute('data-page','fraud');
+ await expect(page.getByRole('tab',{name:'Alertes'})).toHaveAttribute('aria-selected','true');
  await page.goto('/');
  await page.getByRole('button',{name:'Examiner la calibration du modèle de fraude'}).click();
  await expect(page.locator('#main-content')).toHaveAttribute('data-page','models');
