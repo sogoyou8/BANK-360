@@ -217,6 +217,61 @@
  .qw-check-copy small,.qw-source-copy small{white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-height:1.35;overflow:hidden;text-overflow:ellipsis}
  .qw-check-card{min-height:76px}
 }
+/* C5.9.1 — Adaptive density: filtered contexts never stretch 2–3 cards to the height of four. */
+.qw-scope-credit .qw-check-list,
+.qw-scope-fraud .qw-check-list{flex:0 1 auto;align-content:start;grid-template-rows:repeat(3,clamp(69px,9.15vh,94px));padding-bottom:8px}
+.qw-scope-fraud .qw-check-list{grid-template-rows:repeat(2,clamp(69px,9.15vh,94px))}
+.qw-source-list.qw-one-source{flex:0 1 auto}
+.qw-one-source .qw-source-card{flex:0 0 clamp(67px,8.7vh,91px)}
+.qw-scope-note{display:flex;align-items:flex-start;gap:8px;margin:7px 20px 0;padding:10px 12px;border-radius:11px;background:#26476d66;border:1px solid #89aae138;color:#adc8ed;font-size:11px;line-height:1.45}
+.qw-scope-note svg{flex:none;color:#7fb1fc;margin-top:1px}
+/* C5.9.2 — Contextual perspectives emphasize their actual content, not just borders. */
+.qw-perspective-controls .qw-grid{grid-template-columns:minmax(0,1.42fr) minmax(0,.84fr)}
+.qw-perspective-sources .qw-grid{grid-template-columns:minmax(0,.96fr) minmax(0,1.23fr);grid-template-rows:minmax(0,1.28fr) minmax(0,.72fr)}
+.qw-perspective-limits .qw-grid{grid-template-columns:minmax(0,.96fr) minmax(0,1.23fr);grid-template-rows:minmax(0,.88fr) minmax(0,1.12fr)}
+.qw-perspective-controls .qw-check-list{padding-bottom:8px}
+.qw-perspective-info{display:flex;align-items:flex-start;gap:8px;flex:none;margin:2px 15px 13px;padding:9px 11px;border-radius:10px;border:1px solid #7da7ff50;background:linear-gradient(110deg,#1e44729a,#1a2a5e9d);color:#bcd5f9;font-size:10px;line-height:1.4}
+.qw-perspective-info svg{flex:none;color:#87b7ff;margin-top:1px}
+.qw-perspective-sources .qw-source-list{gap:7px;padding-bottom:4px}
+.qw-perspective-sources .qw-source-card{min-height:0}
+.qw-source-proof{display:block;max-width:100%;font-size:10px;color:#82b1ed;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qw-perspective-sources .qw-source-copy{gap:6px}
+.qw-perspective-limits .qw-limits-list{padding-bottom:3px}
+.qw-perspective-limits .qw-limits-list>div{font-size:12px;line-height:1.5}
+.qw-perspective-limits .qw-perspective-info{background:#3a446e79}
+/* C5.9.3 — readable and keyboard-safe evidence inspection. */
+.qw-dialog .qw-icon{display:grid;place-items:center;flex:none;width:52px;height:52px;border-radius:14px;background:linear-gradient(145deg,#4165b5ab,#273c849b);color:#98c4ff;box-shadow:inset 1px 1px #ffffff2e}
+.qw-dialog-actions{display:flex;justify-content:flex-end;padding-top:17px}
+.qw-dialog-actions button{border-radius:10px;border:1px solid #90afffe0;background:linear-gradient(135deg,#526ed6,#304aaa);color:#fff;padding:10px 17px;font-size:12px;font-weight:650}
+.qw-dialog button:focus-visible,.qw-root button:focus-visible,.qw-root a:focus-visible{outline:2px solid #aee9ff;outline-offset:3px}
+:root[data-theme=light] .qw-scope-note,:root[data-theme=light] .qw-perspective-info{background:#e2edff;color:#31547a}
+:root[data-theme=light] .qw-source-proof{color:#326eac}
+@media(max-height:850px) and (min-width:901px){
+ .qw-scope-credit .qw-check-list{grid-template-rows:repeat(3,clamp(63px,8.65vh,82px))}
+ .qw-scope-fraud .qw-check-list{grid-template-rows:repeat(2,clamp(63px,8.65vh,82px))}
+ .qw-scope-note{margin:3px 13px 0;padding:6px 9px;font-size:10px}
+ .qw-perspective-info{margin:2px 10px 7px;padding:6px 9px;font-size:9px}
+ .qw-perspective-sources .qw-source-copy{gap:3px}
+ .qw-source-proof{font-size:9px}
+ .qw-one-source .qw-source-card{flex-basis:clamp(62px,8vh,77px)}
+ .qw-perspective-limits .qw-limits-list>div{font-size:10px}
+}
+@media(max-height:750px) and (min-width:901px){
+ .qw-scope-credit .qw-check-list{grid-template-rows:repeat(3,57px)}
+ .qw-scope-fraud .qw-check-list{grid-template-rows:repeat(2,57px)}
+ .qw-scope-note{font-size:9px;padding:4px 7px;margin:3px 10px 0}
+ .qw-perspective-info{font-size:9px;padding:4px 7px;margin:1px 9px 5px}
+ .qw-perspective-sources .qw-source-card{padding:3px 7px}
+ .qw-perspective-limits .qw-limits-list>div{font-size:9px}
+}
+@media(max-width:900px){
+ .qw-scope-credit .qw-check-list,.qw-scope-fraud .qw-check-list{display:flex;flex-direction:column;padding-bottom:8px}
+ .qw-scope-credit .qw-check-card,.qw-scope-fraud .qw-check-card{flex:0 0 auto;min-height:76px}
+ .qw-scope-note{margin:0 11px 13px}
+ .qw-perspective-info{margin:0 11px 13px}
+ .qw-one-source .qw-source-card{flex-basis:auto;min-height:75px}
+ .qw-source-proof{white-space:normal;overflow-wrap:anywhere}
+}
 @media(prefers-reduced-motion:reduce){
  .qw-root *{animation:none!important;transition:none!important}
 }
