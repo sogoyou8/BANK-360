@@ -183,8 +183,7 @@ export default function QualityWorkspace({checks}:{checks:QualityChecks}){
     <div><CheckCircle2 size={26}/><span><strong>{passed}</strong><small>contrôles conformes{scope==='all'?'':' / '+selected.length}</small></span></div>
    </div>
   </div>
-  <p className="qw-perspective-context" data-testid="quality-perspective-description" aria-live="polite">{perspectiveDescriptions[perspective]}</p>
-  <div className="qw-grid" data-testid="quality-grid">
+  <div className="qw-grid" data-testid="quality-grid" aria-label={perspectiveDescriptions[perspective]}>
    <section className="qw-panel qw-checks-panel" aria-label="Contrôles des agrégats">
     <div className="qw-panel-heading"><div className="qw-panel-icon"><Settings2 size={25}/></div><div><h2>Contrôles des agrégats</h2><p>Vérifications de la qualité et de la cohérence des données</p></div></div>
     <div className={'qw-check-list qw-check-count-'+selected.length}>
