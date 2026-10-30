@@ -10,7 +10,7 @@
 - [x] **B2 — Power BI Credit Risk : TERMINÉ ET RECETTÉ (28/10/2026)**. PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels, CI réussie et validation visuelle/interactive Power BI Desktop sur captures et vidéos. Les indicateurs sectoriels EBA restent un chantier distinct.
 - [x] **B3 — Credit Risk Analytics : TERMINÉ (28/10/2026)**. Étude de prédiction de défaut historique, trois approches comparées, train/validation/test 18k/6k/6k, audit de biais descriptifs et résultats agrégés ; aucun scoring bancaire réel.
 - [x] **B4 — Fraud Analytics : TERMINÉ (28/10/2026), simulation PaySim uniquement**. 6 362 620 transactions simulées, modèles comparés, validation chronologique, métriques, contrôles de fuite, déciles et audits d'alertes. Aucune décision, aucun scoring réel ou déploiement.
-- [x] **B5 — Cockpit Web React : PAGES 01–05 VALIDÉES ET GELÉES (30/10/2026)**. Architecture de référence **6 pages / 6 sections** : 01 Vue d'ensemble, 02 Portefeuille & segmentation, 03 Fraude & alertes, 04 Modèles & explorateur, 05 Qualité & traçabilité ; **06 Rapports & préférences reste à travailler**. PR [#19](https://github.com/sogoyou8/BANK-360/pull/19), [#20](https://github.com/sogoyou8/BANK-360/pull/20), [#21](https://github.com/sogoyou8/BANK-360/pull/21) fusionnées dans `main` ; **76/76 tests Chromium réussis après fusion C5** ([Actions](https://github.com/sogoyou8/BANK-360/actions/runs/41033332558)). Aucun déploiement public lancé. Voir le [registre de gel 01–05](docs/B5-gel-pages-01-05.md).
+- [x] **B5 — Cockpit Web React : LES 6 PAGES VALIDÉES ET GELÉES (30/10/2026)**. Architecture **6 pages / 6 sections** : 01 Vue d'ensemble, 02 Portefeuille & segmentation, 03 Fraude & alertes, 04 Modèles & explorateur, 05 Qualité & traçabilité, 06 Rapports & préférences. Les PR [#19](https://github.com/sogoyou8/BANK-360/pull/19), [#20](https://github.com/sogoyou8/BANK-360/pull/20), [#21](https://github.com/sogoyou8/BANK-360/pull/21) et [#22](https://github.com/sogoyou8/BANK-360/pull/22) sont fusionnées dans `main` ; **89/89 tests Chromium réussis après fusion C6** ([Actions](https://github.com/sogoyou8/BANK-360/actions/runs/41055392969)). Aucun déploiement public lancé. Voir le [registre officiel de gel 01–06](docs/B5-gel-pages-01-06.md).
 - [ ] B6 : finalisation et portfolio
 
 ### Recette B1 sur données historiques réelles
@@ -101,18 +101,18 @@ python -m bank360 validate --db examples/demo-output/data/bank360.sqlite
 
 ## B5 — Application Web Aurora Spatial Atlas · refonte B5.R
 
-- **Architecture actuelle : 6 pages / 6 sections**, dont 01–05 gelées. Voir [Crédit unifié](docs/B5-credit-unified.md), [Fraude C3](docs/B5-fraud-unified-C3.md), [Intelligence C4](docs/B5-intelligence-unified-C4.md), [Qualité C5](docs/B5-quality-unified-C5.md) et le [registre de gel](docs/B5-gel-pages-01-05.md). Les architectures B5.R à dix pages et C3 à sept pages sont historiques.
+- **Architecture actuelle : 6 pages / 6 sections, toutes gelées**. Voir [Crédit unifié](docs/B5-credit-unified.md), [Fraude C3](docs/B5-fraud-unified-C3.md), [Intelligence C4](docs/B5-intelligence-unified-C4.md), [Qualité C5](docs/B5-quality-unified-C5.md), [Rapports C6](docs/B5-reports-unified-C6.md) et le [registre de gel](docs/B5-gel-pages-01-06.md). Les architectures historiques B5.R à dix pages et C3 à sept pages ne sont plus les références.
 - Interface sans indicateurs fictifs d'activité temps réel, sans références aux étapes de développement, aucune géolocalisation client ; données historiques UCI et simulations PaySim distinctes.
 
 ## B5 — Application Web Aurora Spatial Atlas
 
 - **Source :** [web/](web/) · [Cadrage et commandes](docs/B5-implementation.md) · [Recette technique](docs/B5-validation-finale.md).
-- **6 pages actuelles** : Vue d'ensemble ; Portefeuille & segmentation (Crédit) ; Détection de fraude & analyse des alertes ; Modèles & explorateur de données ; Qualité & traçabilité ; Rapports & préférences. **5 pages gelées et la page 06 restant à finaliser**.
+- **6 pages gelées** : Vue d'ensemble ; Portefeuille & segmentation (Crédit) ; Détection de fraude & analyse des alertes ; Modèles & explorateur de données ; Qualité & traçabilité ; Rapports & préférences. **C6 clôturée après C6.3, sans C6.4.**
 - **Identité** : Aurora + Spatial Workspace + Atlas (interface sombre vitrée, option claire, design responsive et panneaux contextuels). Aucun faux graphique temps réel ni point géographique inventé.
 - **Données intégrées à la compilation** : CSV agrégés B2 (UCI historiques) et JSON/CSV B3/B4 (PaySim simulé) ; sources séparées, aucun dossier ni transaction individuelle publiés.
 - **CI :** [build TypeScript + test données + 5 scénarios Playwright réussis](https://github.com/sogoyou8/BANK-360/actions/runs/40710999940), y compris **prévisualisation HTML autonome testée hors ligne**.
 - **Prévisualisation** : télécharger l'artefact `bank360-b5-static-preview` depuis l'exécution CI, extraire, ouvrir `BANK-360-B5-APERCU-LOCAL.html` directement dans Chrome (aucun npm nécessaire).
-- **État** : pages 01–05 clôturées techniquement et visuellement, avec contrôle local de C5 ; page 06 restant à finaliser. Aucune publication Vercel/GitHub Pages lancée lors de la clôture C5 ; aucune banque connectée.
+- **État** : six pages B5 clôturées techniquement et visuellement ; 89/89 tests Chromium sur `main` après fusion C6. Aucune publication Vercel/GitHub Pages lancée lors de cette clôture ; aucune banque connectée. La validation globale du projet Data et la décision de publication demeurent distinctes.
 
 ## B4 — Fraud Analytics PaySim : expérimentation validée
 
