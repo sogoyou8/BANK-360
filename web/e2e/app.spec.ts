@@ -395,7 +395,7 @@ test('C3 — compact desktop geometries and mobile theme parity',async({page})=>
 });
 
 test('C3 — six daily aggregate rows and all channel rows fit without an internal scrollbar',async({page})=>{
- for(const [width,height] of [[1672,941],[1440,900],[1366,768]] as const){
+ for(const [width,height] of [[1672,941],[1440,900],[1366,768],[1280,720]] as const){
   await page.setViewportSize({width,height});await page.goto('/');await section(page,'Fraude');
   const dims=await page.locator('.fw-detail-table').evaluate(el=>{
    const box=el.getBoundingClientRect(),first=el.querySelector('tbody tr:first-child')!.getBoundingClientRect(),last=el.querySelector('tbody tr:last-child')!.getBoundingClientRect();
