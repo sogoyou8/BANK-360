@@ -96,7 +96,7 @@
  .cw-detail .cw-table-scroll,.cw-monthtable .cw-table-scroll{overflow-y:auto;overscroll-behavior:contain}
  .cw-detail .cw-table-scroll th,.cw-monthtable .cw-table-scroll th{padding:6px 5px;line-height:1.15}
  .cw-detail .cw-table-scroll td,.cw-monthtable .cw-table-scroll td{padding:5px 5px;line-height:1.1}
- .cw-detail .cw-table-scroll tr,.cw-monthtable .cw-table-scroll tr{height:27px}
+ .cw-detail .cw-table-scroll tr,.cw-monthtable .cw-table-scroll tr{height:25px}
  .cw-monthtable .cw-month-foot{min-height:20px;padding-top:4px}
  .cw-trend .cw-panel-head{min-height:53px}
  .cw-trend .cw-panel-body{padding-bottom:11px}
