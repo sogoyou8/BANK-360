@@ -112,7 +112,18 @@ export default function QualityWorkspace({checks}:{checks:QualityChecks}){
  const [perspective,setPerspective]=useState<QualityPerspective>('overview');
  const [detail,setDetail]=useState<QualityItem|null>(null);
  const items=useMemo(()=>buildEvidence(checks),[checks.creditOK,checks.paymentOK,checks.fraudOK,checks.modelsOK,checks.population,checks.defaults,checks.paymentObservations,checks.paymentRows]);
- const selected=items.filter(item=>scope==='all'||item.scope===scope||item.scope==='both');
+ const selected=items.filter(item=>scope==='all'||item.scope===scope||item.scope==='both').map(item=>{
+  if(item.id!=='models'||scope==='all')return item;
+  const isCredit=scope==='credit';
+  const metric=isCredit?b3.holdout_test_metrics.pr_auc:b4.holdout_test.pr_auc;
+  return {...item,scope,status:metric>0?'passed' as const:'failed' as const,
+   file:isCredit?'reports/b3/B3-metrics.json':'reports/b4/B4-metrics.json',
+   criterion:'PR-AUC test déclarée et strictement positive dans le rapport expérimental '+(isCredit?'B3 (Crédit UCI).':'B4 (Fraude PaySim).'),
+   observed:'PR-AUC test '+(isCredit?'B3':'B4')+' : '+metric.toFixed(3).replace('.',','),
+   expected:'PR-AUC test strictement positive dans la source sélectionnée',
+   meaning:'Contrôle de présence et de cohérence minimale du rapport expérimental sélectionné ; il ne certifie pas la fiabilité opérationnelle du modèle.'
+  };
+ });
  const passed=selected.filter(item=>item.status==='passed').length;
  const isGood=selected.length>0&&passed===selected.length;
  const uciscoped=scope!=='fraud',fraudscoped=scope!=='credit';
