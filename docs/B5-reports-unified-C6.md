@@ -63,3 +63,26 @@ Le workflow `B5 Web cockpit` lance `npm run test`, `npm run build`, `npm run sta
 ## Clôture
 
 Une fois tous les tests réussis, comparer la capture réelle de C6 à la maquette Aurora. **La fusion de la PR #22, le gel de la page 06 et toute publication exigent une validation locale explicite de l'utilisateur.** Le gel historique des pages 01–05 reste valable.
+
+
+## C6.1 — Finition et validation de la maquette
+
+Dernier ajustement visuel sur grand écran, **sans modification des pages 01–05** :
+- Dock et rails principaux calés sur la cible Aurora à 1672 × 941.
+- Bandeau déplacé vers la bonne ligne de composition.
+- Répartition Méthodologie / Préférences équilibrée, les trois cartes d'export restent entièrement visibles.
+- Aucune valeur de taille « ~2,4 Mo », « ~1,8 Mo » ou « ~0,9 Mo » reproduite : il ne s'agit pas de mesures issues des exports.
+
+**GitHub Actions B5 C6.1 :** [run 41042207316](https://github.com/sogoyou8/BANK-360/actions/runs/41042207316), **87/87 tests Chromium réussis**, \`npm run test\`, compilation TypeScript / React et \`npm run standalone\` réussis. Les workflows B1 et B3 de cette version sont également réussis.
+
+**Validation XLSX indépendante :** le fichier produit par Playwright (\`reports-c6-alertes-real.xlsx\`) a été importé avec un lecteur de classeur distinct du code React. Le classeur « Données agrégées » contient bien les 9 colonnes \`type, transactions, frauds, alerts, tp, fp, fn, precision, recall\` et des lignes de groupes PaySim, sans transactions individuelles. Le ZIP/OOXML est conforme à cette lecture.
+
+**Captures Chromium disponibles** dans l'artefact \`bank360-b5-browser-evidence\` de ce run :
+- \`reports-c61-reference-1672x941.png\`, comparaison à la cible ;
+- \`reports-c6-1440x810.png\` et \`reports-c6-mobile-390x844.png\` ;
+- autres formats et contextes \`reports-c6-context-*.png\` ;
+- fichier réel \`reports-c6-alertes-real.xlsx\`.
+
+Les captures automatisées vérifient l'intégrité du cockpit à 1920×1080, 1672×941, 1648×928, 1440×900, 1440×810, 1366×768, 1280×720 et 390×844, y compris les filtres et perspectives.
+
+**Statut : C6.1 prêt à être inspecté localement.** PR #22 ouverte en brouillon, non fusionnée, aucun déploiement. Seule la validation explicite de la capture locale permettra de geler la page 06.
