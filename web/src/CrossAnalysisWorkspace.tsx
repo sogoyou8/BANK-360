@@ -28,8 +28,8 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
  const [selectionInfo,setSelectionInfo]=useState(false);
  const creditRows=useMemo(()=>filteredSegments(filters),[filters]);
  const credit=useMemo(()=>creditTotals(creditRows),[creditRows]);
- const ageGroups=useMemo(()=>groupSegments(creditRows,'age_band'),[creditRows]);
- const limitGroups=useMemo(()=>groupSegments(creditRows,'credit_limit_band'),[creditRows]);
+ const ageGroups=useMemo(()=>groupSegments(filteredSegments({...filters,age:'Tout'}),'age_band'),[filters]);
+ const limitGroups=useMemo(()=>groupSegments(filteredSegments({...filters,limit:'Tout'}),'credit_limit_band'),[filters]);
  const monthly=useMemo(()=>paymentSeries(filters),[filters]);
  const activeFraud=fraud.channel!=='Tous'?
   fraudTypes.find(x=>x.type===fraud.channel):
@@ -93,8 +93,8 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
      <Kpi label="Retards · septembre" value={fmtInt(monthly[5].delayed)} detail={monthly[5].observations?asPct(monthly[5].rate):'—'} tone="mint"/>
     </div>
     <div className="x1-credit-charts">
-     <div className="x1-chart"><h3>Défauts par âge <small>Choisir une tranche</small></h3>{ageGroups.length?<Bars items={ageGroups} label="Taux de défaut par âge" max={ageMax} selected={filters.age} onClick={v=>chooseCredit('age',v)}/>:<div className="x1-empty">Aucun dossier</div>}</div>
-     <div className="x1-chart"><h3>Défauts par plafond <small>Choisir un plafond</small></h3>{limitGroups.length?<Bars items={limitGroups} label="Taux de défaut par plafond" max={limitMax} selected={filters.limit} onClick={v=>chooseCredit('limit',v)}/>:<div className="x1-empty">Aucun dossier</div>}</div>
+     <div className="x1-chart"><h3>Défauts par âge <small>Comparer / choisir</small></h3>{ageGroups.length?<Bars items={ageGroups} label="Taux de défaut par âge" max={ageMax} selected={filters.age} onClick={v=>chooseCredit('age',v)}/>:<div className="x1-empty">Aucun dossier</div>}</div>
+     <div className="x1-chart"><h3>Défauts par plafond <small>Comparer / choisir</small></h3>{limitGroups.length?<Bars items={limitGroups} label="Taux de défaut par plafond" max={limitMax} selected={filters.limit} onClick={v=>chooseCredit('limit',v)}/>:<div className="x1-empty">Aucun dossier</div>}</div>
     </div>
     <div className="x1-month-chart"><div className="x1-subtitle"><h3>Retards mensuels</h3><span>Avril–sept. 2005 · mêmes filtres UCI</span></div><div className="x1-month-bars">{monthly.map(m=><div key={m.period} title={m.period+' · '+fmtInt(m.delayed)+' retards / '+fmtInt(m.observations)+' observations'}><b>{m.observations?asPct(m.rate):'—'}</b><span><i style={{height:Math.max(m.rate?2:0,100*m.rate/monthMax)+'%'}}/></span><small>{m.period.slice(-2)}</small></div>)}</div></div>
    </Card>
@@ -106,12 +106,12 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
      <Kpi label="Rappel" value={fraudRecall===null?'—':asPct(fraudRecall)} detail="Vraies / fraudes"/>
     </div>
     <div className="x1-fraud-charts">
-     <div className="x1-chart"><h3>Alertes par type <small>{fraud.day!=='Tous'?'Vue globale · non filtrable par jour':'Choisir un type'}</small></h3>
-      <div className="x1-horizontal-bars">{fraudTypes.filter(x=>x.alerts>0).map(t=><button key={t.type} disabled={fraud.day!=='Tous'} aria-pressed={fraud.channel===t.type} onClick={()=>chooseChannel(t.type)} title={t.type+' : '+fmtInt(t.alerts)+' alertes du test global'}>
+     <div className="x1-chart"><h3>Alertes par type <small>{fraud.day!=='Tous'?'Vue globale · clic = changer d'axe':'Choisir un type'}</small></h3>
+      <div className="x1-horizontal-bars">{fraudTypes.filter(x=>x.alerts>0).map(t=><button key={t.type} aria-pressed={fraud.channel===t.type} onClick={()=>chooseChannel(t.type)} title={t.type+' : '+fmtInt(t.alerts)+' alertes du test global'}>
        <span>{t.type}</span><i><em style={{width:(100*t.alerts/typeMax)+'%'}}/></i><b>{fmtInt(t.alerts)}</b></button>)}</div>
      </div>
-     <div className="x1-chart"><h3>Alertes par jour <small>{fraud.channel!=='Tous'?'Vue globale · non filtrable par type':'Choisir un jour'}</small></h3>
-      <div className="x1-day-bars">{fraudDays.map(d=><button key={d.day} disabled={fraud.channel!=='Tous'} aria-pressed={fraud.day===String(d.day)} onClick={()=>chooseDay(String(d.day))} title={'J'+d.day+' : '+fmtInt(d.alerts)+' alertes du test global'}><b>{d.alerts}</b><span><i style={{height:(100*d.alerts/dayMax)+'%'}}/></span><small>J{d.day}</small></button>)}</div>
+     <div className="x1-chart"><h3>Alertes par jour <small>{fraud.channel!=='Tous'?'Vue globale · clic = changer d'axe':'Choisir un jour'}</small></h3>
+      <div className="x1-day-bars">{fraudDays.map(d=><button key={d.day} aria-pressed={fraud.day===String(d.day)} onClick={()=>chooseDay(String(d.day))} title={'J'+d.day+' : '+fmtInt(d.alerts)+' alertes du test global'}><b>{d.alerts}</b><span><i style={{height:(100*d.alerts/dayMax)+'%'}}/></span><small>J{d.day}</small></button>)}</div>
      </div>
     </div>
     <div className="x1-model-note"><Activity size={15}/><span>B3 PR-AUC {format3(b3.holdout_test_metrics.pr_auc)} · B4 PR-AUC {format3(test.pr_auc)} — <strong>tests globaux, non filtrables par segment</strong></span></div>
