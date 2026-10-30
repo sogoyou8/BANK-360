@@ -132,6 +132,28 @@
  .iw-table-window th{height:22px;padding:2px 9px}
  .iw-chart-axis{padding-top:19px;padding-bottom:19px}.iw-bar-value{min-height:14px}
 }
+/* C4.12 — Measured 1440×722 CSS viewport: prioritize complete explorer rows.
+   Scoped to short 1320–1450px desktops; standard Aurora ratios stay unchanged. */
+@media (min-width:1320px) and (max-width:1450px) and (min-height:690px) and (max-height:750px){
+ .app:has(.intelligence-workspace) .view-head{height:49px;min-height:49px;padding-top:2px;padding-bottom:3px}
+ .app:has(.intelligence-workspace) .iw-title h1{font-size:21px}
+ .app:has(.intelligence-workspace) .iw-title small{font-size:9px}
+ .intelligence-workspace{gap:6px}
+ .iw-kpis{height:58px;min-height:58px;gap:8px}
+ .iw-kpi{padding:4px 8px}
+ .iw-kpi-icon{height:38px;width:38px}
+ .iw-kpi-copy{gap:1px}
+ .iw-kpi-copy small{font-size:8px}
+ .iw-board{gap:6px;grid-template-rows:minmax(0,.77fr) minmax(0,1.23fr)}
+ .iw-panel-header{height:34px;min-height:34px}
+ .iw-panel-content{padding-bottom:4px}
+ .iw-explorer-toolbar{min-height:35px;padding-bottom:1px}
+ .iw-explorer-footer{min-height:13px;padding-top:1px}
+ .iw-ranking{row-gap:3px}
+ .iw-ranking-rows{gap:2px}
+ .iw-mini-kpis{min-height:42px}
+ .iw-mini-kpis>div{padding:2px 7px}
+}
 @media(max-width:1120px){
  .app:has(.intelligence-workspace) .view-head{height:auto;min-height:72px;flex-wrap:wrap;align-items:flex-start}
  .app:has(.intelligence-workspace) .view-name{min-width:0}
