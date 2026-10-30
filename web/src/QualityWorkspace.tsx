@@ -83,16 +83,28 @@ function buildEvidence(checks:QualityChecks):QualityItem[]{
 }
 function QualityCheckDetail({item,onClose}:{item:QualityItem;onClose:()=>void}){
  const closer=useRef<HTMLButtonElement>(null);
+ const dialogRef=useRef<HTMLElement>(null);
  useEffect(()=>{
   const previous=document.activeElement instanceof HTMLElement?document.activeElement:null;
   closer.current?.focus();
-  const key=(event:KeyboardEvent)=>{if(event.key==='Escape')onClose();};
+  const key=(event:KeyboardEvent)=>{
+   if(event.key==='Escape'){event.preventDefault();onClose();return;}
+   if(event.key!=='Tab')return;
+   const options=[...(dialogRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])')??[])];
+   if(!options.length){event.preventDefault();return;}
+   const first=options[0],last=options[options.length-1];
+   if(event.shiftKey && (document.activeElement===first || !dialogRef.current?.contains(document.activeElement))){
+    event.preventDefault();last.focus();
+   } else if(!event.shiftKey && (document.activeElement===last || !dialogRef.current?.contains(document.activeElement))){
+    event.preventDefault();first.focus();
+   }
+  };
   window.addEventListener('keydown',key);
   return()=>{window.removeEventListener('keydown',key);previous?.focus();};
  },[onClose]);
  const Row=({term,value}:{term:string;value:string})=><div className="qw-evidence-row"><dt>{term}</dt><dd>{value}</dd></div>;
  return <div className="qw-dialog-layer" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}}>
-  <section role="dialog" aria-modal="true" aria-labelledby="qw-dialog-title" aria-describedby="qw-dialog-desc" className="qw-dialog">
+  <section ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby="qw-dialog-title" aria-describedby="qw-dialog-desc" className="qw-dialog">
    <div className="qw-dialog-top"><div className="qw-icon"><item.icon size={25}/></div><div><span>Inspection du contrôle</span><h2 id="qw-dialog-title">{item.name}</h2></div><button ref={closer} aria-label="Fermer le détail" onClick={onClose}><X size={20}/></button></div>
    <p id="qw-dialog-desc" className="qw-dialog-intro">{item.meaning}</p>
    <div className={'qw-result qw-result-'+item.status}><StatusIcon state={item.status}/>{item.status==='passed'?'Contrôle conforme':item.status==='failed'?'Contrôle à examiner':'Contrôle indisponible'}</div>
@@ -104,6 +116,7 @@ function QualityCheckDetail({item,onClose}:{item:QualityItem;onClose:()=>void}){
     <Row term="Valeur attendue" value={item.expected}/>
    </dl>
    <div className="qw-dialog-bottom"><Info size={16}/> Analyse descriptive sur données historiques et simulées, sans décision opérationnelle.</div>
+   <div className="qw-dialog-actions"><button type="button" onClick={onClose}>Fermer l’inspection</button></div>
   </section>
  </div>;
 }
@@ -133,9 +146,20 @@ export default function QualityWorkspace({checks}:{checks:QualityChecks}){
   {id:'drift',label:'Les résultats de fraude sont sensibles à une dérive chronologique.',scope:'fraud'}
  ].filter(x=>scope!=='credit'||x.scope!=='fraud');
  const sourceCards=[
-  {id:'credit',icon:Database,title:'Portefeuille de crédit',description:'UCI · Taïwan, 2005 · données historiques',url:UCI_URL},
-  {id:'fraud',icon:Shield,title:'Fraude · paiements mobiles',description:'PaySim · transactions entièrement simulées',url:PAYSIM_URL}
+  {id:'credit',icon:Database,title:'Portefeuille de crédit',description:'UCI · Taïwan, 2005 · données historiques',url:UCI_URL,proof:'powerbi/data/uci350_segments.csv · uci350_payment_months.csv'},
+  {id:'fraud',icon:Shield,title:'Fraude · paiements mobiles',description:'PaySim · transactions entièrement simulées',url:PAYSIM_URL,proof:'reports/b4/B4-metrics.json · simulation PaySim'}
  ].filter(x=>scope==='all'||x.id===scope);
+ const perspectiveDescriptions:Record<QualityPerspective,string>={
+  overview:'Synthèse des contrôles, des sources et des limites.',
+  controls:'Inspection des critères et résultats de chaque contrôle.',
+  sources:'Origine et fichiers de référence des deux jeux indépendants.',
+  limits:'Contraintes méthodologiques et périmètre d’utilisation.'
+ };
+ const scopeDescriptions:Record<QualityScope,string>={
+  all:'UCI historique et PaySim simulé : contrôles indépendants.',
+  credit:'Crédit : agrégats UCI 2005 et rapport expérimental B3 uniquement.',
+  fraud:'Fraude : métadonnées PaySim simulées et rapport expérimental B4 uniquement.'
+ };
  return <section className={'qw-root qw-perspective-'+perspective+' qw-scope-'+scope} aria-label="Qualité et traçabilité" data-testid="quality-workspace">
   <header className="qw-header">
    <div className="qw-head-top">
@@ -159,10 +183,11 @@ export default function QualityWorkspace({checks}:{checks:QualityChecks}){
     <div><CheckCircle2 size={26}/><span><strong>{passed}</strong><small>contrôles conformes{scope==='all'?'':' / '+selected.length}</small></span></div>
    </div>
   </div>
+  <p className="qw-perspective-context" data-testid="quality-perspective-description" aria-live="polite">{perspectiveDescriptions[perspective]}</p>
   <div className="qw-grid" data-testid="quality-grid">
    <section className="qw-panel qw-checks-panel" aria-label="Contrôles des agrégats">
     <div className="qw-panel-heading"><div className="qw-panel-icon"><Settings2 size={25}/></div><div><h2>Contrôles des agrégats</h2><p>Vérifications de la qualité et de la cohérence des données</p></div></div>
-    <div className="qw-check-list">
+    <div className={'qw-check-list qw-check-count-'+selected.length}>
      {selected.map(item=><button type="button" key={item.id} className="qw-check-card" onClick={()=>setDetail(item)} aria-label={'Inspecter le contrôle '+item.name} data-testid={'quality-check-'+item.id}>
       <span className="qw-card-icon"><item.icon size={26}/></span>
       <span className="qw-check-copy"><strong>{item.name}</strong><small>{item.subtitle}</small></span>
@@ -170,20 +195,24 @@ export default function QualityWorkspace({checks}:{checks:QualityChecks}){
       <ChevronRight size={21} className="qw-chevron"/>
      </button>)}
     </div>
+    {selected.length<4&&<p className="qw-scope-note" data-testid="quality-scope-note"><Info size={14}/>{scopeDescriptions[scope]}</p>}
+    {perspective==='controls'&&<div className="qw-perspective-info" data-testid="quality-controls-focus"><ShieldCheck size={15}/>{passed} contrôle(s) conformes sur {selected.length} · Cliquez sur une carte pour consulter le critère, la mesure et la source.</div>}
    </section>
    <section className="qw-panel qw-sources-panel" aria-label="Provenance">
     <div className="qw-panel-heading"><div className="qw-panel-icon"><Database size={25}/></div><div><h2>Provenance</h2><p>Origine et nature des sources de données</p></div></div>
-    <div className="qw-source-list">
+    <div className={'qw-source-list '+(sourceCards.length===1?'qw-one-source':'')}>
      {sourceCards.map(item=><a key={item.id} href={item.url} target="_blank" rel="noreferrer noopener" className="qw-source-card" aria-label={'Ouvrir la source '+item.title}>
       <span className={'qw-card-icon '+(item.id==='fraud'?'qw-source-fraud':'')}><item.icon size={27}/></span>
-      <span className="qw-source-copy"><span className="qw-source-line"><strong>{item.title}</strong>{item.id==='credit'&&<em>Source principale</em>}</span><small>{item.description}</small></span>
+      <span className="qw-source-copy"><span className="qw-source-line"><strong>{item.title}</strong>{item.id==='credit'&&<em>Source principale</em>}</span><small>{item.description}</small>{perspective==='sources'&&<span className="qw-source-proof">{item.proof}</span>}</span>
       <span className="qw-open-source"><ArrowUpRight size={22}/></span>
      </a>)}
     </div>
+    {perspective==='sources'&&<p className="qw-perspective-info" data-testid="quality-sources-focus"><Database size={15}/>Sources historiques UCI et simulées PaySim, sans rapprochement de données individuelles.</p>}
    </section>
    <section className="qw-panel qw-limits-panel" aria-label="Limites d’utilisation">
     <div className="qw-panel-heading"><div className="qw-panel-icon"><Info size={25}/></div><div><h2>Limites d’utilisation</h2><p>Contraintes et périmètre d’usage des données</p></div></div>
     <div className="qw-limits-list">{limits.map(limit=><div key={limit.id}><Info size={19}/><span>{limit.label}</span></div>)}</div>
+    {perspective==='limits'&&<p className="qw-perspective-info" data-testid="quality-limits-focus"><CircleAlert size={15}/>{scope==='credit'?'Périmètre historique UCI : aucune décision réelle de crédit.':scope==='fraud'?'PaySim est simulé ; la dérive chronologique limite la généralisation.':'Données historiques ou simulées : aucun usage bancaire opérationnel.'}</p>}
    </section>
   </div>
   {detail&&<QualityCheckDetail item={detail} onClose={()=>setDetail(null)}/>}
