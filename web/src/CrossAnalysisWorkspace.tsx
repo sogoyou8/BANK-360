@@ -106,11 +106,11 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
      <Kpi label="Rappel" value={fraudRecall===null?'—':asPct(fraudRecall)} detail="Vraies / fraudes"/>
     </div>
     <div className="x1-fraud-charts">
-     <div className="x1-chart"><h3>Alertes par type <small>{fraud.day!=='Tous'?'Vue globale · clic = changer d'axe':'Choisir un type'}</small></h3>
+     <div className="x1-chart"><h3>Alertes par type <small>{fraud.day!=='Tous'?'Vue globale · clic = changer d’axe':'Choisir un type'}</small></h3>
       <div className="x1-horizontal-bars">{fraudTypes.filter(x=>x.alerts>0).map(t=><button key={t.type} aria-pressed={fraud.channel===t.type} onClick={()=>chooseChannel(t.type)} title={t.type+' : '+fmtInt(t.alerts)+' alertes du test global'}>
        <span>{t.type}</span><i><em style={{width:(100*t.alerts/typeMax)+'%'}}/></i><b>{fmtInt(t.alerts)}</b></button>)}</div>
      </div>
-     <div className="x1-chart"><h3>Alertes par jour <small>{fraud.channel!=='Tous'?'Vue globale · clic = changer d'axe':'Choisir un jour'}</small></h3>
+     <div className="x1-chart"><h3>Alertes par jour <small>{fraud.channel!=='Tous'?'Vue globale · clic = changer d’axe':'Choisir un jour'}</small></h3>
       <div className="x1-day-bars">{fraudDays.map(d=><button key={d.day} aria-pressed={fraud.day===String(d.day)} onClick={()=>chooseDay(String(d.day))} title={'J'+d.day+' : '+fmtInt(d.alerts)+' alertes du test global'}><b>{d.alerts}</b><span><i style={{height:(100*d.alerts/dayMax)+'%'}}/></span><small>J{d.day}</small></button>)}</div>
      </div>
     </div>
