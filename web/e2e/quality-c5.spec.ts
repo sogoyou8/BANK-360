@@ -150,3 +150,22 @@ test('C5 — dark/light appearance remains operable; other page shells preserved
  await page.locator('.nav-dock').getByRole('button',{name:'Fraude',exact:true}).click();
  await expect(page.getByRole('heading',{name:'Détection de fraude & analyse des alertes'})).toBeVisible();
 });
+
+
+test('C5.8 — reference 1648×928 Aurora rails, banner and panels align with approved target',async({page})=>{
+ await page.setViewportSize({width:1648,height:928});await openQuality(page);
+ const g=await page.evaluate(()=>{
+  const box=(selector:string)=>{const r=document.querySelector(selector)!.getBoundingClientRect();return{x:r.x,y:r.y,width:r.width,right:r.right,bottom:r.bottom}};
+  return {dock:box('.nav-dock'),title:box('.qw-heading h1'),banner:box('.qw-reconciliation'),
+   left:box('.qw-checks-panel'),right:box('.qw-sources-panel'),lower:box('.qw-limits-panel')};
+ });
+ expect(Math.abs(g.dock.x-17),'dock left edge').toBeLessThanOrEqual(3);
+ expect(Math.abs(g.dock.width-87),'dock width').toBeLessThanOrEqual(3);
+ expect(Math.abs(g.banner.x-134),'main grid x').toBeLessThanOrEqual(5);
+ expect(Math.abs(g.banner.right-1618),'main grid right').toBeLessThanOrEqual(5);
+ expect(Math.abs(g.banner.y-262),'status banner vertical alignment').toBeLessThanOrEqual(11);
+ expect(Math.abs(g.left.y-373),'module panel alignment').toBeLessThanOrEqual(12);
+ expect(Math.abs(g.right.y-g.left.y)).toBeLessThanOrEqual(1);
+ expect(Math.abs(g.lower.bottom-g.left.bottom)).toBeLessThanOrEqual(2);
+ await page.screenshot({path:'test-results/quality-c58-target-1648x928.png',fullPage:true});
+});
