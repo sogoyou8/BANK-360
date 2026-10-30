@@ -40,3 +40,12 @@ Valider les captures Chromium 1672×941, 1440×900, 1366×768 et mobile 390×844
 **Dernière validation technique avant recette utilisateur : 45/45 tests Chromium PASS**, builds et contrôles B1/B3/B5 PASS (run GitHub Actions `41000393347`, commit applicatif `dcf3608eacc88fe418107785dca4f100ab7b664a`). Aucune modification de UCI, du contrat B4 ou des KPI de test.
 
 **Décision : C3.6–C3.9 techniquement terminés, gel et fusion de la PR #19 en attente de la capture et de l'approbation explicite de l'utilisateur. Aucun déploiement.**
+
+
+## C3.10 — Finition finale du mode graphique et des canaux (30 octobre 2026)
+
+- **Mode initial « Combinée »** : transactions simulées en barres et alertes en courbe, chaque série sur son axe et son échelle réels. Les deux modes alternatifs (« Alertes », « Transactions ») restent sélectionnables, avec des valeurs recalculées depuis les agrégats PaySim inchangés.
+- **Lisibilité des canaux CASH_OUT et TRANSFER** : les quatre statistiques (vraies alertes, fausses alertes, précision, rappel) ont des libellés au-dessus de nombres plus lisibles. Des règles de densité ciblées sur le cockpit Fraude préservent la compatibilité avec les fenêtres desktop courtes.
+- **Tests** : 46/46 tests Playwright/Chromium réussis, dont nouveau contrôle d'ouverture en mode Combinée, de bascule entre modes, de deux axes distincts, des caractères non tronqués et de la taille de police sur 1672×941, 1440×900, 1366×768, 1280×720 et mobile 390×844. Contrôles B1/B3/B5 au vert : [GitHub Actions run 41001911084](https://github.com/sogoyou8/BANK-360/actions/runs/41001911084).
+- **Preuves** : captures Chromium et aperçu HTML autonome dans les artefacts privés de cette exécution. Aucune modification des pages 01/02, des sources de données ou des chiffres de B4.
+- **Statut** : PR #19 laissée ouverte et non fusionnée. Pas de publication ni déploiement. Gel de la page 03 uniquement après approbation explicite de la nouvelle capture locale par l'utilisateur.
