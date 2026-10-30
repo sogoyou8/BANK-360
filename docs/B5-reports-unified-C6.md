@@ -99,3 +99,48 @@ Les captures automatisées vérifient l'intégrité du cockpit à 1920×1080, 16
 - Le fichier XLSX PaySim réel est toujours généré ; colonnes et valeurs reconnues par un lecteur OOXML indépendant, aucun montant, identifiant ou score de transaction inventé.
 
 **Décision : C6.2 est techniquement prête à la revue locale. PR #22 reste en brouillon, sans fusion ni déploiement public.** La page 06 ne sera gelée qu'après validation de l'utilisateur sur sa machine.
+
+## C6.3 — Finition unique après revue vidéo locale (30 octobre 2026)
+
+**Objectif :** corriger dans une seule intervention le tassement de Préférences sous la perspective Méthodologie, l'espace sous-utilisé des contextes Crédit/Fraude et compléter les tests géométriques, sans modifier la Vue globale Toutes sources ni les pages 01–05 gelées.
+
+### C6.3.1 — Préférences lisibles sous Méthodologie
+
+- Le découpage vertical Méthodologie/Préférences réserve une hauteur minimum au panneau inférieur dans toute fenêtre desktop.
+- Chaque préférence (« Apparence » et « Filtres de crédit ») dispose d'un espace propre pour son titre, sa valeur et son bouton.
+- Des règles adaptées aux fenêtres de hauteur inférieure ou égale à 850 px et à 750 px préviennent le chevauchement de lignes et boutons.
+- Aucune nouvelle route, aucune donnée modifiée.
+
+### C6.3.2 — Densité des contextes filtrés
+
+- **Crédit** : largeur des deux colonnes rééquilibrée en Vue globale ; les deux exports restent compacts et un encadré « Périmètre Crédit » précise la provenance UCI, le caractère historique, le nombre calculé de lignes exportables et si un filtre est actif.
+- **Fraude** : la colonne Exports se resserre en Vue globale ; la carte « Alertes par canal » reste compacte. L'encadré « Périmètre Fraude » précise PaySim simulé, l'origine B4 et le nombre réel de lignes exportables.
+- Ces encadrés réutilisent les lignes réelles des exports déjà calculées. Ils n'inventent ni transactions individuelles, ni volumes, ni montants.
+- **Toutes sources / Vue globale** : proportions et disposition validées C6.2 conservées.
+
+### C6.3.3 — Détection de collisions et non seulement de débordements
+
+Le test C6.3 « no label/button collisions or clipped preferences across sources, perspectives and viewports » parcourt **48 combinaisons** :
+
+- Résolutions : **1648×928, 1440×810, 1366×768, 1280×720**.
+- Contextes : Toutes sources, Crédit, Fraude.
+- Perspectives : Méthodologie, Préférences, Exports, Vue globale.
+- Contrôles de géométrie : bouton strictement dans la ligne et séparé de son texte, absence de recouvrement entre les deux lignes, descriptif et bouton visibles, note méthodologique contenue dans son panneau, encadré de périmètre entre la dernière carte et le pied du panneau, aucune coupure interne ni défilement global.
+
+**Résultat : 89/89 tests Chromium réussis** sur [GitHub Actions run 41052242912](https://github.com/sogoyou8/BANK-360/actions/runs/41052242912), dont C6.3. Les contrôles B1 et B3 du même commit sont également réussis.
+
+### C6.3.4 — Captures et comparaison réelle
+
+Captures Chromium dans l'artefact bank360-b5-browser-evidence du run B5 :
+
+- reports-c62-target-1648x928.png : Vue globale Toutes sources, comparée à la cible, sans changement de composition.
+- reports-c63-all-methodology-1648x928.png : trois méthodologies et deux préférences sans chevauchement.
+- reports-c63-credit-overview-1648x928.png et reports-c63-fraud-overview-1648x928.png : nouvelles proportions et périmètres de source réels.
+- reports-c63-credit-methodology-1648x928.png, reports-c63-fraud-methodology-1648x928.png : deux préférences lisibles.
+- Mêmes contrôles et captures à **1280×720** : absence de collision ou coupure.
+
+**Inspection visuelle des captures :** textes, contrôles et footer intégralement visibles. La perspective Méthodologie réserve désormais à Préférences un espace stable. La Vue globale de référence est conservée. Les contextes filtrés gardent naturellement de l'espace libre, mais l'encadré de périmètre en améliore l'usage sans inventer d'indicateurs.
+
+**Périmètre C6.3 :** fichiers ReportsWorkspace.tsx, reports-workspace.css, reports-c6.spec.ts et cette documentation, exclusivement sur la branche C6.
+
+**Statut : C6.3 techniquement validé et capturé ; prêt pour revue locale.** La [PR #22](https://github.com/sogoyou8/BANK-360/pull/22) demeure en brouillon sur sa branche, **non fusionnée, non déployée**. La page 06 ne sera gelée qu'après validation du rendu local par l'utilisateur.
