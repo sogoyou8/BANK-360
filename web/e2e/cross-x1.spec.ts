@@ -233,3 +233,19 @@ test('X1.5 — all chart text and matrix stay within their actual containers in 
   await page.screenshot({path:'test-results/x15-analysis-'+width+'x'+height+'.png',fullPage:true});
  }
 });
+
+
+test('X1.5.3 — short viewport does not show half a data row; expanded inspector restores all records',async({page})=>{
+ await page.setViewportSize({width:1280,height:720});
+ await openX1(page);
+ const collapsed=page.locator('.x1-inspector:not(.x1-inspector-expanded)');
+ await expect(collapsed).toBeVisible();
+ await expect(collapsed.locator('.x1-inspector-table tbody')).toHaveCSS('visibility','hidden');
+ await expect(collapsed.getByRole('button',{name:/Agrandir/i})).toBeVisible();
+ await collapsed.getByRole('button',{name:/Agrandir/i}).click();
+ const expanded=page.locator('.x1-inspector-expanded');
+ await expect(expanded).toBeVisible();
+ await expect(expanded.locator('.x1-inspector-table tbody')).toHaveCSS('visibility','visible');
+ await expect(expanded.locator('.x1-inspector-table tbody tr').first()).toBeVisible();
+ await page.screenshot({path:'test-results/x15-expanded-1280x720.png',fullPage:true});
+});
