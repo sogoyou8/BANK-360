@@ -299,3 +299,50 @@ test('C4.11 — DPR 125 % sans changement du viewport CSS ne réduit pas le nomb
   await page.screenshot({path:'test-results/intelligence-c411-dpr125.png',fullPage:true});
  }finally{await context.close()}
 });
+
+
+test('C4.12 — measured 1440×722 viewport shows nine full explorer rows, no overlaps',async({page})=>{
+ for(const [width,height] of [[1440,722],[1440,740],[1366,720]] as const){
+  await page.setViewportSize({width,height});await intelligence(page);
+  const g=await page.evaluate(()=>{
+   const rect=(s:string)=>document.querySelector(s)!.getBoundingClientRect();
+   const table=rect('.iw-table-window');
+   const head=rect('.iw-table-window thead');
+   const rows=[...document.querySelectorAll('.iw-table-window tbody tr')].map(x=>x.getBoundingClientRect());
+   const full=rows.filter(r=>r.top>=head.bottom-1&&r.bottom<=table.bottom+1).length;
+   const cut=rows.filter(r=>r.bottom>head.bottom+1&&r.top<table.bottom-1&&r.bottom>table.bottom+1).length;
+   const diag=rect('.iw-diagnostics'),ranking=[...document.querySelectorAll('.iw-ranking-row')].map(x=>x.getBoundingClientRect());
+   const minis=rect('.iw-mini-kpis'),footer=rect('.iw-diag-footnote');
+   const panel=rect('.iw-deciles'),explorer=rect('.iw-explorer'),kpis=rect('.iw-kpis');
+   return{full,cut,diagBottom:diag.bottom,ranking:ranking.map(r=>({top:r.top,bottom:r.bottom,height:r.height})),
+    miniTop:minis.top,miniBottom:minis.bottom,footerTop:footer.top,footerBottom:footer.bottom,
+    tableHeight:table.height,explorerHeight:explorer.height,upperHeight:panel.height,kpiHeight:kpis.height,
+    overflowX:document.documentElement.scrollWidth-innerWidth};
+  });
+  expect(g.full,'full rows at '+width+'×'+height).toBeGreaterThanOrEqual(9);
+  expect(g.cut,'no cropped rows at '+width+'×'+height).toBe(0);
+  expect(g.ranking).toHaveLength(3);
+  expect(g.ranking.every(x=>x.height>=13),'readable model comparison at '+width+'×'+height).toBe(true);
+  for(let i=1;i<g.ranking.length;i++)expect(g.ranking[i].top).toBeGreaterThanOrEqual(g.ranking[i-1].bottom-1);
+  expect(g.miniTop,'Brier/Rappel below comparison').toBeGreaterThanOrEqual(g.ranking[2].bottom+2);
+  expect(g.footerTop,'footnote below Brier/Rappel').toBeGreaterThanOrEqual(g.miniBottom-1);
+  expect(g.footerBottom).toBeLessThanOrEqual(g.diagBottom);
+  expect(g.overflowX).toBeLessThanOrEqual(2);
+  await noScroll(page);
+  await page.screenshot({path:'test-results/intelligence-c412-'+width+'x'+height+'.png',fullPage:true});
+ }
+});
+
+test('C4.12 — same 1440×722 CSS viewport at DPR 2 keeps nine rows',async({browser})=>{
+ const context=await browser.newContext({viewport:{width:1440,height:722},deviceScaleFactor:2});
+ try{
+  const page=await context.newPage();
+  await page.goto('/?c4diag=1');await page.getByRole('button',{name:'Intelligence',exact:true}).click();
+  await expect(page.getByTestId('iw-css-viewport')).toHaveText('1440 × 722');
+  await expect.poll(async()=>Number(await page.getByTestId('iw-full-rows').textContent())).toBeGreaterThanOrEqual(9);
+  await expect(page.getByTestId('iw-viewport-diagnostic')).toContainText('1'); // scale visual 1 while DPR 2
+  await expect(page.getByTestId('iw-viewport-diagnostic')).toContainText('2');
+  await noScroll(page);
+  await page.screenshot({path:'test-results/intelligence-c412-1440x722-dpr2.png',fullPage:true});
+ }finally{await context.close()}
+});
