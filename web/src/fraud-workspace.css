@@ -85,9 +85,9 @@
 .fw-detail-table{min-height:0;flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#718cb4 transparent}
 .fw-detail-table table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:10px}
 .fw-detail-table thead{position:sticky;top:0;background:#2b4178;z-index:1;color:#bbd1f3}
-.fw-detail-table th{padding:6px 4px;text-align:right;font-size:9px;font-weight:550}
+.fw-detail-table th{padding:4px 4px;text-align:right;font-size:9px;font-weight:550}
 .fw-detail-table th:first-child{text-align:left}.fw-detail-table th button{background:none;color:inherit;padding:0;font-size:9px}
-.fw-detail-table td{padding:6px 4px;border-bottom:1px solid #9db4f31d;text-align:right;font-variant-numeric:tabular-nums;color:#dbe8ff}
+.fw-detail-table td{padding:3px 4px;border-bottom:1px solid #9db4f31d;text-align:right;font-variant-numeric:tabular-nums;color:#dbe8ff}
 .fw-detail-table td:first-child{text-align:left}
 .fw-detail-table tbody tr{cursor:pointer}.fw-detail-table tbody tr:hover,.fw-detail-table tbody tr.active{background:#6379c54a}.fw-detail-table tbody tr:focus-visible{outline:2px solid #b2cbff;outline-offset:-2px}
 .fw-detail-foot{display:flex;align-items:center;gap:5px;border-top:1px solid #9eb5ee32;padding-top:6px;color:#bdd9ef;font-size:9px;white-space:nowrap}
@@ -144,7 +144,7 @@
  .fw-panel-head{min-height:40px;padding-top:9px}
  .fw-trend-labels{min-height:32px}.fw-day b{font-size:8px}
  .fw-ring{width:112px;height:112px}
- .fw-detail-table td{padding:4px}.fw-detail-foot{padding-top:4px}
+ .fw-detail-table td{padding:2px 4px}.fw-detail-foot{padding-top:3px}
 }
 @media(max-width:1120px){
  .app:has(.fraud-workspace) .view-head{height:auto;min-height:75px;flex-wrap:wrap}
@@ -197,3 +197,5 @@
 :root[data-theme=light] .fw-detail-actions input{color:#233e68}
 :root[data-theme=light] .fw-view-heading-sub{color:#465f81}
 @media(prefers-reduced-motion:reduce){.fw-day-track i{transition:none}}
+
+.fw-quality-tools{display:flex;gap:6px;align-items:center}
