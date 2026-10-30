@@ -35,3 +35,35 @@
 @media(max-width:900px){.credit-workspace{gap:12px}.cw-modebar{height:auto;min-height:32px;flex-wrap:wrap;overflow:visible}.cw-modebar>button[role=tab]{padding:8px 12px}.cw-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.cw-kpi{min-height:94px}.cw-board{display:flex;flex-direction:column;gap:12px}.cw-panel{height:auto;min-height:260px}.cw-panel-body{height:auto;min-height:205px}.cw-donut{width:140px;height:140px}.cw-table-scroll{max-height:300px;min-height:200px}.cw-age-layout{height:205px}.cw-trend-chart{height:205px}.cw-limits{height:220px}.cw-status-layout{min-height:195px}.cw-month-foot small{display:block}.cw-monthtable .cw-panel-body{min-height:260px}}
 @media(max-width:480px){.cw-kpi{gap:7px}.cw-kpi-icon{width:35px;min-width:35px;height:35px}.cw-kpi strong{font-size:18px}.cw-kpi small{font-size:9px}.cw-kpi>div>span{font-size:10px}.cw-status-layout{gap:6px}.cw-donut{width:102px;height:102px}.cw-donut strong{font-size:15px}.cw-status-list>button:not(.cw-drill){grid-template-columns:8px minmax(0,1fr) 32px 35px;gap:3px}.cw-panel-head h2{font-size:12px}.cw-search{width:100px}.cw-table-scroll table{font-size:9px}.cw-month-foot{flex-wrap:wrap}}
 @media(prefers-reduced-motion:reduce){.cw-kpi,.cw-age-bar,.cw-modebar>button{transition:none}}
+
+/* Same fixed dock and topbar geometry as the approved Home view, scoped to Credit only. */
+@media(min-width:901px){
+ .app:has(.credit-workspace) .app-layout{padding:17px 28px 15px 18px;gap:26px}
+ .app:has(.credit-workspace) .nav-dock{width:87px;min-width:87px;padding:18px 9px;border-radius:27px}
+ .app:has(.credit-workspace) .dock-link{width:63px;height:63px;border-radius:17px}
+ .app:has(.credit-workspace) .nav-dock nav{gap:14px}
+ .app:has(.credit-workspace) .dock-emblem{width:52px;height:52px;margin:4px 0 17px}
+ .app:has(.credit-workspace) .dock-emblem div{width:44px;height:44px}
+ .app:has(.credit-workspace) .dock-footer{width:51px;height:51px}
+ .app:has(.credit-workspace) .topbar{height:71px;min-height:71px;padding:0 18px;gap:22px}
+ .app:has(.credit-workspace) .wordmark{font-size:22px;letter-spacing:3.7px}
+ .app:has(.credit-workspace) .search-trigger{height:53px;width:clamp(280px,31vw,488px);padding:0 17px}
+ .app:has(.credit-workspace) .search-trigger span{font-size:13px}
+ .app:has(.credit-workspace) .top-icon{width:52px;height:52px;border-radius:14px}
+ .app:has(.credit-workspace) .profile-bubble{width:50px;height:50px}
+ .app:has(.credit-workspace) .view-head{height:77px;min-height:77px;padding:8px 4px 11px}
+ .app:has(.credit-workspace) .view-name{gap:27px}
+ .app:has(.credit-workspace) .view-overline{font-size:13px;letter-spacing:1.6px}
+ .app:has(.credit-workspace) .view-head h1{font-size:33px;letter-spacing:-.9px}
+ .app:has(.credit-workspace) .view{padding:0 0 8px;overflow:hidden}
+ .app:has(.credit-workspace) .statusline{height:30px;min-height:30px;padding:0 4px;font-size:11px;color:#91a7cd}
+}
+@media(min-width:901px) and (max-width:1500px){
+ .app:has(.credit-workspace) .app-layout{padding:14px 27px 13px 14px;gap:17px}
+ .app:has(.credit-workspace) .nav-dock{width:75px;min-width:75px}
+ .app:has(.credit-workspace) .dock-link{width:52px;height:52px}
+ .app:has(.credit-workspace) .nav-dock nav{gap:11px}
+ .app:has(.credit-workspace) .topbar{height:61px;min-height:61px}
+ .app:has(.credit-workspace) .view-head{height:67px;min-height:67px}
+ .app:has(.credit-workspace) .view-head h1{font-size:29px}
+}

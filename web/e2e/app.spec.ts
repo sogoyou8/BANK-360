@@ -34,7 +34,7 @@ test('Filtre âge croise portefeuille, défaut et six mois, reset restaure 30k',
  await expect(page.locator('.cw-kpi').nth(1)).toContainText('2 197');
  await expect(page.locator('.cw-kpi').nth(2)).toContainText('124 209');
  await expect(page.locator('.cw-monthtable tbody tr')).toHaveCount(6);
- const totals=await page.locator('.cw-monthtable tbody tr').evaluateAll(rs=>rs.map(r=>r.cells[1].textContent));
+ const totals=await page.locator('.cw-monthtable tbody tr').evaluateAll(rs=>rs.map(r=>(r.cells[1].textContent||'').replace(/\s/g,' ')));
  expect(totals).toEqual(Array(6).fill('9 618'));
  await page.getByRole('button',{name:'Réinitialiser les filtres'}).click();
  await expect(page.locator('.cw-kpi').first()).toContainText('30 000');
@@ -64,11 +64,11 @@ test('Clic graphique âge et plafond active puis désactive le filtre réel',asy
 test('Mesures Dossiers / Défaut sur âge et plafond changent sans changer les effectifs',async({page})=>{
  await page.goto('/');await credit(page);
  const age=page.locator('.cw-age');
- await age.getByRole('button',{name:'Dossiers'}).click();
+ await age.getByRole('button',{name:'Dossiers',exact:true}).click();
  await expect(age.locator('.cw-age-bar').filter({hasText:'18-29'})).toContainText('9 618');
  await age.getByRole('button',{name:'Défaut'}).click();
  await expect(age.locator('.cw-age-bar').filter({hasText:'18-29'})).toContainText('22,8 %');
- await page.locator('.cw-limit').getByRole('button',{name:'Dossiers'}).click();
+ await page.locator('.cw-limit').getByRole('button',{name:'Dossiers',exact:true}).click();
  await expect(page.locator('.cw-limit-row').first()).toContainText('4 311');
 });
 test('Chronologie avril-septembre : sélection d’un mois ne modifie pas le portefeuille',async({page})=>{
@@ -86,7 +86,7 @@ test('Statuts septembre : quatre catégories réconciliées, sélection et drill
  await expect(page.locator('.cw-status-list')).toContainText('6 818');
  await page.locator('.cw-status-list').getByRole('button',{name:/1–8 · retard/}).click();
  await expect(page.locator('.cw-kpi').first()).toContainText('6 818');
- await page.getByRole('button',{name:'Codes'}).click();
+ await page.getByRole('button',{name:'Codes',exact:true}).click();
  await expect(page.getByRole('button',{name:'2 · 2 mois'})).toBeVisible();
  await page.getByRole('button',{name:'2 · 2 mois'}).click();
  await expect(page.locator('#filter-status')).toHaveValue('2');
@@ -96,7 +96,7 @@ test('Sélection par statut de septembre : historique rétrospectif et observati
  await page.goto('/');await credit(page);
  await page.locator('#filter-status').selectOption('-1');
  await expect(page.locator('.cw-kpi').first()).toContainText('5 686');
- const obs=await page.locator('.cw-monthtable tbody tr').evaluateAll(rs=>rs.map(r=>(r.cells[1].textContent||'').trim()));
+ const obs=await page.locator('.cw-monthtable tbody tr').evaluateAll(rs=>rs.map(r=>(r.cells[1].textContent||'').replace(/\s/g,' ').trim()));
  expect(obs).toEqual(Array(6).fill('5 686'));
  await page.getByRole('tab',{name:'Risque'}).click();
  await expect(page.locator('.cw-kpi').first()).toContainText('5 686');

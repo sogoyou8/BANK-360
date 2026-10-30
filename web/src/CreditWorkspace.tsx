@@ -76,6 +76,8 @@ export default function CreditWorkspace({filters,onFilters,mode,onMode}:{filters
  const sort=(col:'name'|'count'|'defaults'|'rate')=>{setSortDesc(sortBy===col?!sortDesc:col!=='name');setSortBy(col)};
  const chosenMonth=monthly.find(x=>x.period===month)||september;
  const topRate=totals.total?totals.defaults/totals.total:0;
+ const ageTop=Math.max(...agesData.map(x=>x.rate),.01);
+ const ageScale=ageMeasure==='rate'?Math.max(.3,Math.ceil(ageTop*10)/10):Math.max(1,...agesData.map(x=>x.count));
  const maxMonthly=Math.max(...monthly.map(m=>m.rate),.01);
  const maxMonthlyScale=Math.max(.1,Math.ceil(maxMonthly*100/10)/10);
  const monthlyPoints=monthly.map((m,i)=>`${28+i*69},${150-124*m.rate/maxMonthlyScale}`).join(' ');
@@ -98,9 +100,9 @@ export default function CreditWorkspace({filters,onFilters,mode,onMode}:{filters
   <div className="cw-board">
    <Panel title="Segmentation par âge" role="cw-age cw-credit-priority" extra={<Switcher measure={ageMeasure} onChange={setAgeMeasure}/>}>
     {totals.total===0?<Nothing/>:<div className="cw-age-layout">
-     <div className="cw-axis" aria-hidden="true"><span>{ageMeasure==='rate'?'100 %':fmtInt(Math.max(...agesData.map(x=>x.count)))}</span><span>{ageMeasure==='rate'?'50 %':''}</span><span>{ageMeasure==='rate'?'0 %':'0'}</span></div>
+     <div className="cw-axis" aria-hidden="true"><span>{ageMeasure==='rate'?fmtPct(ageScale,0):fmtInt(ageScale)}</span><span>{ageMeasure==='rate'?fmtPct(ageScale/2,0):''}</span><span>{ageMeasure==='rate'?'0 %':'0'}</span></div>
      <div className="cw-age-bars" role="group" aria-label="Segmentation par âge">
-      {agesData.map(a=>{const val=ageMeasure==='rate'?a.rate:a.count;const scale=ageMeasure==='rate'?Math.max(.35,...agesData.map(x=>x.rate)):Math.max(...agesData.map(x=>x.count),1);return <button type="button" className={'cw-age-bar '+(filters.age===a.name?'active':'')} key={a.name} onClick={()=>updateFilter('age',a.name)} aria-label={`${a.name} : ${ageMeasure==='rate'?toPct(val):fmtInt(val)+' dossiers'}, ${fmtInt(a.count)} dossiers`}>
+      {agesData.map(a=>{const val=ageMeasure==='rate'?a.rate:a.count;const scale=ageScale;return <button type="button" className={'cw-age-bar '+(filters.age===a.name?'active':'')} key={a.name} onClick={()=>updateFilter('age',a.name)} aria-label={`${a.name} : ${ageMeasure==='rate'?toPct(val):fmtInt(val)+' dossiers'}, ${fmtInt(a.count)} dossiers`}>
         <b>{ageMeasure==='rate'?toPct(val):fmtInt(val)}</b><div className="cw-age-track"><i style={{height:(100*val/scale)+'%'}}/></div><span>{a.name}</span><small>n={fmtInt(a.count)}</small>
        </button>})}
      </div>
