@@ -102,10 +102,13 @@
  .app:has(.rw-root) .nav-dock{width:87px;min-width:87px}
  .app:has(.rw-root) .dock-link{width:57px;height:57px}
 }
+/* C6.2: align the approved 1648 × 928 visual rail and 54/46 panel split. */
 @media(min-width:1500px) and (min-height:851px){
- .rw-header{height:164px;min-height:164px}
+ .rw-root{gap:12px}
+ .rw-header{height:168px;min-height:168px}
  .rw-heading-row{padding-top:10px}
- .rw-grid{grid-template-rows:minmax(0,1.4fr) minmax(0,1fr)}
+ .rw-heading-main{gap:26px}
+ .rw-grid{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);grid-template-rows:minmax(0,1.4fr) minmax(0,1fr)}
  .rw-export-panel .rw-panel-title{min-height:89px;flex-basis:89px}
 }
 @media(max-height:850px) and (min-width:901px){
