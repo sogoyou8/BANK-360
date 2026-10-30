@@ -245,7 +245,11 @@ test('C2.1 — KPI et tableau restent lisibles sur téléphone et thème clair',
  await page.setViewportSize({width:390,height:844});await page.goto('/');await credit(page);
  const metrics=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-innerWidth,buttons:[...document.querySelectorAll('.cw-kpi-action')].every(el=>getComputedStyle(el).display!=='none')}));
  expect(metrics.overflow).toBeLessThanOrEqual(2);expect(metrics.buttons).toBe(true);
- await page.getByRole('button',{name:'Changer le thème'}).last().click();
+ await page.getByRole('button',{name:'Rapports',exact:true}).click();
+ await page.getByRole('button',{name:'Changer le thème'}).click();
  await expect(page.locator('html')).toHaveAttribute('data-theme','light');
+ await credit(page);
  await expect(page.locator('.cw-kpi-action').first()).toBeVisible();
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
+ expect(overflow).toBeLessThanOrEqual(2);
 });
