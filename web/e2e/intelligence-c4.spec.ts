@@ -346,3 +346,47 @@ test('C4.12 — same 1440×722 CSS viewport at DPR 2 keeps nine rows',async({bro
   await page.screenshot({path:'test-results/intelligence-c412-1440x722-dpr2.png',fullPage:true});
  }finally{await context.close()}
 });
+
+
+test('C4.13 — measured 1440×810 viewport: nine complete explorer rows without disturbing diagnostics',async({page})=>{
+ for(const [width,height] of [[1440,800],[1440,810],[1440,840],[1366,810]] as const){
+  await page.setViewportSize({width,height});await intelligence(page);
+  const reading=await page.evaluate(()=>{
+   const rect=(selector:string)=>document.querySelector(selector)!.getBoundingClientRect();
+   const table=rect('.iw-table-window'),head=rect('.iw-table-window thead'),slot=rect('.iw-table-slot');
+   const rows=[...document.querySelectorAll('.iw-table-window tbody tr')].map(x=>x.getBoundingClientRect());
+   const visible=rows.filter(x=>x.top>=head.bottom-1&&x.bottom<=table.bottom+1).length;
+   const cut=rows.filter(x=>x.bottom>head.bottom+1&&x.top<table.bottom-1&&x.bottom>table.bottom+1).length;
+   const ranked=[...document.querySelectorAll('.iw-ranking-row')].map(x=>x.getBoundingClientRect());
+   const mini=rect('.iw-mini-kpis'),foot=rect('.iw-diag-footnote'),diagnostics=rect('.iw-diagnostics');
+   return {visible,cut,slotHeight:slot.height,tableHeight:table.height,ranked:ranked.map(x=>({top:x.top,bottom:x.bottom,height:x.height})),
+    miniTop:mini.top,miniBottom:mini.bottom,footTop:foot.top,footBottom:foot.bottom,diagBottom:diagnostics.bottom,
+    pageOverflow:document.documentElement.scrollHeight-innerHeight,pageOverflowX:document.documentElement.scrollWidth-innerWidth};
+  });
+  expect(reading.visible,'complete explorer rows '+width+'×'+height).toBeGreaterThanOrEqual(9);
+  expect(reading.cut,'clipped rows '+width+'×'+height).toBe(0);
+  expect(reading.ranked).toHaveLength(3);
+  expect(reading.ranked.every(x=>x.height>=13)).toBe(true);
+  for(let i=1;i<3;i++)expect(reading.ranked[i].top).toBeGreaterThanOrEqual(reading.ranked[i-1].bottom-1);
+  expect(reading.miniTop,'Brier/Rappel clear of Reference').toBeGreaterThanOrEqual(reading.ranked[2].bottom+2);
+  expect(reading.footTop,'note clear of Brier/Rappel').toBeGreaterThanOrEqual(reading.miniBottom-1);
+  expect(reading.footBottom).toBeLessThanOrEqual(reading.diagBottom);
+  expect(reading.pageOverflow).toBeLessThanOrEqual(3);
+  expect(reading.pageOverflowX).toBeLessThanOrEqual(2);
+  await page.screenshot({path:'test-results/intelligence-c413-'+width+'x'+height+'.png',fullPage:true});
+ }
+});
+
+test('C4.13 — measured 1440×810, devicePixelRatio 2 retains nine complete rows',async({browser})=>{
+ const context=await browser.newContext({viewport:{width:1440,height:810},deviceScaleFactor:2});
+ try{
+  const page=await context.newPage();
+  await page.goto('/?c4diag=1');
+  await page.getByRole('button',{name:'Intelligence',exact:true}).click();
+  await expect(page.getByTestId('iw-css-viewport')).toHaveText('1440 × 810');
+  await expect.poll(async()=>Number(await page.getByTestId('iw-full-rows').textContent())).toBeGreaterThanOrEqual(9);
+  const metrics=await page.evaluate(()=>({dpr:window.devicePixelRatio,viewport:innerHeight,overflow:document.documentElement.scrollHeight-innerHeight}));
+  expect(metrics).toEqual({dpr:2,viewport:810,overflow:0});
+  await page.screenshot({path:'test-results/intelligence-c413-1440x810-dpr2.png',fullPage:true});
+ }finally{await context.close()}
+});
