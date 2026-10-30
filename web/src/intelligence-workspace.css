@@ -154,6 +154,17 @@
  .iw-mini-kpis{min-height:42px}
  .iw-mini-kpis>div{padding:2px 7px}
 }
+/* C4.13 — Real local CSS viewport 1440×810, DPR 2:
+   recover >=30px for 9 complete 22px explorer rows, keep model cards readable. */
+@media (min-width:1320px) and (max-width:1450px) and (min-height:781px) and (max-height:850px){
+ .app:has(.intelligence-workspace) .view-head{height:56px;min-height:56px;padding-top:3px;padding-bottom:4px}
+ .intelligence-workspace{gap:8px}
+ .iw-kpis{height:71px;min-height:71px}
+ .iw-board{gap:7px;grid-template-rows:minmax(0,.83fr) minmax(0,1.27fr)}
+ .iw-panel-header{height:38px;min-height:38px}
+ .iw-explorer-toolbar{min-height:40px;padding-bottom:3px}
+ .iw-explorer-footer{min-height:14px;padding-top:1px}
+}
 @media(max-width:1120px){
  .app:has(.intelligence-workspace) .view-head{height:auto;min-height:72px;flex-wrap:wrap;align-items:flex-start}
  .app:has(.intelligence-workspace) .view-name{min-width:0}
