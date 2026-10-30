@@ -113,7 +113,7 @@ export default function FraudWorkspace({mode,onMode,scope,onScope}:{mode:FraudMo
       <div className="fw-quality-legend">
        <div><i className="mint"/><span>Vraies alertes</span><b>{int(source.tp)}</b><small>{pct(source.alerts?source.tp/source.alerts:0)}</small></div>
        <div><i className="rose"/><span>Fausses alertes</span><b>{int(source.fp)}</b><small>{pct(source.alerts?source.fp/source.alerts:0)}</small></div>
-       <div className="fw-missed"><i className="violet"/><span>Fraudes manquées*</span><b>{int(source.fn)}</b><small>hors alertes</small></div>
+       <div className="fw-missed"><i className="violet"/><span>Fraudes manquées*</span><b>{int(source.fn)}</b><small>exclues</small></div>
       </div>
      </div>
      <div className="fw-quality-footer"><span>{populationName} · précision {pct(source.alerts?source.tp/source.alerts:0)} · rappel {pct(source.frauds?source.tp/source.frauds:0)}</span><span><Info size={13}/> *Non incluses dans le diagramme. Dérive et sous-calibration importantes.</span></div>
