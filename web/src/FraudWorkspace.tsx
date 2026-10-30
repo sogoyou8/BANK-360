@@ -43,7 +43,7 @@ export function FraudFilterBar({scope,onScope}:{scope:FraudScope,onScope:(f:Frau
 }
 export default function FraudWorkspace({mode,onMode,scope,onScope}:{mode:FraudMode,onMode:(x:FraudMode)=>void,scope:FraudScope,onScope:(f:FraudScope)=>void}){
  const [measure,setMeasure]=useState<Measure>('alerts');
- const [trendView,setTrendView]=useState<'alerts'|'transactions'|'combined'>('alerts');
+ const [trendView,setTrendView]=useState<'alerts'|'transactions'|'combined'>('combined');
  const [detailType,setDetailType]=useState<'days'|'channels'>('days');
  const [query,setQuery]=useState('');
  const [sortDesc,setSortDesc]=useState(true);
