@@ -6,7 +6,7 @@ async function openX1(page:Page){
 test('X1 — two main destinations and frozen classic shell remain available',async({page})=>{
  await openX1(page);
  await expect(page.locator('.nav-dock .dock-link')).toHaveCount(2);
- await expect(page.getByRole('heading',{name:'Analyse 360 · vision croisée'})).toBeVisible();
+ await expect(page.getByRole('heading',{name:'Analyse 360 — Crédit & fraude'})).toBeVisible();
  await page.getByRole('button',{name:'Gouvernance & preuves',exact:true}).click();
  await expect(page.getByTestId('x1-governance')).toBeVisible();
  await page.locator('.nav-dock').getByRole('button',{name:'Analyse 360',exact:true}).click();
