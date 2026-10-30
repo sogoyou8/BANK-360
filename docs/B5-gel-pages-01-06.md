@@ -38,7 +38,7 @@ Le gel porte sur l'**interface B5**, et non sur la clôture de toutes les phases
 ### Vérifications
 
 - **Dernier commit de PR #22** : [B5 GitHub Actions #41053333500](https://github.com/sogoyou8/BANK-360/actions/runs/41053333500) — **89/89 tests Chromium réussis**, compilation et contrôles de données réussis ; B1 [#41053333501](https://github.com/sogoyou8/BANK-360/actions/runs/41053333501) et B3 [#41053333668](https://github.com/sogoyou8/BANK-360/actions/runs/41053333668) réussis.
-- **Vérification `main` post-fusion** : [B5 #41055392969](https://github.com/sogoyou8/BANK-360/actions/runs/41055392969) ; [B1 #41055392974](https://github.com/sogoyou8/BANK-360/actions/runs/41055392974). Vérifier les résultats complets de ces workflows sur GitHub Actions.
+- **Vérification `main` post-fusion** : [B5 #41055392969](https://github.com/sogoyou8/BANK-360/actions/runs/41055392969) — **SUCCESS, 89/89 tests Chromium**, build React/TypeScript et validation de données réussis ; [B1 #41055392974](https://github.com/sogoyou8/BANK-360/actions/runs/41055392974) — **SUCCESS**.
 - Aucun workflow B5 n'exécute une publication : compilation, tests et création d'artefacts téléchargables uniquement. Aucun déploiement public initié par cette clôture.
 
 ### Politique de gel
