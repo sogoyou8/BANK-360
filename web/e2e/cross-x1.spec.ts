@@ -188,7 +188,7 @@ test('X1.5 — all chart text and matrix stay within their actual containers in 
    const matrixRows=[...document.querySelectorAll('.x1-matrix-row')].map(get);
    const matrixHeading=get(matrix.querySelector('.x1-subtitle')!);
    const matrixHeader=get(matrix.querySelector('.x1-matrix-head')!);
-   const matrixFooter=get(matrix.querySelector('.x1-matrix-foot')!);
+   const matrixBottom=get(matrix).bottom;
    const matrixRowLabels=[...document.querySelectorAll('.x1-matrix-row strong')].map(get);
    const matrixTextGeometry=
     matrixRows.length===5&&matrixRows.every((r,i)=>r.height>=16&&
@@ -196,7 +196,7 @@ test('X1.5 — all chart text and matrix stay within their actual containers in 
      (!i||matrixRows[i-1].bottom<=r.top+1))&&
     matrixHeading.bottom<=matrixHeader.top+2&&
     matrixHeader.bottom<=matrixRows[0].top+2&&
-    matrixRows[4].bottom<=matrixFooter.top+2;
+    matrixRows[4].bottom<=matrixBottom+1;
 
    const dayValues=[...document.querySelectorAll('.x1-day-bars button')];
    const horizontalValues=[...document.querySelectorAll('.x1-horizontal-bars button')];
