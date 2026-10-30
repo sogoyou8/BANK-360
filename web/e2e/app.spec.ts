@@ -205,3 +205,47 @@ test('Les six mois y compris septembre sont intégralement visibles sans scroll 
   expect(v.last).toBeLessThanOrEqual(v.limit+1);
  }
 });
+
+test('C2.1 — les 5 segments et les 6 mois tiennent sans défilement interne à 1440 et 1672',async({page})=>{
+ for(const width of [1440,1672]){
+  await page.setViewportSize({width,height:width===1440?900:941});await page.goto('/');await credit(page);
+  await expect(page.locator('.cw-detail tbody tr')).toHaveCount(5);
+  await expect(page.locator('.cw-monthtable tbody tr')).toHaveCount(6);
+  for(const selector of ['.cw-detail','.cw-monthtable']){
+   const geometry=await page.locator(selector).evaluate(el=>{
+    const sc=el.querySelector('.cw-table-scroll') as HTMLElement;
+    const last=el.querySelector('tbody tr:last-child')!.getBoundingClientRect();
+    const box=sc.getBoundingClientRect();
+    return {lastBottom:last.bottom,viewBottom:box.bottom,scroll:sc.scrollTop,scrollHeight:sc.scrollHeight,clientHeight:sc.clientHeight}
+   });
+   expect(geometry.lastBottom,selector+' last row visible '+width).toBeLessThanOrEqual(geometry.viewBottom+1);
+   expect(geometry.scroll,selector+' scroll offset '+width).toBe(0);
+   expect(geometry.scrollHeight-geometry.clientHeight,selector+' no scroll '+width).toBeLessThanOrEqual(2);
+  }
+  await noMainScroll(page);
+  await page.screenshot({path:'test-results/credit-c21-'+width+'.png'});
+ }
+});
+test('C2.1 — flèches KPI ouvrent une perspective utile sans quitter la page Crédit',async({page})=>{
+ await page.goto('/');await credit(page);
+ await expect(page.locator('.cw-kpi-action')).toHaveCount(4);
+ await page.getByRole('button',{name:'Examiner le risque de crédit'}).click();
+ await expect(page.getByRole('tab',{name:'Risque'})).toHaveAttribute('aria-selected','true');
+ await page.getByRole('button',{name:'Explorer les retards de paiement'}).click();
+ await expect(page.getByRole('tab',{name:'Paiements'})).toHaveAttribute('aria-selected','true');
+ await page.getByRole('button',{name:'Explorer les plafonds de crédit'}).click();
+ await expect(page.getByRole('tab',{name:'Vue globale'})).toHaveAttribute('aria-selected','true');
+ await expect(page.locator('.cw-detail').getByRole('button',{name:'Plafond',exact:true})).toHaveClass(/active/);
+ await page.getByRole('button',{name:'Voir la composition du portefeuille'}).click();
+ await expect(page.locator('.cw-detail').getByRole('button',{name:'Âge',exact:true})).toHaveClass(/active/);
+ await expect(page.locator('.cw-age').getByRole('button',{name:'Dossiers',exact:true})).toHaveAttribute('aria-pressed','true');
+ await noMainScroll(page);
+});
+test('C2.1 — KPI et tableau restent lisibles sur téléphone et thème clair',async({page})=>{
+ await page.setViewportSize({width:390,height:844});await page.goto('/');await credit(page);
+ const metrics=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-innerWidth,buttons:[...document.querySelectorAll('.cw-kpi-action')].every(el=>getComputedStyle(el).display!=='none')}));
+ expect(metrics.overflow).toBeLessThanOrEqual(2);expect(metrics.buttons).toBe(true);
+ await page.getByRole('button',{name:'Changer le thème'}).last().click();
+ await expect(page.locator('html')).toHaveAttribute('data-theme','light');
+ await expect(page.locator('.cw-kpi-action').first()).toBeVisible();
+});
