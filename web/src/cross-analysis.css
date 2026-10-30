@@ -340,3 +340,10 @@
  .x1-gov-quality .x1-proof-details{gap:3px}
  .x1-proof-row[aria-expanded=true]{padding:7px}
 }
+
+
+/* Explicit purpose statement for people seeing BANK 360 for the first time. */
+.x1-heading-copy{min-width:0;display:flex;flex-direction:column;gap:4px}
+.x1-heading-copy h1{margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.x1-heading-copy small{color:#a8bedc;font-size:11px;line-height:1.3}
+@media(max-width:640px){.x1-heading-copy h1{white-space:normal}.x1-heading-copy small{font-size:10px}}
