@@ -346,7 +346,7 @@ test('C3 — channel, day, and alert status are never silently joined',async({pa
  await expect(page.getByLabel('Canal',{exact:true})).toHaveValue('Tous');
  await expect(page.locator('.fw-ring')).toHaveAttribute('aria-label',/85 vraies alertes et 214 fausses/);
  await page.getByLabel('Statut alerte').selectOption('tp');
- await expect(page.locator('.fw-channel-row').first()).toContainText('125');
+ await expect(page.locator('.fw-channel-row').filter({hasText:'TRANSFER'})).toContainText('125');
  await expect(page.locator('.fw-channel-summary')).toContainText('pas de jointure jour × canal');
  await page.getByRole('button',{name:'Réinitialiser'}).click();
  await expect(page.getByLabel('Statut alerte')).toHaveValue('all');
