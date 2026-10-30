@@ -113,3 +113,48 @@
 @media(max-width:480px){.cw-kpi{padding-right:33px}.cw-kpi-action{right:5px;width:24px;height:24px}.cw-kpi-action svg{width:14px}.cw-kpi strong{font-size:17px}}
 :root[data-theme=light] .cw-kpi-action{color:#284574;background:linear-gradient(145deg,#eff5ff,#d9e6ff);border-color:#95b0dd;box-shadow:0 4px 11px #718fbb30,inset 0 1px #fff}
 :root[data-theme=light] .cw-age-bar>small,:root[data-theme=light] .cw-trend-axis{color:#466187}
+
+/* C2.2 — adaptive desktop density. Keep the Aurora cockpit on one screen,
+   distribute the two rows evenly, and make 5/6-row tables fill their viewport.
+   Long status-code tables keep their own accessible scrolling. */
+@media (min-width:1121px){
+ .credit-workspace{gap:9px}
+ .cw-board{grid-template-rows:repeat(2,minmax(0,1fr));gap:11px}
+ .cw-detail .cw-panel-head,.cw-monthtable .cw-panel-head{min-height:40px;padding:8px 12px 3px}
+ .cw-detail .cw-panel-body,.cw-monthtable .cw-panel-body{padding:0 12px 7px}
+ .cw-detail .cw-table-tools{min-height:25px;padding-bottom:2px}
+ .cw-detail .cw-table-scroll,.cw-monthtable .cw-table-scroll{min-height:0;overflow-y:auto;overscroll-behavior:contain}
+ .cw-detail .cw-table-scroll table,.cw-monthtable .cw-table-scroll table{height:100%}
+ .cw-detail .cw-table-scroll th,.cw-monthtable .cw-table-scroll th{padding:4px 5px;line-height:1.1}
+ .cw-detail .cw-table-scroll td,.cw-monthtable .cw-table-scroll td{padding:4px 5px;line-height:1.1}
+ .cw-detail .cw-table-scroll tr,.cw-monthtable .cw-table-scroll tr{height:23px}
+ .cw-monthtable .cw-month-foot{min-height:19px;padding-top:3px}
+}
+/* Laptop or browser zoom: recover usable height from chrome, not from data. */
+@media (min-width:1121px) and (max-height:860px){
+ .app:has(.credit-workspace) .app-layout{padding-top:10px;padding-bottom:10px}
+ .app:has(.credit-workspace) .topbar{height:60px;min-height:60px}
+ .app:has(.credit-workspace) .view-head{height:64px;min-height:64px;padding-top:4px;padding-bottom:6px}
+ .app:has(.credit-workspace) .statusline{height:23px;min-height:23px}
+ .cw-modebar{height:30px;min-height:30px}
+ .cw-kpis{height:86px;min-height:86px}
+ .cw-kpi-icon{height:45px;width:45px;min-width:45px}
+ .cw-board{gap:10px}
+ .cw-monthtable .cw-table-scroll tr,.cw-detail .cw-table-scroll tr{height:21px}
+}
+/* Short desktop windows: preserve every month without mini-scrollbars. */
+@media (min-width:1121px) and (max-height:760px){
+ .app:has(.credit-workspace) .app-layout{padding-top:6px;padding-bottom:6px}
+ .app:has(.credit-workspace) .topbar{height:54px;min-height:54px}
+ .app:has(.credit-workspace) .view-head{height:56px;min-height:56px}
+ .app:has(.credit-workspace) .view-head h1{font-size:27px}
+ .app:has(.credit-workspace) .statusline{height:20px;min-height:20px}
+ .cw-modebar{height:28px;min-height:28px}
+ .cw-kpis{height:78px;min-height:78px}
+ .cw-board{gap:8px}
+ .cw-detail .cw-panel-head,.cw-monthtable .cw-panel-head{min-height:38px}
+ .cw-detail .cw-panel-body,.cw-monthtable .cw-panel-body{padding-bottom:6px}
+ .cw-monthtable .cw-table-scroll tr,.cw-detail .cw-table-scroll tr{height:19px}
+ .cw-monthtable .cw-table-scroll td,.cw-detail .cw-table-scroll td{padding:3px 5px}
+ .cw-monthtable .cw-month-foot{min-height:18px;padding-top:2px}
+}
