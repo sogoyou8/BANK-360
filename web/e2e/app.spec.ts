@@ -253,3 +253,57 @@ test('C2.1 — KPI et tableau restent lisibles sur téléphone et thème clair',
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
  expect(overflow).toBeLessThanOrEqual(2);
 });
+
+test('C2.2 — tables fully visible on short and intermediate desktop viewports',async({page})=>{
+ // These CSS viewports also represent reduced usable space when browser zoom increases.
+ const sizes:[[number,number],...[number,number][]]=[[1280,720],[1366,768],[1440,800],[1440,900],[1512,820],[1672,860],[1672,941]];
+ for(const [width,height] of sizes){
+  await page.setViewportSize({width,height});await page.goto('/');await credit(page);
+  await noMainScroll(page);
+  for(const [selector,expected] of [['.cw-detail',5],['.cw-monthtable',6]] as const){
+   const geometry=await page.locator(selector).evaluate(el=>{
+    const sc=el.querySelector('.cw-table-scroll') as HTMLElement;
+    const rows=[...el.querySelectorAll('tbody tr')];
+    const viewport=sc.getBoundingClientRect(),first=rows[0]?.getBoundingClientRect(),last=rows.at(-1)?.getBoundingClientRect();
+    const footer=el.querySelector('.cw-month-foot')?.getBoundingClientRect();
+    return {count:rows.length,firstTop:first?.top,lastBottom:last?.bottom,viewTop:viewport.top,viewBottom:viewport.bottom,
+      scroll:sc.scrollTop,overflow:sc.scrollHeight-sc.clientHeight,footerTop:footer?.top,panelBottom:el.getBoundingClientRect().bottom};
+   });
+   expect(geometry.count,`${selector} row count ${width}x${height}`).toBe(expected);
+   expect(geometry.firstTop,`${selector} first row ${width}x${height}`).toBeGreaterThanOrEqual(geometry.viewTop-1);
+   expect(geometry.lastBottom,`${selector} last row ${width}x${height}`).toBeLessThanOrEqual(geometry.viewBottom+1);
+   expect(geometry.scroll,`${selector} scroll position ${width}x${height}`).toBe(0);
+   expect(geometry.overflow,`${selector} no internal scrolling ${width}x${height}`).toBeLessThanOrEqual(2);
+   if(selector==='.cw-monthtable'){
+    expect(geometry.footerTop,`monthly summary remains visible ${width}x${height}`).toBeGreaterThanOrEqual(geometry.viewBottom-1);
+    expect(geometry.panelBottom,`monthly summary fits panel ${width}x${height}`).toBeGreaterThanOrEqual(geometry.footerTop!+16);
+   }
+  }
+  if((width===1280&&height===720)||(width===1440&&height===800)||(width===1672&&height===941))
+   await page.screenshot({path:`test-results/credit-c22-${width}x${height}.png`,fullPage:true});
+ }
+});
+
+test('C2.2 — three perspectives retain fitted tables and long status list still scrolls',async({page})=>{
+ await page.setViewportSize({width:1440,height:800});await page.goto('/');await credit(page);
+ for(const tab of ['Vue globale','Risque','Paiements']){
+  await page.getByRole('tab',{name:tab}).click();
+  for(const selector of ['.cw-detail','.cw-monthtable']){
+   const dims=await page.locator(selector).evaluate(el=>{
+    const sc=el.querySelector('.cw-table-scroll') as HTMLElement;
+    return {last:el.querySelector('tbody tr:last-child')!.getBoundingClientRect().bottom,limit:sc.getBoundingClientRect().bottom,overflow:sc.scrollHeight-sc.clientHeight};
+   });
+   expect(dims.last,`${tab}, ${selector}`).toBeLessThanOrEqual(dims.limit+1);
+   expect(dims.overflow,`${tab}, ${selector}`).toBeLessThanOrEqual(2);
+  }
+  await noMainScroll(page);
+ }
+ await page.locator('.cw-detail').getByRole('button',{name:'Statut',exact:true}).click();
+ await expect(page.locator('.cw-detail tbody tr')).toHaveCount(11);
+ const sc=page.locator('.cw-detail .cw-table-scroll');
+ const before=await sc.evaluate(e=>({client:e.clientHeight,scroll:e.scrollHeight}));
+ expect(before.scroll).toBeGreaterThan(before.client);
+ await sc.evaluate(e=>e.scrollTop=e.scrollHeight);
+ const end=await sc.evaluate(e=>({last:e.querySelector('tbody tr:last-child')!.getBoundingClientRect().bottom,limit:e.getBoundingClientRect().bottom}));
+ expect(end.last).toBeLessThanOrEqual(end.limit+1);
+});

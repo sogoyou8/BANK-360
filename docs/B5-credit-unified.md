@@ -35,3 +35,13 @@ En absence de dossiers, les taux non définis s'affichent « — » et les graph
 - Les quatre cartes KPI retrouvent une action fléchée, avec navigation **dans les trois perspectives de la même page** plutôt que vers des routes supplémentaires.
 - L'axe âge affiche quatre repères alignés sur la valeur maximum réelle, la courbe des retards retrouve sa profondeur et sa grille, le diagramme des statuts utilise un relief neumorphic maîtrisé.
 - Même identité Aurora, dock fixe, huit pages / six sections, mêmes sources UCI et mêmes calculs. Aucun déploiement.
+
+
+## C2.2 — Ajustement adaptatif de hauteur (30 octobre 2026)
+
+- **Structure inchangée** : quatre KPI, six panneaux et trois perspectives restent sur un même écran desktop, avec deux rangées de même hauteur. Les couleurs, chiffres, filtres croisés, clics, exports CSV et calculs historiques ne changent pas.
+- **Tables** : la table d'âge (5 lignes) et le tableau mensuel (6 lignes, dont septembre) occupent leur espace disponible sans nécessiter de défilement interne dans les tailles desktop couvertes. L'historique répète les mêmes dossiers sur six mois ; ce n'est pas 180 000 clients.
+- **Statut** : la dimension « Statut » avec ses 11 codes conserve volontairement le défilement dans le tableau Portefeuille ; elle ne doit pas forcer le défilement de toute l'application.
+- **Hauteurs réduites / zoom** : la barre supérieure, le titre, les KPI et les marges se compactent pour les fenêtres desktop de hauteur <= 860 px, puis <= 760 px, sans modification des autres pages.
+- **Recette supplémentaire** : tests géométriques sur 1280×720, 1366×768, 1440×800, 1440×900, 1512×820, 1672×860 et 1672×941 ; vérification des 3 perspectives, de la synthèse mensuelle, du non-défilement et de l'accès aux 11 codes de statut. Ces tailles réduites simulent l'effet du zoom sur la surface utile, sans prouver tous les facteurs de zoom natifs de Chrome.
+- **Publication** : aucune publication publique. Validation technique CI et revue visuelle locale utilisateur nécessaires avant gel définitif.
