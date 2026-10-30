@@ -187,3 +187,65 @@ test('C4.8.4 — 1648px reference rail, title and card alignment',async({page})=
  expect(Math.abs(rails.tab.x-782),'perspectives horizontal alignment').toBeLessThanOrEqual(20);
  await noScroll(page);
 });
+
+
+test('C4.10 — aucune ligne partiellement coupée au repos ni au bas de l’Explorateur',async({page})=>{
+ const sizes:[[number,number],...[number,number][]]=[[1920,1080],[1672,941],[1648,928],[1440,900],[1366,768],[1280,720],[390,844]];
+ for(const [width,height] of sizes){
+  await page.setViewportSize({width,height});
+  await intelligence(page);
+  const state=async()=>page.locator('.iw-table-window').evaluate(viewport=>{
+   const slot=viewport.parentElement!;
+   const rect=(el:Element)=>el.getBoundingClientRect();
+   const box=rect(viewport),available=rect(slot),heading=rect(viewport.querySelector('thead')!);
+   const dataTop=heading.bottom;
+   const rows=[...viewport.querySelectorAll('tbody tr')].map(rect);
+   const intersecting=rows.filter(r=>r.bottom>dataTop+1&&r.top<box.bottom-1);
+   const partialAtBottom=intersecting.filter(r=>r.bottom>box.bottom+1);
+   const complete=intersecting.filter(r=>r.top>=dataTop-1&&r.bottom<=box.bottom+1);
+   return {partialAtBottom:partialAtBottom.length,complete:complete.length,overflow:document.documentElement.scrollWidth-innerWidth,
+    viewportHeight:box.height,slotHeight:available.height,unused:available.bottom-box.bottom,
+    top:viewport.scrollTop,max:viewport.scrollHeight-viewport.clientHeight,header:heading.height,
+    firstComplete:complete[0]?.top,lastComplete:complete.at(-1)?.bottom,tableBottom:box.bottom};
+  });
+  const initial=await state();
+  expect(initial.partialAtBottom,'clipped last row at rest '+width+'×'+height).toBe(0);
+  expect(initial.complete,'full rows at rest '+width+'×'+height).toBeGreaterThanOrEqual(height>=900?9:height>=760?6:3);
+  expect(initial.unused,'unused area smaller than a row '+width+'×'+height).toBeGreaterThanOrEqual(-1);
+  expect(initial.unused,'unused area smaller than a row '+width+'×'+height).toBeLessThanOrEqual(28);
+  expect(initial.overflow,'horizontal viewport overflow '+width+'×'+height).toBeLessThanOrEqual(2);
+  await page.screenshot({path:'test-results/intelligence-c410-'+width+'x'+height+'.png',fullPage:true});
+  await page.locator('.iw-table-window').evaluate(el=>el.scrollTo({top:el.scrollHeight,behavior:'instant'}));
+  await expect.poll(async()=>(await state()).partialAtBottom,{timeout:4000,message:'no cut row at end '+width+'×'+height}).toBe(0);
+  const end=await state();
+  expect(end.complete,'full rows at end '+width+'×'+height).toBeGreaterThanOrEqual(height>=900?9:height>=760?6:3);
+  if(width>900)await noScroll(page);
+ }
+});
+
+test('C4.10 — filtres, onglets, recherche et export préservent le découpage du tableau',async({page})=>{
+ await page.setViewportSize({width:1648,height:928});await intelligence(page);
+ const check=async()=>page.locator('.iw-table-window').evaluate(viewport=>{
+  const vr=viewport.getBoundingClientRect();
+  const hr=viewport.querySelector('thead')!.getBoundingClientRect();
+  const rows=[...viewport.querySelectorAll('tbody tr')].map(el=>el.getBoundingClientRect());
+  const partial=rows.filter(r=>r.bottom>hr.bottom+1&&r.top<vr.bottom-1&&r.bottom>vr.bottom+1).length;
+  return {partial,visible:rows.filter(r=>r.top>=hr.bottom-1&&r.bottom<=vr.bottom+1).length};
+ });
+ await expect.poll(async()=>(await check()).partial).toBe(0);
+ await page.getByLabel('Âge Intelligence').selectOption('18-29');
+ await expect.poll(async()=>(await check()).partial).toBe(0);
+ await page.getByLabel('Rechercher des groupes').fill('à jour');
+ await expect.poll(async()=>(await check()).partial).toBe(0);
+ await page.getByRole('button',{name:'Réinitialiser',exact:true}).click();
+ await expect.poll(async()=>(await check()).visible).toBeGreaterThanOrEqual(9);
+ await page.getByRole('group',{name:'Jeu de données'}).getByRole('button',{name:'Fraude'}).click();
+ await expect(page.locator('.iw-table-window tbody tr')).toHaveCount(5);
+ await expect.poll(async()=>(await check()).partial).toBe(0);
+ await page.getByRole('group',{name:'Jeu de données'}).getByRole('button',{name:'Jours simulés'}).click();
+ await expect(page.locator('.iw-table-window tbody tr')).toHaveCount(6);
+ await expect.poll(async()=>(await check()).partial).toBe(0);
+ await page.getByRole('group',{name:'Jeu de données'}).getByRole('button',{name:'Crédit'}).click();
+ await expect.poll(async()=>(await check()).visible).toBeGreaterThanOrEqual(9);
+ await noScroll(page);
+});
