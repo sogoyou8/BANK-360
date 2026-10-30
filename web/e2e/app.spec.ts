@@ -409,3 +409,79 @@ test('C3 — six daily aggregate rows and all channel rows fit without an intern
   await noMainScroll(page);
  }
 });
+
+test('C3.6 — lecture indépendante des alertes et transactions, doubles axes uniquement en comparaison',async({page})=>{
+ await page.setViewportSize({width:1440,height:900});await page.goto('/');await section(page,'Fraude');
+ const options=page.getByRole('group',{name:"Lecture de l'évolution"});
+ await expect(options.getByRole('button',{name:'Alertes'})).toHaveAttribute('aria-pressed','true');
+ await expect(page.locator('.fw-trend-labels button b')).toHaveText(['76','93','147','299','102','73']);
+ await expect(page.locator('.fw-combo-axis.fw-right')).toHaveCount(0);
+ await options.getByRole('button',{name:'Transactions'}).click();
+ await expect(options.getByRole('button',{name:'Transactions'})).toHaveAttribute('aria-pressed','true');
+ await expect(page.locator('.fw-trend-labels button b')).toHaveText(['10 655','8 574','14 522','55 037','11 283','282']);
+ await expect(page.locator('.fw-combo-axis.fw-right')).toHaveCount(0);
+ await options.getByRole('button',{name:'Combinée'}).click();
+ await expect(page.locator('.fw-combo-axis.fw-right')).toHaveCount(1);
+ await expect(page.locator('.fw-legend')).toContainText('axe gauche');
+ await expect(page.locator('.fw-legend')).toContainText('axe droit');
+ await page.getByLabel('Statut alerte').selectOption('tp');
+ await expect(page.locator('.fw-trend-labels button b')).toHaveText(['10 655','8 574','14 522','55 037','11 283','282']);
+ await expect(page.locator('.fw-combo-axis.fw-right').first()).toContainText('85');
+ await options.getByRole('button',{name:'Alertes'}).click();
+ await expect(page.locator('.fw-trend-labels button b')).toHaveText(['41','72','65','85','77','73']);
+ await noMainScroll(page);
+});
+
+test('C3.7 — les deux canaux montrent uniquement les diagnostics PaySim vérifiés',async({page})=>{
+ await page.setViewportSize({width:1672,height:941});await page.goto('/');await section(page,'Fraude');
+ const cash=page.locator('.fw-channel-row').filter({hasText:'CASH_OUT'});
+ const transfer=page.locator('.fw-channel-row').filter({hasText:'TRANSFER'});
+ await expect(cash).toContainText('304');
+ await expect(cash.locator('.fw-channel-metrics')).toContainText('288');
+ await expect(cash.locator('.fw-channel-metrics')).toContainText('16');
+ await expect(cash.locator('.fw-channel-metrics')).toContainText('94,7');
+ await expect(cash.locator('.fw-channel-metrics')).toContainText('38,7');
+ await expect(transfer).toContainText('486');
+ await expect(transfer.locator('.fw-channel-metrics')).toContainText('125');
+ await expect(transfer.locator('.fw-channel-metrics')).toContainText('361');
+ await expect(transfer.locator('.fw-channel-metrics')).toContainText('25,7');
+ await expect(transfer.locator('.fw-channel-metrics')).toContainText('16,8');
+ await cash.click();
+ await expect(page.getByLabel('Canal',{exact:true})).toHaveValue('CASH_OUT');
+ await expect(page.locator('.fw-quality')).toContainText('288');
+ await expect(page.locator('.fw-quality')).toContainText('16');
+ await expect(page.locator('.fw-trend-labels button b')).toHaveText(['76','93','147','299','102','73']);
+});
+
+test('C3.8–C3.9 — nouveau contenu visible sans débordement à chaque résolution',async({page})=>{
+ for(const [width,height] of [[1672,941],[1440,900],[1366,768],[1280,720]] as const){
+  await page.setViewportSize({width,height});await page.goto('/');await section(page,'Fraude');
+  const check=await page.locator('.fw-channels').evaluate(panel=>{
+   const body=panel.querySelector('.fw-panel-body') as HTMLElement;
+   const rows=[...panel.querySelectorAll('.fw-channel-row')].map(el=>el.getBoundingClientRect());
+   const main=[...panel.querySelectorAll('.fw-channel-main')].map(el=>el.getBoundingClientRect());
+   const metrics=[...panel.querySelectorAll('.fw-channel-metrics')].map(el=>el.getBoundingClientRect());
+   const bodyRect=body.getBoundingClientRect();
+   const clipped=[...panel.querySelectorAll('.fw-channel-metrics span,.fw-channel-metrics b,.fw-channel-name')].filter(el=>el.scrollWidth>el.clientWidth+1).map(el=>el.textContent);
+   return {scroll:body.scrollHeight-body.clientHeight,rows,main,metrics,bodyBottom:bodyRect.bottom,clipped};
+  });
+  expect(check.rows,width+'×'+height).toHaveLength(2);
+  expect(check.clipped,width+'×'+height+' text cut').toEqual([]);
+  for(let i=0;i<2;i++){
+   expect(check.main[i].bottom,width+'×'+height+' main visible').toBeLessThanOrEqual(check.rows[i].bottom+1);
+   expect(check.metrics[i].bottom,width+'×'+height+' metrics visible').toBeLessThanOrEqual(check.rows[i].bottom+1);
+   expect(check.rows[i].bottom,width+'×'+height+' channel visible').toBeLessThanOrEqual(check.bodyBottom+1);
+  }
+  expect(check.scroll,width+'×'+height+' channel content scroll').toBeLessThanOrEqual(2);
+  await noMainScroll(page);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+  await page.screenshot({path:'test-results/fraud-c39-'+width+'x'+height+'.png',fullPage:true});
+ }
+ await page.setViewportSize({width:390,height:844});await page.goto('/');await section(page,'Fraude');
+ await expect(page.locator('.fw-channel-metrics')).toHaveCount(2);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
+ await page.getByRole('button',{name:'Basculer le thème'}).click();
+ await expect(page.locator('html')).toHaveAttribute('data-theme','light');
+ await expect(page.locator('.fw-channel-row')).toHaveCount(2);
+ await page.screenshot({path:'test-results/fraud-c39-mobile-light.png',fullPage:true});
+});
