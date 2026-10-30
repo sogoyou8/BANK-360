@@ -173,3 +173,17 @@ test('C4.8.3–C4.8.4 — visual target proportions, at least nine table rows on
   await page.screenshot({path:'test-results/intelligence-c48-'+width+'x'+height+'.png',fullPage:true});
  }
 });
+
+test('C4.8.4 — 1648px reference rail, title and card alignment',async({page})=>{
+ await page.setViewportSize({width:1648,height:928});await intelligence(page);
+ const rails=await page.evaluate(()=>{
+  const rect=(sel:string)=>{const r=document.querySelector(sel)!.getBoundingClientRect();return{x:r.x,width:r.width}};
+  return {dock:rect('.nav-dock'),title:rect('.iw-title h1'),kpi:rect('.iw-kpi'),tab:rect('.iw-header-controls .iw-segments')};
+ });
+ expect(Math.abs(rails.dock.x-17),'Aurora dock left').toBeLessThanOrEqual(4);
+ expect(Math.abs(rails.dock.width-87),'Aurora dock width').toBeLessThanOrEqual(2);
+ expect(Math.abs(rails.kpi.x-134),'cockpit left rail').toBeLessThanOrEqual(6);
+ expect(Math.abs(rails.title.x-263),'Intelligence title alignment').toBeLessThanOrEqual(14);
+ expect(Math.abs(rails.tab.x-782),'perspectives horizontal alignment').toBeLessThanOrEqual(20);
+ await noScroll(page);
+});
