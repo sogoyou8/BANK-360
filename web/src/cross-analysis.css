@@ -405,3 +405,26 @@
  .x1-credit-panel .x1-matrix-section{min-height:129px}
  .x1-credit-panel .x1-month-inline{min-height:22px;margin-bottom:5px}
 }
+
+
+/* X1.5.3 — short desktop viewports: never expose half of a table row.
+   The full inspector remains available through Agrandir (same page, same state). */
+@media(min-width:901px) and (max-height:750px){
+ .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-scroll{
+  overflow:hidden;
+ }
+ .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table tbody{
+  visibility:hidden;
+ }
+ .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table thead th{
+  padding-top:5px;padding-bottom:5px;
+ }
+ .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-foot{
+  min-height:21px;padding-top:2px;padding-bottom:2px;
+ }
+ .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-head small{
+  max-width:25vw;
+ }
+ .x1-inspector-expanded .x1-inspector-scroll{overflow:auto}
+ .x1-inspector-expanded .x1-inspector-table tbody{visibility:visible}
+}
