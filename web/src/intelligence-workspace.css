@@ -176,4 +176,16 @@
 :root[data-theme=light] .iw-table-window thead{background:#cfddf6}
 :root[data-theme=light] .iw-table-window td,:root[data-theme=light] .iw-table-window th{color:#29466f}
 :root[data-theme=light] .iw-chart-axis{color:#4a6389}
+/* C4.11 — Opt-in viewport diagnostics. Never included in the normal cockpit layout. */
+.iw-viewport-diagnostic{position:fixed;z-index:200;right:20px;bottom:26px;width:min(355px,calc(100vw - 28px));max-height:min(610px,calc(100vh - 34px));overflow:auto;padding:15px 17px;border-radius:15px;border:1px solid #a2baffd1;background:linear-gradient(140deg,#193365f6,#0b1734f9);box-shadow:0 12px 42px #02091bdd,inset 0 1px #ffffff27;color:#f3f7ff;backdrop-filter:blur(20px)}
+.iw-diagnostic-title{display:flex;justify-content:space-between;gap:8px;align-items:center;padding-bottom:9px;border-bottom:1px solid #9dafff39}
+.iw-diagnostic-title strong{font-size:13px}
+.iw-diagnostic-title span{font-size:9px;color:#9db9f3}
+.iw-viewport-diagnostic dl{display:grid;grid-template-columns:1fr auto;gap:8px 10px;margin:12px 0;font-size:11px}
+.iw-viewport-diagnostic dt{color:#b7ccee}
+.iw-viewport-diagnostic dd{margin:0;font-weight:680;font-variant-numeric:tabular-nums;text-align:right;color:#f5f9ff}
+.iw-viewport-diagnostic button{display:block;width:100%;background:#315cc1;border:1px solid #9bb9f9;border-radius:9px;padding:9px 10px;color:#fff;font-size:11px}
+.iw-viewport-diagnostic small{display:block;margin-top:9px;color:#b5c9e7;font-size:10px;line-height:1.4}
+:root[data-theme=light] .iw-viewport-diagnostic{background:linear-gradient(145deg,#edf5ff,#dbe8fd);color:#233d66}
+:root[data-theme=light] .iw-viewport-diagnostic dt,:root[data-theme=light] .iw-viewport-diagnostic dd{color:#233d66}
 @media(prefers-reduced-motion:reduce){.intelligence-workspace *{transition:none!important;animation:none!important}}
