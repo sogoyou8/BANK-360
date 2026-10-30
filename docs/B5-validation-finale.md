@@ -1,6 +1,6 @@
 # BANK 360 — B5 · Validation technique et recette Web
 
-**Note :** le présent rapport correspond à l'architecture B5 initiale à 11 pages. La refonte **B5.R du 29 octobre 2026** remplace cette architecture par **10 pages dans six sections**, voir [le cahier B5.R](B5R-architecture.md) et les exécutions du workflow Web. Les résultats des audits B1–B4 sont inchangés.
+**Note :** rapport historique de l'architecture initiale à 11 pages. La version actuelle rassemble **8 pages / 6 sections**, dont Crédit unifié, voir [B5-credit-unified.md](B5-credit-unified.md). La refonte **B5.R du 29 octobre 2026** remplace cette architecture par **10 pages dans six sections**, voir [le cahier B5.R](B5R-architecture.md) et les exécutions du workflow Web. Les résultats des audits B1–B4 sont inchangés.
 
 **Date :** 28 octobre 2026 · **Statut :** `PASS — build et tests automatisés` · **Design utilisateur : à confirmer visuellement après ouverture.**
 

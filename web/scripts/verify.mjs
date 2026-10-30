@@ -11,13 +11,18 @@ for(const m of ['2005-04','2005-05','2005-06','2005-07','2005-08','2005-09'])ass
 assert.equal(b3.dataset.population,30000);assert.equal(b4.observed.rows,6362620);assert.equal(b4.observed.frauds,8213);
 assert.equal(b4.holdout_test.alerted,b4.holdout_test.confusion.tp+b4.holdout_test.confusion.fp);
 const src=read('web/src/main.tsx');
-const ids=['home','portfolio','risk','payments','fraud','alerts','models','explorer','quality','reports'];
+const ids=['home','portfolio','fraud','alerts','models','explorer','quality','reports'];
 for(const id of ids){assert.ok(src.includes(`id:'${id}'`),`Page ${id} absente`);assert.ok(src.includes(`page==='${id}'`),`Vue ${id} absente`)}
-assert.ok(!src.includes("id:'clients'"));assert.equal((src.match(/title:'[^']+',icon:/g)||[]).length>=6,true);
+assert.ok(!src.includes("id:'clients'"));
+assert.ok(!src.includes("id:'risk'")&&!src.includes("id:'payments'"),'Anciennes routes Crédit à retirer');
+const creditSrc=read('web/src/CreditWorkspace.tsx');
+for(const key of ['cw-age','cw-trend','cw-detail','cw-limit','cw-status','cw-monthtable'])assert.ok(creditSrc.includes(key),'Module crédit absent '+key);
+assert.ok(creditSrc.includes('bucketMatch')&&creditSrc.includes('const monthly=useMemo'),'Agrégation cohorte/mensuelle requise');
+assert.ok(creditSrc.includes('Aucun dossier pour cette sélection'),'État vide requis');assert.equal((src.match(/title:'[^']+',icon:/g)||[]).length>=6,true);
 for(const phase of ['B1 ·','B2 ·','B3 ·','B4 ·','EXPERIENCE','PROJET'])assert.ok(!src.includes(phase),`Étiquette interne inutile ${phase}`);
 for(const name of ['B3-calibration.csv','B3-feature-importance.csv','B3-subgroup-audit.csv'])assert.ok(read('web/src/riskEvidence.ts').includes(name));
 assert.ok(!src.includes('Math.random('));assert.ok(!src.includes('new Date()'));
-console.log('B5.R: 10 pages / 6 sections, sources réconciliées, recherche, diagnostics, pas de métriques fabriquées — PASS');
+console.log('B5 Crédit unifié: 8 pages / 6 sections, sources réconciliées, recherche, diagnostics, pas de métriques fabriquées — PASS');
 
 assert.ok(src.includes('function CalibrationView'), 'Calibration prédite et observée requise');
 assert.ok(src.includes('chart-scale'), 'Repères des axes requis');

@@ -16,7 +16,7 @@ Le rendu est disponible sur `http://127.0.0.1:5173`. Pour les tests de navigateu
 
 ## Navigation
 
-10 pages / 6 sections : Vue d'ensemble ; Portefeuille & segmentation, Risque de crédit, Paiements & comportements ; Détection de fraude, Analyse des alertes ; Modèles & performance, Explorateur de données ; Qualité & traçabilité ; Rapports & préférences. Aucun écran individuel Clients n'est nécessaire : l'analyse des groupes se fait dans Portefeuille.
+8 pages / 6 sections : Vue d’ensemble ; **Crédit unifié** (Portefeuille & segmentation, avec 3 perspectives internes Vue globale / Risque / Paiements) ; Détection de fraude, Analyse des alertes ; Modèles & performance, Explorateur de données ; Qualité & traçabilité ; Rapports & préférences. Les trois anciennes pages Crédit deviennent une seule page interactive : filtres communs et six modules.
 
 Dock de navigation permanent, de largeur fixe (92 px desktop) et barre d'icônes fixe en bas sur mobile. Les sous-pages s'affichent dans un panneau flottant **sans redimensionner le cockpit**. Palette `Ctrl/Cmd + K`, interface adaptable et deux thèmes.
 
@@ -38,7 +38,7 @@ Sur desktop (largeur d'au moins 1120 px et hauteur utile d'au moins 720 px), cha
 
 ## Finition R2
 
-Les dix vues utilisent désormais des compositions différentes selon l'activité (synthèse, crédit, risques, fraude, gouvernance, rapports), et non une grille de cartes répétée. Les graphiques quantitatifs affichent zéro et des repères numériques, la série des paiements utilise une échelle démarrant à zéro, et l'écran des modèles distingue explicitement métriques de **test** et comparaisons de **validation**. La calibration met côte à côte score moyen prédit et taux réellement observé. Les contrôles de navigation ont un matériau translucide, les surfaces analytiques sont plus opaques, et le thème clair a été renforcé. La recherche sert exclusivement à accéder à une page.
+Les huit vues utilisent désormais des compositions différentes selon l'activité (synthèse, crédit, risques, fraude, gouvernance, rapports), et non une grille de cartes répétée. Les graphiques quantitatifs affichent zéro et des repères numériques, la série des paiements utilise une échelle démarrant à zéro, et l'écran des modèles distingue explicitement métriques de **test** et comparaisons de **validation**. La calibration met côte à côte score moyen prédit et taux réellement observé. Les contrôles de navigation ont un matériau translucide, les surfaces analytiques sont plus opaques, et le thème clair a été renforcé. La recherche sert exclusivement à accéder à une page.
 
 ## R3 — Finition métier ciblée
 
@@ -47,3 +47,10 @@ Les dix vues utilisent désormais des compositions différentes selon l'activit�
 - Retards septembre : légende lisible des codes UCI sans invention de sens pour les codes `-2` et `0`. Les valeurs d'origine restent inchangées dans les filtres/exportations.
 - Graphiques de défaut par âge, plafond et code : `n=` dossiers affiché avec chaque taux. Aucun indicateur supplémentaire factice.
 - Mono-écran conservé sur desktop, mobile scrollable.
+
+## Crédit unifié (B5, écran 02)
+
+- Une seule route `portfolio` ; modes internes `Vue globale / Risque / Paiements` ; le bouton Crédit du dock et les liens Accueil/Risque conservent leur fonctionnement.
+- Six panneaux en grille à trois colonnes : Âge, Évolution des retards, Détail portefeuille, Plafond, Statuts septembre et Détail mensuel.
+- Âge × plafond × statut septembre : agrégats de cohorte croisés, avec 6 mois répétés. Réinitialisation, drill-down codes UCI, mesures Dossiers / Défaut, mois inspectable, tableau triable/recherchable, exports agrégés.
+- Fond Aurora / surfaces vitrées et relief discret ; mono-écran desktop à 1440×900 et 1672×941, vertical mobile. Voir `docs/B5-credit-unified.md`.

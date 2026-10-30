@@ -20,10 +20,10 @@ jobs:
       - name: Install front dependencies
         run: npm install --no-audit --no-fund
         working-directory: web
-      - name: Validate data contracts and 10 pages
+      - name: Validate data contracts and 8 pages
         run: npm run test
         working-directory: web
-      - name: Compile 10-page React TypeScript app
+      - name: Compile 8-page React TypeScript app
         run: npm run build
         working-directory: web
       - name: Create self-contained offline HTML preview
