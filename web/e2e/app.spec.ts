@@ -1,6 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 const noMainScroll=async(page:Page)=>{const v=await page.locator('#main-content').evaluate(e=>e.scrollHeight-e.clientHeight);expect(v).toBeLessThanOrEqual(3)};
-const credit=async(page:Page)=>{await page.getByRole('button',{name:'Crédit',exact:true}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page','portfolio')};
+const credit=async(page:Page)=>{await page.locator('.nav-dock').getByRole('button',{name:'Crédit',exact:true}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page','portfolio')};
 const section=async(page:Page,name:string,target?:string)=>{await page.getByRole('button',{name,exact:true}).click();if(target)await page.getByRole('menuitem',{name:new RegExp(target)}).click()};
 
 test('Architecture : six pages, six sections, une seule vue Crédit et données séparées',async({page})=>{
