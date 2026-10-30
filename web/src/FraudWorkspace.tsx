@@ -43,6 +43,7 @@ export function FraudFilterBar({scope,onScope}:{scope:FraudScope,onScope:(f:Frau
 }
 export default function FraudWorkspace({mode,onMode,scope,onScope}:{mode:FraudMode,onMode:(x:FraudMode)=>void,scope:FraudScope,onScope:(f:FraudScope)=>void}){
  const [measure,setMeasure]=useState<Measure>('alerts');
+ const [trendView,setTrendView]=useState<'alerts'|'transactions'|'combined'>('alerts');
  const [detailType,setDetailType]=useState<'days'|'channels'>('days');
  const [query,setQuery]=useState('');
  const [sortDesc,setSortDesc]=useState(true);
@@ -62,6 +63,9 @@ export default function FraudWorkspace({mode,onMode,scope,onScope}:{mode:FraudMo
  const trendTransMax=Math.max(1,...fraudDays.map(d=>d.transactions));
  const trendAlertMax=Math.max(1,...fraudDays.map(d=>selectedCount(d,scope.kind)));
  const trendPoints=fraudDays.map((d,i)=>(45+i*81)+','+(164-137*selectedCount(d,scope.kind)/trendAlertMax)).join(' ');
+ const trendBarValue=(d:Group)=>trendView==='alerts'?selectedCount(d,scope.kind):d.transactions;
+ const trendBarMax=trendView==='alerts'?trendAlertMax:trendTransMax;
+ const trendIsCombined=trendView==='combined';
  const ring=source.alerts?'conic-gradient(#56dac4 0 '+(100*source.tp/source.alerts)+'%,#ef83b7 '+(100*source.tp/source.alerts)+'% 100%)':'#31436d';
  const selectDay=(d:number)=>onScope({...scope,day:scope.day===String(d)?'Tous':String(d),channel:'Tous'});
  const selectChannel=(name:string)=>onScope({...scope,channel:scope.channel===name?'Tous':name,day:'Tous'});
@@ -87,25 +91,29 @@ export default function FraudWorkspace({mode,onMode,scope,onScope}:{mode:FraudMo
     ].map(k=>{const Icon=k.icon;return <div className={'fw-kpi tone-'+k.tone} key={k.id}><span className="fw-kpi-icon"><Icon size={23}/></span><div className="fw-kpi-copy"><span>{k.title}</span><strong>{k.value}</strong><small>{k.note}</small></div><span aria-hidden="true" className="fw-spark"><i/><i/><i/><i/><i/><i/></span><button className="fw-kpi-action" onClick={k.action} aria-label={'Examiner : '+k.title}><ChevronRight size={19}/></button></div>})}
    </div>
    <div className="fw-board">
-    <Panel title="Évolution des alertes" role="fw-trend" subtitle="Test chronologique · 100 353 transactions" extra={<span className="fw-head-caption">J25–J30</span>}>
-     <div className="fw-legend"><span><i className="fw-key blue"/>Transactions · axe gauche</span><span><i className="fw-key pink"/>Alertes · axe droit</span></div>
-     <div className="fw-combo" role="group" aria-label="Évolution agrégée par jour simulé">
-      <div className="fw-combo-axis" aria-hidden="true"><span>{int(trendTransMax)}</span><span>{int(Math.round(trendTransMax/2))}</span><span>0</span></div>
-      <svg viewBox="0 0 500 186" preserveAspectRatio="none" aria-label="Barres de transactions et courbe des alertes réelles, jours J25 à J30" role="img">
-       <defs><linearGradient id="fw-grad-b" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#75bbff"/><stop offset="1" stopColor="#4044b3"/></linearGradient><linearGradient id="fw-grad-p" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#f58ec9" stopOpacity=".20"/><stop offset="1" stopColor="#f58ec9" stopOpacity="0"/></linearGradient></defs>
-       {[26,95,164].map(y=><path key={y} d={'M 20 '+y+' H 490'} stroke="#a8c5ff26" strokeDasharray="3 5"/>)}
-       {fraudDays.map((d,i)=><rect key={d.day} x={29+i*81} y={164-137*d.transactions/trendTransMax} width="32" height={137*d.transactions/trendTransMax} rx="5" fill="url(#fw-grad-b)" opacity={scope.day===String(d.day)?1:.84}/>)}
-       <path d={'M 45 164 L '+trendPoints.replaceAll(' ', ' L ')+' L 450 164 Z'} fill="url(#fw-grad-p)"/>
-       <polyline points={trendPoints} fill="none" stroke="#ff64ae" strokeWidth="3" vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round"/>
-       {fraudDays.map((d,i)=><circle key={d.day} cx={45+i*81} cy={164-137*selectedCount(d,scope.kind)/trendAlertMax} r={scope.day===String(d.day)?5:3.5} fill="#ffb9dc" stroke="#ff4d9a" strokeWidth="2"><title>{'J'+d.day+' : '+int(d.transactions)+' transactions · '+int(selectedCount(d,scope.kind))+' '+kindsName[scope.kind].toLowerCase()}</title></circle>)}
-      </svg>
-      <div className="fw-combo-axis fw-right" aria-hidden="true"><span>{int(trendAlertMax)}</span><span>{int(Math.round(trendAlertMax/2))}</span><span>0</span></div>
+    <Panel title="Évolution des alertes" role="fw-trend" subtitle="J25–J30 · 100 353 transactions au test" extra={<div className="fw-trend-switch" role="group" aria-label="Lecture de l'évolution">{([{id:'alerts',label:'Alertes'},{id:'transactions',label:'Transactions'},{id:'combined',label:'Combinée'}] as const).map(t=><button key={t.id} type="button" onClick={()=>setTrendView(t.id)} aria-pressed={trendView===t.id} className={trendView===t.id?'active':''}>{t.label}</button>)}</div>}>
+     <div className="fw-legend" aria-live="polite">
+      <span><i className={'fw-key '+(trendView==='alerts'?'violet':'blue')}/>{trendView==='alerts'?kindsName[scope.kind]+' · axe gauche':'Transactions · axe gauche'}</span>
+      {trendIsCombined&&<span><i className="fw-key pink"/>{kindsName[scope.kind]} · axe droit</span>}
      </div>
-     <div className="fw-trend-labels">{fraudDays.map(d=><button key={d.day} className={scope.day===String(d.day)?'active':''} onClick={()=>selectDay(d.day)} aria-label={'Inspecter J'+d.day}><span>J{d.day}</span><b>{int(selectedCount(d,scope.kind))}</b></button>)}</div>
+     <div className="fw-combo" role="group" aria-label="Évolution agrégée par jour simulé">
+      <div className="fw-combo-axis" aria-hidden="true"><span>{int(trendBarMax)}</span><span>{int(Math.round(trendBarMax/2))}</span><span>0</span></div>
+      <svg viewBox="0 0 500 186" preserveAspectRatio="none" aria-label={trendView==='combined'?'Transactions en barres et alertes en courbe, deux axes distincts':trendView==='alerts'?'Alertes du test par jour simulé':'Transactions du test par jour simulé'} role="img">
+       <defs><linearGradient id="fw-grad-b" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#75bbff"/><stop offset="1" stopColor="#4044b3"/></linearGradient><linearGradient id="fw-grad-alert" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#cb9aff"/><stop offset="1" stopColor="#6555c2"/></linearGradient><linearGradient id="fw-grad-p" x1="0" y1="0" x2="0" y2="1"><stop stopColor="#f58ec9" stopOpacity=".20"/><stop offset="1" stopColor="#f58ec9" stopOpacity="0"/></linearGradient></defs>
+       {[26,95,164].map(y=><path key={y} d={'M 20 '+y+' H 490'} stroke="#a8c5ff26" strokeDasharray="3 5"/>)}
+       {fraudDays.map((d,i)=>{const count=trendBarValue(d);return <rect key={d.day} x={29+i*81} y={164-137*count/trendBarMax} width="32" height={137*count/trendBarMax} rx="5" fill={trendView==='alerts'?'url(#fw-grad-alert)':'url(#fw-grad-b)'} opacity={scope.day===String(d.day)?1:.91}><title>{'J'+d.day+' · '+int(count)+' '+(trendView==='alerts'?kindsName[scope.kind].toLowerCase():'transactions')+' · test'}</title></rect>})}
+       {trendIsCombined&&<><path d={'M 45 164 L '+trendPoints.replaceAll(' ', ' L ')+' L 450 164 Z'} fill="url(#fw-grad-p)"/><polyline points={trendPoints} fill="none" stroke="#ff64ae" strokeWidth="3" vectorEffect="non-scaling-stroke" strokeLinejoin="round" strokeLinecap="round"/>{fraudDays.map((d,i)=><circle key={d.day} cx={45+i*81} cy={164-137*selectedCount(d,scope.kind)/trendAlertMax} r={scope.day===String(d.day)?5:3.5} fill="#ffb9dc" stroke="#ff4d9a" strokeWidth="2"><title>{'J'+d.day+' : '+int(selectedCount(d,scope.kind))+' '+kindsName[scope.kind].toLowerCase()}</title></circle>)}</>}
+      </svg>
+      {trendIsCombined&&<div className="fw-combo-axis fw-right" aria-hidden="true"><span>{int(trendAlertMax)}</span><span>{int(Math.round(trendAlertMax/2))}</span><span>0</span></div>}
+     </div>
+     <div className="fw-trend-labels" data-trend-view={trendView}>{fraudDays.map(d=><button key={d.day} className={scope.day===String(d.day)?'active':''} onClick={()=>selectDay(d.day)} aria-label={'Inspecter J'+d.day}><span>J{d.day}</span><b>{int(trendBarValue(d))}</b></button>)}</div>
     </Panel>
-    <Panel title="Alertes par canal" role="fw-channels" subtitle="Test chronologique · regroupement par type" extra={<span className="fw-head-caption">{kindsName[scope.kind]}</span>}>
-     <div className="fw-channel-rows">{shownChannels.map(c=>{const n=selectedCount(c,scope.kind);return <button key={c.type} className={'fw-channel-row '+(scope.channel===c.type?'active':'')} onClick={()=>selectChannel(c.type)} aria-label={c.type+' : '+int(n)+' '+kindsName[scope.kind].toLowerCase()}><span className="fw-channel-name">{c.type}</span><span className="fw-channel-track"><i style={{width:(100*n/channelsMax)+'%'}}/></span><strong>{int(n)}</strong><small>{pct(totalChannel?n/totalChannel:0)}</small></button>})}</div>
-     <div className="fw-channel-summary">{scope.day!=='Tous'?'Répartition par canal : test complet (pas de jointure jour × canal).':'Sélectionne un canal pour examiner ses agrégats.'}</div>
+    <Panel title="Alertes par canal" role="fw-channels" subtitle="Test chronologique · seules catégories alertées" extra={<span className="fw-head-caption">{kindsName[scope.kind]}</span>}>
+     <div className="fw-channel-rows">{shownChannels.map(c=>{const n=selectedCount(c,scope.kind);return <button key={c.type} className={'fw-channel-row '+(scope.channel===c.type?'active':'')} onClick={()=>selectChannel(c.type)} aria-label={c.type+' : '+int(n)+' '+kindsName[scope.kind].toLowerCase()}>
+      <span className="fw-channel-main"><span className="fw-channel-name"><Fingerprint size={14}/>{c.type}</span><span className="fw-channel-track"><i style={{width:(100*n/channelsMax)+'%'}}/></span><strong>{int(n)}</strong><small>{pct(totalChannel?n/totalChannel:0)}</small></span>
+      <span className="fw-channel-metrics"><span>Vraies <b>{int(c.tp)}</b></span><span>Fausses <b>{int(c.fp)}</b></span><span>Précision <b>{pct(c.precision)}</b></span><span>Rappel <b>{pct(c.recall)}</b></span></span>
+     </button>})}</div>
+     <div className="fw-channel-summary">{scope.day!=='Tous'?'Canaux du test complet : pas de jointure jour × canal.':'Sélectionner un canal actualise la qualité, sans modifier les jours.'}</div>
     </Panel>
     <Panel title="Qualité de détection" role="fw-quality" extra={<div className="fw-quality-tools"><span className="fw-head-caption" title="PR-AUC mesurée uniquement sur le test chronologique global">PR-AUC test {value(test.pr_auc)}</span><button className="fw-icon" onClick={()=>onMode('alerts')} title="Perspective Alertes" aria-label="Examiner la qualité de détection"><ChevronRight size={16}/></button></div>}>
      <div className="fw-quality-layout">
