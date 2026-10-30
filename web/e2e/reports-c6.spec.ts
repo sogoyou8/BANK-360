@@ -221,3 +221,84 @@ test('C6.2 — 1648x928 approved Aurora target keeps 54/46 panel balance and ori
  expect(g.overall).toBeLessThanOrEqual(3);
  await page.screenshot({path:'test-results/reports-c62-target-1648x928.png',fullPage:true});
 });
+
+
+test('C6.3 — no label/button collisions or clipped preferences across sources, perspectives and viewports',async({page})=>{
+ for(const [width,height] of [[1648,928],[1440,810],[1366,768],[1280,720]] as const){
+  await page.setViewportSize({width,height});await openReports(page);
+  for(const s of ['Toutes sources','Crédit','Fraude'] as const){
+   await scope(page).getByRole('button',{name:s,exact:true}).click();
+   for(const tab of ['Méthodologie','Préférences','Exports','Vue globale'] as const){
+    await tabs(page).getByRole('tab',{name:tab}).click();
+    const g=await page.evaluate(()=>{
+     const root=document.querySelector('.rw-root')!;
+     const rect=(e:Element)=>e.getBoundingClientRect();
+     const method=document.querySelector('.rw-method-panel')!;
+     const pref=document.querySelector('.rw-preferences-panel')!;
+     const prefRect=rect(pref),titleRect=rect(pref.querySelector('.rw-panel-title')!);
+     const list=rect(pref.querySelector('.rw-preferences-list')!);
+     const prefRows=[...pref.querySelectorAll('.rw-preferences-list>div')].map(row=>{
+      const r=rect(row),text=rect(row.querySelector('span')!),button=rect(row.querySelector('button')!);
+      const labels=[...row.querySelectorAll('strong,small')].map(rect);
+      return {top:r.top,bottom:r.bottom,left:r.left,right:r.right,height:r.height,
+       textLeft:text.left,textRight:text.right,textTop:text.top,textBottom:text.bottom,
+       labelSeparation:labels.length===2?labels[1].top-labels[0].bottom:0,
+       buttonLeft:button.left,buttonRight:button.right,buttonTop:button.top,buttonBottom:button.bottom,
+       buttonHeight:button.height};
+     });
+     const methodCards=[...method.querySelectorAll('.rw-method-card')].map(rect);
+     const methodNote=method.querySelector('.rw-focus-note');
+     const exportPanel=document.querySelector('.rw-export-panel')!;
+     const summary=exportPanel.querySelector('.rw-context-summary');
+     const exportCards=[...exportPanel.querySelectorAll('.rw-export-card')].map(rect);
+     const foot=rect(exportPanel.querySelector('.rw-export-bottom')!);
+     const end=rect(root);
+     return {
+      global:document.documentElement.scrollHeight-innerHeight,
+      horizontal:document.documentElement.scrollWidth-innerWidth,
+      page:document.querySelector('#main-content')!.scrollHeight-document.querySelector('#main-content')!.clientHeight,
+      panelOverflow:[...root.querySelectorAll('.rw-panel')].map(x=>x.scrollHeight-x.clientHeight),
+      titleBottom:titleRect.bottom,listTop:list.top,listBottom:list.bottom,prefBottom:prefRect.bottom,
+      rows:prefRows,methodNoteBottom:methodNote?rect(methodNote).bottom:null,
+      methodBottom:rect(method).bottom,methodCards:methodCards.map(x=>({top:x.top,bottom:x.bottom})),
+      summary:summary?{top:rect(summary).top,bottom:rect(summary).bottom}:null,
+      lastExportBottom:exportCards.at(-1)?.bottom??0,exportFootTop:foot.top,
+      exportBottom:rect(exportPanel).bottom,rootBottom:end.bottom,footerTop:rect(document.querySelector('.statusline')!).top
+     };
+    });
+    const name=width+'×'+height+' '+s+' / '+tab;
+    expect(g.global,'global scroll '+name).toBeLessThanOrEqual(3);
+    expect(g.page,'main scroll '+name).toBeLessThanOrEqual(3);
+    expect(g.horizontal,'horizontal overflow '+name).toBeLessThanOrEqual(3);
+    expect(g.panelOverflow.every(v=>v<=3),'no panel clipping '+name).toBe(true);
+    expect(g.rows).toHaveLength(2);
+    expect(g.listTop,'preference list below header '+name).toBeGreaterThanOrEqual(g.titleBottom-1);
+    for(const row of g.rows){
+     expect(row.height,'preference row has height '+name).toBeGreaterThanOrEqual(34);
+     expect(row.textRight,'label vs button collision '+name).toBeLessThanOrEqual(row.buttonLeft-5);
+     expect(row.buttonRight,'button inside row '+name).toBeLessThanOrEqual(row.right+1);
+     expect(row.buttonTop,'button inside top '+name).toBeGreaterThanOrEqual(row.top-1);
+     expect(row.buttonBottom,'button inside bottom '+name).toBeLessThanOrEqual(row.bottom+1);
+     expect(row.textTop,'label inside top '+name).toBeGreaterThanOrEqual(row.top-1);
+     expect(row.textBottom,'label inside bottom '+name).toBeLessThanOrEqual(row.bottom+1);
+     expect(row.labelSeparation,'label lines overlap '+name).toBeGreaterThanOrEqual(-1);
+    }
+    expect(g.rows[0].bottom,'two rows must not overlap '+name).toBeLessThanOrEqual(g.rows[1].top+1);
+    expect(g.rows[1].bottom,'last preference row remains inside panel '+name).toBeLessThanOrEqual(g.prefBottom+1);
+    expect(g.listBottom,'list remains inside panel '+name).toBeLessThanOrEqual(g.prefBottom+1);
+    expect(g.methodNoteBottom??0,'method focus note remains inside panel '+name).toBeLessThanOrEqual(g.methodBottom+1);
+    if(g.summary){
+     expect(s,'source context only when filtered '+name).not.toBe('Toutes sources');
+     expect(g.summary.top,'source context after exports '+name).toBeGreaterThanOrEqual(g.lastExportBottom-1);
+     expect(g.summary.bottom,'source context before explanatory footer '+name).toBeLessThanOrEqual(g.exportFootTop+1);
+     expect(g.summary.bottom,'source context inside export panel '+name).toBeLessThanOrEqual(g.exportBottom+1);
+    }else expect(s).toBe('Toutes sources');
+    expect(g.rootBottom).toBeLessThanOrEqual(g.footerTop+3);
+    if(tab==='Méthodologie'||(tab==='Vue globale'&&s!=='Toutes sources')){
+     const safeScope=s==='Crédit'?'credit':s==='Fraude'?'fraud':'all';
+     await page.screenshot({path:'test-results/reports-c63-'+safeScope+'-'+(tab==='Méthodologie'?'methodology':'overview')+'-'+width+'x'+height+'.png',fullPage:true});
+    }
+   }
+  }
+ }
+});
