@@ -1,4 +1,4 @@
-import React,{useEffect,useMemo,useState} from 'react';
+import React,{useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
 import {Activity,BarChart3,CheckCircle2,ChevronRight,Download,Info,Layers3,Search,ShieldAlert,Target,X} from 'lucide-react';
 import {ages,b3,b3Deciles,b4,b4Deciles,creditTotals,filteredSegments,fraudDays,fraudTypes,fmtInt,fmtPct,initialFilters,limits,segments,type CreditFilters} from './data';
 import {creditAudit,creditCalibration,creditDrivers,driverLabels} from './riskEvidence';
@@ -35,6 +35,8 @@ export default function IntelligenceWorkspace({perspective,onPerspective,context
  const [query,setQuery]=useState('');
  const [sortKey,setSortKey]=useState('');
  const [sortDescending,setSortDescending]=useState(false);
+ const tableSlotRef=useRef<HTMLDivElement>(null);
+ const tableViewportRef=useRef<HTMLDivElement>(null);
  useEffect(()=>{setSelectedRow(null);setSelectedDecile(null);setQuery('');setSortKey('')},[context]);
  const creditRows=useMemo(()=>filteredSegments(filters),[filters]);
  const total=useMemo(()=>creditTotals(creditRows),[creditRows]);
@@ -57,6 +59,36 @@ export default function IntelligenceWorkspace({perspective,onPerspective,context
  const allowed:DiagnosticView[]=isCredit?['ranking','drivers','calibration','audit']:['ranking','drift'];
  const activeDiag=allowed.includes(diagnostic)?diagnostic:'ranking';
  const detail=rows.find(x=>x.id===selectedRow);
+
+ // C4.10: keep the scrolling viewport at an exact number of physical table rows.
+ // The parent slot owns the flexible layout; quantizing the child never changes
+ // its measured available height, avoiding ResizeObserver feedback loops.
+ useLayoutEffect(()=>{
+  const slot=tableSlotRef.current;
+  const viewport=tableViewportRef.current;
+  if(!slot||!viewport)return;
+  const align=()=>{
+   const header=viewport.querySelector('thead tr') as HTMLElement|null;
+   const row=viewport.querySelector('tbody tr') as HTMLElement|null;
+   if(!header||!row)return;
+   const available=slot.getBoundingClientRect().height;
+   const headerHeight=header.getBoundingClientRect().height;
+   const rowHeight=row.getBoundingClientRect().height;
+   if(available<=0||headerHeight<=0||rowHeight<=0)return;
+   const capacity=Math.floor((available-headerHeight+.25)/rowHeight);
+   const aligned=capacity>=1?Math.min(available,headerHeight+capacity*rowHeight):available;
+   viewport.style.height=Math.max(0,aligned-.75)+'px';
+   viewport.style.setProperty('--iw-table-header-height',headerHeight+'px');
+  };
+  align();
+  const observer=new ResizeObserver(align);
+  observer.observe(slot);
+  const header=viewport.querySelector('thead tr');
+  const row=viewport.querySelector('tbody tr');
+  if(header)observer.observe(header);
+  if(row)observer.observe(row);
+  return()=>observer.disconnect();
+ },[context,visibleRows.length,perspective]);
  const selectedBars=isDays?fraudDays.map(x=>({id:x.day,label:'J'+x.day,rate:x.alerts,n:x.transactions,observed:x.frauds,mean:0})):deciles.map(x=>({id:x.decile,label:'D'+x.decile,rate:x.rate,n:x.n,observed:'defaults' in x?x.defaults:x.frauds,mean:x.mean}));
  const highest=Math.max(.00001,...selectedBars.map(x=>x.rate));
  const test=isCredit?c:f;
@@ -95,7 +127,7 @@ export default function IntelligenceWorkspace({perspective,onPerspective,context
 
   <Panel className="iw-explorer" title="Explorateur de données" extra={<div className="iw-explore-actions"><label className="iw-search"><Search size={14}/><input value={query} onChange={e=>{setQuery(e.target.value);setSelectedRow(null)}} aria-label="Rechercher des groupes" placeholder="Rechercher..."/></label><button type="button" className="iw-download" onClick={()=>downloadCsv('bank360-intelligence-'+context+'-agregats.csv',visibleRows,columns)} aria-label="Exporter les groupes affichés en CSV"><Download size={16}/> CSV</button></div>}>
    <div className="iw-explorer-toolbar">{isCredit?<div className="iw-credit-filters" role="group" aria-label="Filtres de l'explorateur crédit"><label>Âge<select value={filters.age} aria-label="Âge Intelligence" onChange={e=>{onFilters({...filters,age:e.target.value});setSelectedRow(null)}}><option value="Tout">Tous</option>{ages.map(x=><option key={x}>{x}</option>)}</select></label><label>Plafond<select value={filters.limit} aria-label="Plafond Intelligence" onChange={e=>{onFilters({...filters,limit:e.target.value});setSelectedRow(null)}}><option value="Tout">Tous</option>{limits.map(x=><option key={x}>{x}</option>)}</select></label><label>Statut septembre<select value={filters.status} aria-label="Statut septembre Intelligence" onChange={e=>{onFilters({...filters,status:e.target.value});setSelectedRow(null)}}><option value="Tout">Tous</option>{statuses.map(x=><option key={x} value={x}>{statusLabel(x)}</option>)}</select></label><button type="button" className="iw-reset" onClick={()=>{onFilters(initialFilters);setSelectedRow(null);setQuery('')}}><X size={15}/> Réinitialiser</button></div>:<div className="iw-readonly"><Info size={13}/>{isDays?'Jours simulés J25–J30 · test B4':'Cinq types d’opérations PaySim · test B4'} · agrégats uniquement</div>}<span className="iw-rowcount">{count(visibleRows.length)} groupes affichés</span></div>
-   <div className="iw-table-window" role="region" aria-label="Groupes agrégés" tabIndex={0}><table><thead><tr>{columns.map(col=><th key={col.key}><button type="button" aria-label={'Trier par '+col.label} onClick={()=>{setSortKey(col.key);setSortDescending(sortKey===col.key?!sortDescending:false)}}>{col.label}{sortKey===col.key?(sortDescending?' ↓':' ↑'):''}</button></th>)}</tr></thead><tbody>{visibleRows.map(row=><tr key={row.id} tabIndex={0} className={selectedRow===row.id?'selected':''} onClick={()=>setSelectedRow(selectedRow===row.id?null:row.id)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setSelectedRow(selectedRow===row.id?null:row.id)}}}>{columns.map(col=><td key={col.key} className={typeof row[col.key]==='number'?'numeric':''}>{display(row[col.key],col.unit)}</td>)}</tr>)}{visibleRows.length===0&&<tr><td colSpan={columns.length}>Aucun groupe pour ces filtres ou cette recherche.</td></tr>}</tbody></table></div>
+   <div className="iw-table-slot" ref={tableSlotRef}><div className="iw-table-window" ref={tableViewportRef} role="region" aria-label="Groupes agrégés" tabIndex={0}><table><thead><tr>{columns.map(col=><th key={col.key}><button type="button" aria-label={'Trier par '+col.label} onClick={()=>{setSortKey(col.key);setSortDescending(sortKey===col.key?!sortDescending:false)}}>{col.label}{sortKey===col.key?(sortDescending?' ↓':' ↑'):''}</button></th>)}</tr></thead><tbody>{visibleRows.map(row=><tr key={row.id} tabIndex={0} className={selectedRow===row.id?'selected':''} onClick={()=>setSelectedRow(selectedRow===row.id?null:row.id)} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();setSelectedRow(selectedRow===row.id?null:row.id)}}}>{columns.map(col=><td key={col.key} className={typeof row[col.key]==='number'?'numeric':''}>{display(row[col.key],col.unit)}</td>)}</tr>)}{visibleRows.length===0&&<tr><td colSpan={columns.length}>Aucun groupe pour ces filtres ou cette recherche.</td></tr>}</tbody></table></div></div>
    <div className="iw-explorer-footer" aria-live="polite">{detail?<><CheckCircle2 size={14}/>Groupe sélectionné : {columns.slice(0,3).map(col=>display(detail[col.key],col.unit)).join(' · ')} · {columns.slice(-2).map(col=>col.label+' '+display(detail[col.key],col.unit)).join(' · ')}</>:<><Info size={13}/>{isCredit?'196 groupes UCI au total · taux pondérés par effectif':isDays?'Six jours simulés · aucune date calendaire':'Types PaySim · test chronologique'}</>}<span>Export CSV des lignes visibles</span></div>
   </Panel>
  </div>
