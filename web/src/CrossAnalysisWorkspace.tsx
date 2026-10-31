@@ -1,4 +1,4 @@
-import {useEffect,useMemo,useState} from 'react';
+import {useEffect,useMemo,useRef,useState} from 'react';
 import {Activity,ArrowLeftRight,BarChart3,CheckCircle2,Database,Download,FilterX,Info,Layers3,ShieldAlert,ShieldCheck,Wallet,Maximize2,Minimize2,X,Table2,Grid3X3,ChevronRight} from 'lucide-react';
 import {ages,limits,segments,b3,b4,b3Deciles,b4Deciles,fraudDays,fraudTypes,filteredSegments,groupSegments,creditTotals,paymentSeries,fmtInt,fmtPct,fmtNtd,initialFilters,type CreditFilters} from './data';
 import {exportReport,type ExportFormat,type ReportDataset} from './reportExports';
@@ -34,6 +34,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
  const [modelTab,setModelTab]=useState<ModelTab>('ranking');
  const [selectedRow,setSelectedRow]=useState<string|null>(null);
  const [filterFeedback,setFilterFeedback]=useState('');
+ const panelRef=useRef<HTMLDivElement>(null);
  useEffect(()=>{setSelectedRow(null)},[filters,fraud.channel,fraud.day,detail]);
  useEffect(()=>{if(!filterFeedback)return;const timeout=window.setTimeout(()=>setFilterFeedback(''),3500);return()=>window.clearTimeout(timeout)},[filterFeedback]);
  useEffect(()=>{if(!expanded)return;const onKey=(e:KeyboardEvent)=>{if(e.key==='Escape')setExpanded(false)};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[expanded]);
@@ -105,7 +106,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
   </div>
   <div className="x1-summary">
    <div><Database size={22}/><span><b>{fmtInt(credit.total)}</b><small>Dossiers UCI · sélection</small></span></div>
-   <div><Wallet size={22}/><span><b>{asPct(credit.rate)}</b><small>Défauts UCI · {fmtInt(credit.defaults)}</small></span></div>
+   <div><Wallet size={22}/><span><b>{credit.total?asPct(credit.rate):'—'}</b><small>Défauts UCI · {fmtInt(credit.defaults)}</small></span></div>
    <div><ArrowLeftRight size={22}/><span><b>{fmtInt(fraudValues.transactions)}</b><small>Transactions PaySim · {selectedFraudLabel}</small></span></div>
    <div><ShieldAlert size={22}/><span><b>{fmtInt(fraudValues.alerts)}</b><small>Alertes simulées · {selectedFraudLabel}</small></span></div>
    <button onClick={onGovernance} aria-label="Ouvrir la gouvernance et les preuves"><ShieldCheck size={18}/> Sources & preuves</button>
@@ -115,7 +116,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
     <div className="x1-comparison" aria-live="polite">
      <div><small>Défauts · sélection</small><b>{credit.total?asPct(credit.rate):'—'}</b><small>{fmtInt(credit.total)} dossiers · {fmtInt(credit.defaults)} défauts</small></div>
      <div><small>Référence même statut · tous âges et plafonds</small><b>{creditReference.total?asPct(creditReference.rate):'—'}</b><small>{difference===null?'Aucune comparaison':(difference>=0?'+':'')+new Intl.NumberFormat('fr-FR',{maximumFractionDigits:1,minimumFractionDigits:1}).format(difference)+' point(s)'}</small></div>
-     <button className="x1-compare-open" onClick={()=>{setInspectTab('compare');setExpanded(true)}} aria-label="Comparer la sélection au portefeuille"><ChevronRight size={17}/></button>
+     <button className="x1-compare-open" onClick={()=>{setDetail('credit');setInspectTab('compare');setExpanded(true)}} aria-label="Comparer la sélection au portefeuille"><ChevronRight size={17}/></button>
     </div>
     <div className="x1-matrix-section">
      <div className="x1-subtitle"><h3>Carte des défauts · âge × plafond</h3><span>Couleur = taux · cliquer pour croiser</span></div>
@@ -153,7 +154,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
   {filterFeedback&&<div className="x1-selection-feedback" role="status">{filterFeedback}</div>}
   <section className={'x1-inspector '+(expanded?'x1-inspector-expanded':'')} aria-label="Inspecteur analytique" data-testid="x1-inspector">
    {expanded&&<button className="x1-inspector-backdrop" aria-label="Fermer inspecteur" onClick={()=>setExpanded(false)}/>}
-   <div className="x1-inspector-surface">
+   <div ref={panelRef} className="x1-inspector-surface" role={expanded?'dialog':undefined} aria-modal={expanded?true:undefined} aria-label={expanded?'Inspecteur analytique agrandi':undefined}>
     <header className="x1-inspector-head">
      <div><h2>Explorer les relations</h2><small>{inspectionTitle} · {detail==='credit'?'UCI historique 2005':'PaySim · simulation'}</small></div>
      <div className="x1-inspector-tabs" role="tablist" aria-label="Type d'inspection">
