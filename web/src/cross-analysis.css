@@ -525,3 +525,12 @@
 :root[data-theme=light] .x1-proof-row .x1-bad{background:#f6d8db;color:#8c3044}
 :root[data-theme=light] .x1-gov-exports .x1-export-row button,
 :root[data-theme=light] .x1-setting-row button{background:#2d5994;color:#fff}
+
+/* X1.8 — small-screen heatmap cue without a new panel or changed Aurora grid. */
+.x1-matrix-mobile-help{display:none}
+.x1-matrix-section:focus-visible{outline:2px solid #8ccaff;outline-offset:2px}
+@media(max-width:520px){
+ .x1-matrix-section .x1-matrix-desktop-help{display:none}
+ .x1-matrix-section .x1-matrix-mobile-help{display:inline;color:#d3e4ff;font-weight:600}
+ :root[data-theme=light] .x1-matrix-section .x1-matrix-mobile-help{color:#225381}
+}
