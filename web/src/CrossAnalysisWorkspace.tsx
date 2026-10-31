@@ -24,6 +24,15 @@ function Bars({items,label,selected,onClick,max,unit='rate'}:{items:{name:string
   </button>)}
  </div>;
 }
+function navigateTabs(e:React.KeyboardEvent<HTMLDivElement>){
+ if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;
+ const tabs=Array.from(e.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]:not(:disabled)'));
+ const current=tabs.indexOf(document.activeElement as HTMLButtonElement);
+ if(current<0||!tabs.length)return;
+ e.preventDefault();
+ const next=e.key==='Home'?0:e.key==='End'?tabs.length-1:(current+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;
+ tabs[next].focus();tabs[next].click();
+}
 function Kpi({label,value,detail,tone='blue'}:{label:string,value:string,detail:string,tone?:string}){return <div className={'x1-kpi x1-'+tone}><small>{label}</small><b>{value}</b><span>{detail}</span></div>}
 export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,onGovernance}:Props){
  const [detail,setDetail]=useState<Detail>('credit');
@@ -37,7 +46,24 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
  const panelRef=useRef<HTMLDivElement>(null);
  useEffect(()=>{setSelectedRow(null)},[filters,fraud.channel,fraud.day,detail]);
  useEffect(()=>{if(!filterFeedback)return;const timeout=window.setTimeout(()=>setFilterFeedback(''),3500);return()=>window.clearTimeout(timeout)},[filterFeedback]);
- useEffect(()=>{if(!expanded)return;const onKey=(e:KeyboardEvent)=>{if(e.key==='Escape')setExpanded(false)};window.addEventListener('keydown',onKey);return()=>window.removeEventListener('keydown',onKey)},[expanded]);
+ useEffect(()=>{
+  if(!expanded)return;
+  const opener=document.activeElement instanceof HTMLElement?document.activeElement:null;
+  const surface=panelRef.current;
+  surface?.querySelector<HTMLButtonElement>('.x1-inspector-size')?.focus();
+  const onKey=(e:KeyboardEvent)=>{
+   if(e.key==='Escape'){e.preventDefault();setExpanded(false);return}
+   if(e.key!=='Tab'||!surface)return;
+   const focusables=Array.from(surface.querySelectorAll<HTMLElement>('button:not(:disabled),select:not(:disabled),a[href],[tabindex]:not([tabindex="-1"])'))
+    .filter(el=>el.getClientRects().length>0&&window.getComputedStyle(el).visibility!=='hidden');
+   if(!focusables.length){e.preventDefault();return}
+   const first=focusables[0],last=focusables[focusables.length-1];
+   if(e.shiftKey&&(document.activeElement===first||!surface.contains(document.activeElement))){e.preventDefault();last.focus()}
+   else if(!e.shiftKey&&(document.activeElement===last||!surface.contains(document.activeElement))){e.preventDefault();first.focus()}
+  };
+  document.addEventListener('keydown',onKey);
+  return()=>{document.removeEventListener('keydown',onKey);opener?.focus()};
+ },[expanded]);
  const creditRows=useMemo(()=>filteredSegments(filters),[filters]);
  const credit=useMemo(()=>creditTotals(creditRows),[creditRows]);
  const ageGroups=useMemo(()=>groupSegments(filteredSegments({...filters,age:'Tout'}),'age_band'),[filters]);
@@ -124,7 +150,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
       <div className="x1-matrix-head"><span>Âge / plafond</span>{limits.map(l=><span key={l} title={l}>{l}</span>)}</div>
       {matrix.map(row=><div className="x1-matrix-row" key={row.age}><strong>{row.age}</strong>{row.cells.map(c=>{
        const active=filters.age===row.age&&filters.limit===c.limitBand;
-       return <button type="button" key={c.limitBand} aria-pressed={active} disabled={!c.total} onClick={()=>chooseMatrix(row.age,c.limitBand)} title={row.age+' · '+c.limitBand+' : '+fmtInt(c.total)+' dossiers, '+fmtInt(c.defaults)+' défauts, '+(c.total?asPct(c.rate):'aucun dossier')} style={{background:c.total?'rgba(106,144,247,'+(0.13+Math.min(.55,c.rate*.84))+')':undefined}}>{c.total?asPct(c.rate):'—'}</button>
+       return <button type="button" key={c.limitBand} aria-pressed={active} disabled={!c.total} onClick={()=>chooseMatrix(row.age,c.limitBand)} aria-label={'Âge '+row.age+', plafond '+c.limitBand+' : '+fmtInt(c.total)+' dossiers, '+fmtInt(c.defaults)+' défauts, '+(c.total?asPct(c.rate):'aucun dossier')} title={row.age+' · '+c.limitBand+' : '+fmtInt(c.total)+' dossiers, '+fmtInt(c.defaults)+' défauts, '+(c.total?asPct(c.rate):'aucun dossier')} style={{background:c.total?'rgba(106,144,247,'+(0.13+Math.min(.55,c.rate*.84))+')':undefined}}>{c.total?asPct(c.rate):'—'}</button>
       })}</div>)}
      </div>
 
@@ -157,13 +183,13 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
    <div ref={panelRef} className="x1-inspector-surface" role={expanded?'dialog':undefined} aria-modal={expanded?true:undefined} aria-label={expanded?'Inspecteur analytique agrandi':undefined}>
     <header className="x1-inspector-head">
      <div><h2>Explorer les relations</h2><small>{inspectionTitle} · {detail==='credit'?'UCI historique 2005':'PaySim · simulation'}</small></div>
-     <div className="x1-inspector-tabs" role="tablist" aria-label="Type d'inspection">
-      {([['data','Données'],['monthly','Retards'],['compare','Comparaison'],['models','Modèles']] as const).map(([id,label])=><button role="tab" key={id} aria-selected={inspectTab===id} onClick={()=>{setInspectTab(id);if(id==='monthly')setDetail('credit')}}>{label}</button>)}
+     <div className="x1-inspector-tabs" role="tablist" aria-label="Type d'inspection" onKeyDown={navigateTabs}>
+      {([['data','Données'],['monthly','Retards'],['compare','Comparaison'],['models','Modèles']] as const).map(([id,label])=><button role="tab" key={id} tabIndex={inspectTab===id?0:-1} aria-selected={inspectTab===id} onClick={()=>{setInspectTab(id);if(id==='monthly')setDetail('credit')}}>{label}</button>)}
      </div>
      <button className="x1-inspector-size" aria-label={expanded?'Réduire l’inspecteur':'Agrandir l’inspecteur'} onClick={()=>setExpanded(v=>!v)}>{expanded?<Minimize2 size={16}/>:<Maximize2 size={16}/>}<span>{expanded?'Réduire':'Agrandir'}</span></button>
     </header>
     {inspectTab==='data'&&<>
-     <div className="x1-inspector-data-toolbar"><div role="tablist" aria-label="Source du tableau"><button role="tab" aria-selected={detail==='credit'} onClick={()=>setDetail('credit')}>Crédit</button><button role="tab" aria-selected={detail==='fraud'} onClick={()=>setDetail('fraud')}>Fraude</button></div><label>Format <select aria-label="Format export X1" value={format} onChange={e=>setFormat(e.target.value as ExportFormat)}><option value="csv">CSV</option><option value="xlsx">XLSX</option></select></label><button onClick={exportCurrent}><Download size={14}/> Exporter la sélection</button></div>
+     <div className="x1-inspector-data-toolbar"><div role="tablist" aria-label="Source du tableau" onKeyDown={navigateTabs}><button role="tab" tabIndex={detail==='credit'?0:-1} aria-selected={detail==='credit'} onClick={()=>setDetail('credit')}>Crédit</button><button role="tab" tabIndex={detail==='fraud'?0:-1} aria-selected={detail==='fraud'} onClick={()=>setDetail('fraud')}>Fraude</button></div><label>Format <select aria-label="Format export X1" value={format} onChange={e=>setFormat(e.target.value as ExportFormat)}><option value="csv">CSV</option><option value="xlsx">XLSX</option></select></label><button onClick={exportCurrent}><Download size={14}/> Exporter la sélection</button></div>
      <div className="x1-inspector-scroll" tabIndex={0} role="region" aria-label="Groupes agrégés filtrés"><table className="x1-inspector-table"><thead><tr>{(detail==='credit'?['Âge','Plafond','Statut','Dossiers','Défauts','Taux défaut']:['Type / jour','Transactions','Fraudes','Alertes','Vraies','Précision']).map(x=><th key={x}>{x}</th>)}</tr></thead><tbody>{rows.map(r=><tr key={r.key} className={selectedRow===r.key?'selected':''} tabIndex={0} onClick={()=>setSelectedRow(selectedRow===r.key?null:r.key)} onKeyDown={e=>{if(e.key==='Enter')setSelectedRow(selectedRow===r.key?null:r.key)}}><td>{r.a}</td><td>{r.b}</td><td>{r.c}</td><td>{fmtInt(r.d)}</td><td>{fmtInt(r.e)}</td><td>{r.f===null?'—':asPct(r.f)}</td></tr>)}{!rows.length&&<tr><td colSpan={6}>Aucune donnée pour cette sélection.</td></tr>}</tbody></table></div>
      <footer className="x1-inspector-foot"><Info size={13}/>{detail==='credit'?fmtInt(creditRows.length)+' groupes UCI filtrés · taux pondérés par effectif':'PaySim : regroupement par type OU par jour, jamais les deux'}<button onClick={()=>setSelectionInfo(v=>!v)} aria-expanded={selectionInfo}>Limites <Layers3 size={13}/></button>{selectionInfo&&<span className="x1-inspector-limit">Sources indépendantes, pas de jointure UCI/PaySim. Modèles B3/B4 = test global.</span>}</footer>
     </>}
@@ -175,7 +201,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
       </>:<><p>Regroupement <strong>{selectedFraudLabel}</strong> du test PaySim. Les types et les jours sont deux axes distincts.</p><div className="x1-inspector-compare-kpis"><div><small>Alertes sélectionnées</small><b>{fmtInt(fraudValues.alerts)}</b></div><div><small>Précision</small><b>{fraudPrecision===null?'—':asPct(fraudPrecision)}</b></div><div><small>Rappel</small><b>{fraudRecall===null?'—':asPct(fraudRecall)}</b></div></div></>}
     </div>}
     {inspectTab==='models'&&<div className="x1-inspector-scroll x1-model-inspection">
-      <div className="x1-model-toolbar"><div role="group" aria-label="Source de modèles"><button aria-pressed={detail==='credit'} onClick={()=>{setDetail('credit');setModelTab('ranking')}}>Modèles Crédit B3</button><button aria-pressed={detail==='fraud'} onClick={()=>{setDetail('fraud');setModelTab('ranking')}}>Modèles Fraude B4</button></div><div role="tablist" aria-label="Diagnostics des modèles">{(detail==='credit'?[['ranking','Performance'],['deciles','Déciles'],['variables','Variables'],['calibration','Calibration'],['groups','Sous-groupes']]:[['ranking','Performance'],['deciles','Déciles'],['drift','Dérive']] as string[][]).map(([id,label])=><button role="tab" aria-selected={modelTab===id} key={id} onClick={()=>setModelTab(id as ModelTab)}>{label}</button>)}</div></div>
+      <div className="x1-model-toolbar"><div role="group" aria-label="Source de modèles"><button aria-pressed={detail==='credit'} onClick={()=>{setDetail('credit');setModelTab('ranking')}}>Modèles Crédit B3</button><button aria-pressed={detail==='fraud'} onClick={()=>{setDetail('fraud');setModelTab('ranking')}}>Modèles Fraude B4</button></div><div role="tablist" aria-label="Diagnostics des modèles" onKeyDown={navigateTabs}>{(detail==='credit'?[['ranking','Performance'],['deciles','Déciles'],['variables','Variables'],['calibration','Calibration'],['groups','Sous-groupes']]:[['ranking','Performance'],['deciles','Déciles'],['drift','Dérive']] as string[][]).map(([id,label])=><button role="tab" tabIndex={modelTab===id?0:-1} aria-selected={modelTab===id} key={id} onClick={()=>setModelTab(id as ModelTab)}>{label}</button>)}</div></div>
       <p>Évaluation des <strong>jeux de test globaux</strong> : ces diagnostics ne changent pas lorsque les segments Crédit ou Fraude sont filtrés.</p>
       {modelTab==='ranking'&&<div className="x1-model-kpis">{((detail==='credit'?[['ROC-AUC',b3.holdout_test_metrics.roc_auc],['PR-AUC',b3.holdout_test_metrics.pr_auc],['Brier',b3.holdout_test_metrics.brier],['Rappel',b3.holdout_test_metrics.recall]]:[['ROC-AUC',test.roc_auc],['PR-AUC',test.pr_auc],['Brier',test.brier],['Rappel',test.recall]]) as [string,number][]).map(([label,value])=><div key={label}><small>{label} · test</small><b>{label==='Rappel'?asPct(value):format3(value)}</b></div>)}</div>}
       {modelTab==='deciles'&&<div className="x1-decile-grid">{(detail==='credit'?b3Deciles:b4Deciles).map(d=><div key={d.decile}><small>D{d.decile}</small><b>{asPct(d.rate)}</b></div>)}</div>}
