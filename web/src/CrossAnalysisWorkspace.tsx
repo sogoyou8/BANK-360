@@ -86,6 +86,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
   setDetail('credit');setFilterFeedback(selected?'Sélection retirée.':'Croisement âge × plafond actif, retards et dossiers liés.');
  };
  const creditReference=creditTotals(filteredSegments({...filters,age:'Tout',limit:'Tout'}));
+ const referenceLabel=filters.status==='Tout'?'Référence · tous statuts, âges et plafonds':'Référence · même statut de septembre';
  const difference=credit.total&&creditReference.total?100*(credit.rate-creditReference.rate):null;
  const matrix=ages.map(age=>({age,cells:limits.map(limit=>{
   const t=creditTotals(filteredSegments({age,limit,status:filters.status}));
@@ -141,7 +142,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
    <Card className="x1-credit-panel" title="Crédit · portefeuille et paiements" note="UCI 2005 · mêmes sous-groupes pour défauts et six mois" extra={<span className="x1-scope-pill">{hasCredit?'Sélection filtrée':'30 000 dossiers historiques'}</span>}>
     <div className="x1-comparison" aria-live="polite">
      <div><small>Défauts · sélection</small><b>{credit.total?asPct(credit.rate):'—'}</b><small>{fmtInt(credit.total)} dossiers · {fmtInt(credit.defaults)} défauts</small></div>
-     <div><small>Référence même statut · tous âges et plafonds</small><b>{creditReference.total?asPct(creditReference.rate):'—'}</b><small>{difference===null?'Aucune comparaison':(difference>=0?'+':'')+new Intl.NumberFormat('fr-FR',{maximumFractionDigits:1,minimumFractionDigits:1}).format(difference)+' point(s)'}</small></div>
+     <div><small>{referenceLabel}</small><b>{creditReference.total?asPct(creditReference.rate):'—'}</b><small>{difference===null?'Aucune comparaison':(difference>=0?'+':'')+new Intl.NumberFormat('fr-FR',{maximumFractionDigits:1,minimumFractionDigits:1}).format(difference)+' point(s)'}</small></div>
      <button className="x1-compare-open" onClick={()=>{setDetail('credit');setInspectTab('compare');setExpanded(true)}} aria-label="Comparer la sélection au portefeuille"><ChevronRight size={17}/></button>
     </div>
     <div className="x1-matrix-section">
@@ -195,7 +196,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
     </>}
     {inspectTab==='monthly'&&<div className="x1-inspector-scroll x1-inspector-evidence"><p>Les six mois décrivent les <strong>mêmes dossiers UCI</strong> observés à plusieurs dates. Âge, plafond et statut s’appliquent simultanément.</p><table className="x1-inspector-table"><thead><tr><th>Mois 2005</th><th>Observations</th><th>Retards</th><th>Taux</th></tr></thead><tbody>{monthly.map(m=><tr key={m.period}><td>{m.period}</td><td>{fmtInt(m.observations)}</td><td>{fmtInt(m.delayed)}</td><td>{m.observations?asPct(m.rate):'—'}</td></tr>)}</tbody></table></div>}
     {inspectTab==='compare'&&<div className="x1-inspector-scroll x1-compare-panel">
-     {detail==='credit'?<><p>Comparer un segment avec la référence utilisant le <strong>même statut de septembre</strong>, sans moyenner les taux.</p>
+     {detail==='credit'?<><p>Comparer un segment avec {filters.status==='Tout'?<strong>tout le portefeuille, sans restriction de statut</strong>:<strong>les dossiers de même statut de septembre</strong>}, sans moyenner les taux.</p>
       <div className="x1-inspector-compare-kpis"><div><small>Référence</small><b>{creditReference.total?asPct(creditReference.rate):'—'}</b><small>{fmtInt(creditReference.total)} dossiers</small></div><div><small>Sélection</small><b>{credit.total?asPct(credit.rate):'—'}</b><small>{fmtInt(credit.total)} dossiers</small></div><div><small>Écart</small><b>{difference===null?'—':(difference>0?'+':'')+difference.toFixed(1).replace('.',',')+' pt'}</b><small>Différence descriptive, pas causale</small></div></div>
       <div className="x1-inspector-compare-charts"><div><h3>Répartition par âge</h3><Bars items={ageGroups} label="Taux de défaut par âge" max={ageMax} selected={filters.age} onClick={v=>chooseCredit('age',v)}/></div><div><h3>Répartition par plafond</h3><Bars items={limitGroups} label="Taux de défaut par plafond" max={limitMax} selected={filters.limit} onClick={v=>chooseCredit('limit',v)}/></div></div>
       </>:<><p>Regroupement <strong>{selectedFraudLabel}</strong> du test PaySim. Les types et les jours sont deux axes distincts.</p><div className="x1-inspector-compare-kpis"><div><small>Alertes sélectionnées</small><b>{fmtInt(fraudValues.alerts)}</b></div><div><small>Précision</small><b>{fraudPrecision===null?'—':asPct(fraudPrecision)}</b></div><div><small>Rappel</small><b>{fraudRecall===null?'—':asPct(fraudRecall)}</b></div></div></>}
