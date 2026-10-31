@@ -118,7 +118,8 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
   };
   exportReport(ds,format);
  };
- return <div className="x1-root x2-root x2-analysis" data-testid="x1-analysis">
+ return <div className="x1-root x2-root x21-root x2-analysis" data-testid="x1-analysis">
+  <main className="x2-surface x21-surface" aria-label="Cockpit unifié Crédit et Fraude">
   <div className="x1-filterrail" aria-label="Filtres de l'analyse">
    <div className="x1-filter-group"><span className="x1-filter-domain"><Wallet size={13}/> UCI · Crédit</span>
     <label>Âge<select aria-label="Âge Analyse 360" value={filters.age} onChange={e=>onFilters({...filters,age:e.target.value})}><option value="Tout">Tous</option>{ages.map(x=><option key={x}>{x}</option>)}</select></label>
@@ -133,7 +134,6 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
    </div>
    <button className="x2-source-link" onClick={onGovernance} aria-label="Ouvrir la gouvernance et les preuves"><ShieldCheck size={15}/> Sources & preuves <ChevronRight size={14}/></button>
   </div>
-  <main className="x2-surface" aria-label="Analyse unifiée Crédit et Fraude">
   <div className="x1-summary">
    <div title="Nombre de dossiers de crédit historiques UCI en 2005, après les filtres Crédit"><Database size={22}/><span><b>{fmtInt(credit.total)}</b><small>Dossiers UCI · sélection</small></span></div>
    <div title="Taux de défaut : dossiers sans remboursement le mois suivant, divisés par tous les dossiers de crédit sélectionnés"><Wallet size={22}/><span><b>{credit.total?asPct(credit.rate):'—'}</b><small>Taux de défaut · {fmtInt(credit.defaults)} dossiers</small></span></div>
@@ -142,10 +142,10 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
   </div>
   <div className="x2-domain-titles" aria-hidden="true"><span><Wallet size={14}/> HISTORIQUE UCI · 2005</span><span><ShieldAlert size={14}/> SIMULATION PAYSIM · TEST</span></div>
   <div className="x1-analysis-grid">
-   <Card className="x1-credit-panel" title="Crédit · portefeuille et paiements" note="UCI 2005 · défaut = non-paiement le mois suivant" extra={<span className="x1-scope-pill">{hasCredit?'Sélection filtrée':'30 000 dossiers historiques'}</span>}>
+   <Card className="x1-credit-panel" title="Défauts et segments" note="UCI 2005 · défaut = non-paiement le mois suivant" extra={<span className="x1-scope-pill">{hasCredit?'Sélection filtrée':'30 000 dossiers historiques'}</span>}>
     <div className="x1-comparison" aria-live="polite">
      <div title="Taux de défaut : défauts du mois suivant divisés par les dossiers sélectionnés"><small>Taux de défaut · sélection</small><b>{credit.total?asPct(credit.rate):'—'}</b><small>{fmtInt(credit.total)} dossiers · {fmtInt(credit.defaults)} défauts</small></div>
-     <div title="Référence calculée sur les mêmes données UCI, sans les restrictions âge et plafond"><small>{referenceLabel}</small><b>{creditReference.total?asPct(creditReference.rate):'—'}</b><small>{difference===null?'Aucune comparaison':(difference>=0?'+':'')+new Intl.NumberFormat('fr-FR',{maximumFractionDigits:1,minimumFractionDigits:1}).format(difference)+' point(s)'}</small></div>
+     <div title="Écart descriptif en points de pourcentage entre la sélection et la référence UCI"><small>Écart à la référence</small><b>{difference===null?'—':(difference>0?'+':'')+new Intl.NumberFormat('fr-FR',{maximumFractionDigits:1,minimumFractionDigits:1}).format(difference)+' pt'}</b><small>{referenceLabel} · {creditReference.total?asPct(creditReference.rate):'—'}</small></div>
      <button className="x1-compare-open" onClick={()=>{setDetail('credit');setInspectTab('compare');setExpanded(true)}} aria-label="Comparer la sélection au portefeuille" title="Ouvrir l'analyse détaillée de la comparaison Crédit"><ChevronRight size={17}/></button>
     </div>
     <div className="x1-matrix-section" role="region" aria-label="Carte des taux de défaut, défilement horizontal possible sur mobile" tabIndex={0}>
@@ -161,7 +161,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
     </div>
     <div className="x1-month-inline"><div><strong>Retards · septembre</strong><span>{fmtInt(monthly[5].delayed)} dossiers · {monthly[5].observations?asPct(monthly[5].rate):'—'}</span></div><button onClick={()=>{setInspectTab('monthly');setExpanded(true)}}>Comparer les six mois <Maximize2 size={12}/></button></div>
    </Card>
-   <Card className="x1-fraud-panel" title="Fraude · surveillance simulée" note="PaySim · test chronologique, données indépendantes" extra={<span className="x1-scope-pill">{selectedFraudLabel}</span>}>
+   <Card className="x1-fraud-panel" title="Comportement des alertes" note="PaySim · test chronologique, données indépendantes" extra={<span className="x1-scope-pill">{selectedFraudLabel}</span>}>
     <div className="x1-comparison x1-fraud-comparison" aria-live="polite">
      <div><small>Alertes · {selectedFraudLabel}</small><b>{fmtInt(fraudValues.alerts)}</b><small>{fmtInt(fraudValues.tp)} vraies · {fmtInt(fraudValues.fp)} fausses</small></div>
      <div title="Précision : proportion des alertes qui correspondent réellement à une fraude simulée"><small>Précision · sélection / test global</small><b>{fraudPrecision===null?'—':asPct(fraudPrecision)}</b><small>Référence : {asPct(test.confusion.tp/test.alerted)} · Rappel : {fraudRecall===null?'—':asPct(fraudRecall)}</small></div>
