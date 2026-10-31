@@ -117,7 +117,7 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
   };
   exportReport(ds,format);
  };
- return <div className="x1-root" data-testid="x1-analysis">
+ return <div className="x1-root x2-root x2-analysis" data-testid="x1-analysis">
   <div className="x1-filterrail" aria-label="Filtres de l'analyse">
    <div className="x1-filter-group"><span className="x1-filter-domain"><Wallet size={13}/> UCI · Crédit</span>
     <label>Âge<select aria-label="Âge Analyse 360" value={filters.age} onChange={e=>onFilters({...filters,age:e.target.value})}><option value="Tout">Tous</option>{ages.map(x=><option key={x}>{x}</option>)}</select></label>
@@ -130,14 +130,16 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
     <label>Jour simulé<select aria-label="Jour Analyse 360" value={fraud.day} onChange={e=>onFraud({...fraud,day:e.target.value,channel:'Tous'})}><option value="Tous">Tous</option>{fraudDays.map(x=><option key={x.day} value={String(x.day)}>J{x.day}</option>)}</select></label>
     <button aria-label="Réinitialiser Fraude" title="Réinitialiser Fraude" onClick={()=>onFraud({day:'Tous',channel:'Tous',kind:'all'})}><FilterX size={15}/></button>
    </div>
+   <button className="x2-source-link" onClick={onGovernance} aria-label="Ouvrir la gouvernance et les preuves"><ShieldCheck size={15}/> Sources & preuves <ChevronRight size={14}/></button>
   </div>
+  <main className="x2-surface" aria-label="Analyse unifiée Crédit et Fraude">
   <div className="x1-summary">
    <div title="Nombre de dossiers de crédit historiques UCI en 2005, après les filtres Crédit"><Database size={22}/><span><b>{fmtInt(credit.total)}</b><small>Dossiers UCI · sélection</small></span></div>
    <div title="Taux de défaut : dossiers sans remboursement le mois suivant, divisés par tous les dossiers de crédit sélectionnés"><Wallet size={22}/><span><b>{credit.total?asPct(credit.rate):'—'}</b><small>Taux de défaut · {fmtInt(credit.defaults)} dossiers</small></span></div>
    <div title="Transactions de la simulation PaySim dans le périmètre de test choisi, distinctes des dossiers UCI"><ArrowLeftRight size={22}/><span><b>{fmtInt(fraudValues.transactions)}</b><small>PaySim simulé · {selectedFraudLabel}</small></span></div>
    <div title="Transactions signalées par le modèle de fraude : une alerte n'est pas nécessairement une fraude réelle"><ShieldAlert size={22}/><span><b>{fmtInt(fraudValues.alerts)}</b><small>Alertes du modèle · {selectedFraudLabel}</small></span></div>
-   <button onClick={onGovernance} aria-label="Ouvrir la gouvernance et les preuves"><ShieldCheck size={18}/> Sources & preuves</button>
   </div>
+  <div className="x2-domain-titles" aria-hidden="true"><span><Wallet size={14}/> HISTORIQUE UCI · 2005</span><span><ShieldAlert size={14}/> SIMULATION PAYSIM · TEST</span></div>
   <div className="x1-analysis-grid">
    <Card className="x1-credit-panel" title="Crédit · portefeuille et paiements" note="UCI 2005 · défaut = non-paiement le mois suivant" extra={<span className="x1-scope-pill">{hasCredit?'Sélection filtrée':'30 000 dossiers historiques'}</span>}>
     <div className="x1-comparison" aria-live="polite">
@@ -213,5 +215,6 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
      </div>}
    </div>
   </section>
+  </main>
  </div>;
 }
