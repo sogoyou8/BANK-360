@@ -14,7 +14,20 @@ npm run dev
 
 Le rendu est disponible sur `http://127.0.0.1:5173`. Pour les tests de navigateur : `npx playwright install chromium` puis `npm run test:e2e` (ou via GitHub Actions).
 
-## Navigation
+## Navigation X1.7 — Aurora validée sur la branche de revue
+
+La disposition Aurora à **deux espaces** est maintenant l'ouverture par défaut de la branche `feature/x1-cross-analysis-two-pages` :
+
+- `/` : Analyse 360 (Crédit UCI historique et Fraude PaySim simulée, indépendants).
+- `/?view=governance` : Gouvernance & preuves.
+- `/?classic=1` : ancienne interface à six destinations, conservée pour comparaison et régression.
+- `/?x1=1` : ancien lien de prévisualisation X1, toujours pris en charge ; il ouvre Analyse 360.
+
+Le bouton « Version classique / Analyse 360 » permet de basculer sans déployer ni changer les données. Les URLs suivent l'espace affiché pour préserver les favoris et les actualisations. L'export HTML autonome fonctionne également avec `?classic=1`.
+
+**Statut de publication :** intégration uniquement sur branche de travail et PR #23 brouillon ; aucune fusion dans `main` et aucun déploiement avant validation finale.
+
+## Navigation classique (référence B5)
 
 8 pages / 6 sections : Vue d’ensemble ; **Crédit unifié** (Portefeuille & segmentation, avec 3 perspectives internes Vue globale / Risque / Paiements) ; Détection de fraude, Analyse des alertes ; Modèles & performance, Explorateur de données ; Qualité & traçabilité ; Rapports & préférences. Les trois anciennes pages Crédit deviennent une seule page interactive : filtres communs et six modules.
 
