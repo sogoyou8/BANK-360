@@ -80,7 +80,7 @@ function Overview({go}:{go:(p:View)=>void}){
   <div className="grl-orientation"><button onClick={()=>go('models')}><Target size={21}/><span><strong>Modèles expérimentaux</strong><small>Protocoles et performances B3/B4, sans décision réelle.</small></span><ChevronRight size={18}/></button><button onClick={()=>go('evidence')}><ShieldCheck size={21}/><span><strong>Sources & preuves</strong><small>Qualité, reproductibilité, limites et exports.</small></span><ChevronRight size={18}/></button></div>
  </div>;
 }
-function Credit({go,filters,setFilters}:{go:(p:View)=>void;filters:CreditFilters;setFilters:(f:CreditFilters)=>void}){
+function Credit({go,filters,setFilters,openModel}:{go:(p:View)=>void;filters:CreditFilters;setFilters:(f:CreditFilters)=>void;openModel:(domain:Domain)=>void}){
  const rows=useMemo(()=>filteredSegments(filters),[filters]);
  const totals=useMemo(()=>creditTotals(rows),[rows]);
  const ref=useMemo(()=>creditTotals(filteredSegments({...filters,age:'Tout',limit:'Tout'})),[filters]);
@@ -91,7 +91,7 @@ function Credit({go,filters,setFilters}:{go:(p:View)=>void;filters:CreditFilters
  const maxMonth=Math.max(.001,...monthly.map(x=>x.rate));
  const choose=(age:string,limit:string)=>setFilters({...filters,age:filters.age===age&&filters.limit===limit?'Tout':age,limit:filters.age===age&&filters.limit===limit?'Tout':limit});
  return <div className="grl-page" data-testid="guided-credit">
-  <div className="grl-page-title"><div><span className="grl-eyebrow">CRÉDIT · UCI TAIWAN 2005</span><h1>Quels segments présentent davantage de défauts ?</h1><p>Analyse descriptive de dossiers historiques, non décisionnelle.</p></div><button className="grl-inline-link" onClick={()=>go('models')}>Voir l'évaluation B3 <ArrowRight size={16}/></button></div>
+  <div className="grl-page-title"><div><span className="grl-eyebrow">CRÉDIT · UCI TAIWAN 2005</span><h1>Quels segments présentent davantage de défauts ?</h1><p>Analyse descriptive de dossiers historiques, non décisionnelle.</p></div><button className="grl-inline-link" onClick={()=>openModel('credit')}>Voir l'évaluation B3 <ArrowRight size={16}/></button></div>
   <div className="grl-metrics"><Figure label="Taux de défaut · sélection" value={totals.total?pct(totals.rate):'—'} detail={num(totals.defaults)+' défauts / '+num(totals.total)+' dossiers'}/><Figure label="Dossiers sélectionnés" value={num(totals.total)} detail="UCI · dossiers historiques"/><Figure label="Écart à la référence" value={difference===null?'—':(difference>0?'+':'')+decimals(difference,1)+' pt'} detail={(filters.status==='Tout'?'Portefeuille complet':'Même statut septembre')+' · '+(ref.total?pct(ref.rate):'—')}/></div>
   <div className="grl-filters" role="group" aria-label="Filtres cohorte Crédit">
    <label>Âge<select aria-label="Âge Crédit" value={filters.age} onChange={e=>setFilters({...filters,age:e.target.value})}><option value="Tout">Tous</option>{ages.map(x=><option key={x} value={x}>{x}</option>)}</select></label>
@@ -122,21 +122,19 @@ function Credit({go,filters,setFilters}:{go:(p:View)=>void;filters:CreditFilters
    <div className="grl-footer-actions"><Export dataset={creditDataset(rows)}/><Export dataset={monthsDataset(filters)}/><button onClick={()=>go('evidence')} className="grl-inline-link">Source et contrôles UCI <ChevronRight size={16}/></button></div>
  </div>;
 }
-function Fraud({go}:{go:(p:View)=>void}){
- const [axis,setAxis]=useState<FraudAxis>('day');
- const [selection,setSelection]=useState('Tous');
+function Fraud({go,axis,setAxis,selection,setSelection,openModel}:{go:(p:View)=>void;axis:FraudAxis;setAxis:(axis:FraudAxis)=>void;selection:string;setSelection:(key:string)=>void;openModel:(domain:Domain)=>void}){
  const source=axis==='day'?fraudDays:fraudTypes.filter(x=>x.alerts>0);
  const selected=source.find(x=>('day' in x?String(x.day):x.type)===selection);
  const total={transactions:b4test.n,frauds:b4test.frauds,alerts:b4test.alerted,tp:b4test.confusion.tp,fp:b4test.confusion.fp,fn:b4test.confusion.fn};
  const current=selected||total;
  const precision=current.alerts?current.tp/current.alerts:null,recall=current.frauds?current.tp/current.frauds:null;
  return <div className="grl-page" data-testid="guided-fraud">
-  <div className="grl-page-title"><div><span className="grl-eyebrow grl-eyebrow-pink">FRAUDE · PAYSIM · SIMULATION</span><h1>Que signale le modèle sur le test ?</h1><p>Test chronologique simulé · aucune détection bancaire réelle.</p></div><button className="grl-inline-link" onClick={()=>go('models')}>Voir l'évaluation B4 <ArrowRight size={16}/></button></div>
+  <div className="grl-page-title"><div><span className="grl-eyebrow grl-eyebrow-pink">FRAUDE · PAYSIM · SIMULATION</span><h1>Que signale le modèle sur le test ?</h1><p>Test chronologique simulé · aucune détection bancaire réelle.</p></div><button className="grl-inline-link" onClick={()=>openModel('fraud')}>Voir l'évaluation B4 <ArrowRight size={16}/></button></div>
   <div className="grl-metrics grl-fraud-metrics"><Figure tone="pink" label="Alertes · sélection" value={num(current.alerts)} detail={num(current.transactions)+' transactions test'}/><Figure tone="pink" label="Vraies / fausses alertes" value={num(current.tp)+' / '+num(current.fp)} detail="Vrais / faux positifs"/><Figure tone="pink" label="Précision" value={precision===null?'—':pct(precision)} detail="Vraies alertes / alertes"/><Figure tone="pink" label="Rappel" value={recall===null?'—':pct(recall)} detail="Fraudes détectées / fraudes du test"/></div>
   <div className="grl-axis-controls"><div role="group" aria-label="Axe d'analyse PaySim"><button className={axis==='day'?'is-active':''} aria-pressed={axis==='day'} onClick={()=>{setAxis('day');setSelection('Tous')}}>Par jour</button><button className={axis==='type'?'is-active':''} aria-pressed={axis==='type'} onClick={()=>{setAxis('type');setSelection('Tous')}}>Par type</button></div><span>Un seul axe à la fois : aucun croisement jour × type n'est disponible.</span><button className="grl-quiet" onClick={()=>setSelection('Tous')}><RotateCcw size={15}/> Tout afficher</button></div>
   <div className="grl-fraud-grid"><section className="grl-stage"><div className="grl-stage-heading"><div><h2>{axis==='day'?'Alertes par jour simulé':'Alertes par type de transaction'}</h2><p>{axis==='day'?'J25–J30 · test réservé':'CASH_OUT et TRANSFER · agrégats du test'}</p></div><small>Cliquer pour sélectionner</small></div>
    <ColumnBars unit="alertes" values={source.map(x=>({key:'day' in x?String(x.day):x.type,label:'day' in x?'J'+x.day:x.type,value:x.alerts,hint:num(x.tp)+' vraies, '+num(x.fp)+' fausses'}))}
-   selected={selection} onPick={key=>setSelection(v=>v===key?'Tous':key)}/>
+   selected={selection} onPick={key=>setSelection(selection===key?'Tous':key)}/>
   </section><aside className="grl-side-reading grl-fraud-reading"><span className="grl-eyebrow grl-eyebrow-pink">PÉRIMÈTRE ACTIF</span><h3>{selection==='Tous'?'Test complet':axis==='day'?'Jour simulé J'+selection:'Type '+selection}</h3>
    <strong>{num(current.alerts)} alertes</strong><span>{num(current.tp)} vraies · {num(current.fp)} fausses · {num(current.fn)} fraudes manquées</span>
    <div className="grl-reading-compare"><span>Précision : {precision===null?'—':pct(precision)}</span><b>Rappel : {recall===null?'—':pct(recall)}</b></div>
@@ -147,8 +145,7 @@ function Fraud({go}:{go:(p:View)=>void}){
   <div className="grl-footer-actions"><Export dataset={fraudDataset(axis,selection)}/><button className="grl-inline-link" onClick={()=>go('evidence')}>Provenance PaySim et validation <ChevronRight size={16}/></button></div>
  </div>;
 }
-function Models({go}:{go:(p:View)=>void}){
- const [domain,setDomain]=useState<Domain>('credit');
+function Models({go,domain,setDomain}:{go:(p:View)=>void;domain:Domain;setDomain:(domain:Domain)=>void}){
  const credit=domain==='credit';
  const m=credit?b3.holdout_test_metrics:b4test;
  const confusion=m.confusion;
@@ -198,6 +195,9 @@ export default function GuidedRiskLab(){
  const [filters,setFilters]=useState<CreditFilters>(initialFilters);
  const [theme,setTheme]=useState<'dark'|'light'>('dark');
  const [proofSource,setProofSource]=useState<Scope>('all');
+ const [fraudAxis,setFraudAxis]=useState<FraudAxis>('day');
+ const [fraudSelection,setFraudSelection]=useState('Tous');
+ const [modelDomain,setModelDomain]=useState<Domain>('credit');
  useEffect(()=>{document.documentElement.dataset.theme=theme;return()=>{delete document.documentElement.dataset.theme}},[theme]);
  useEffect(()=>{const onBack=()=>setView(startView());window.addEventListener('popstate',onBack);return()=>window.removeEventListener('popstate',onBack)},[]);
  const go=(next:View)=>{
@@ -209,14 +209,15 @@ export default function GuidedRiskLab(){
   }
   window.scrollTo({top:0,behavior:'instant'});
  };
+ const openModel=(domain:Domain)=>{setModelDomain(domain);go('models')};
  const chosen=views.find(x=>x.id===view)!;
  return <div className="grl-app"><header className="grl-topbar"><button className="grl-brand" onClick={()=>go('overview')} aria-label="BANK 360 — accueil"><span className="grl-orb"/><strong>BANK <em>360</em></strong></button><span className="grl-top-sub">RISK ANALYTICS LAB</span><span className="grl-top-spacer"/><span className="grl-history"><i/> Études historiques et simulées</span><button className="grl-icon-button" onClick={()=>setTheme(t=>t==='dark'?'light':'dark')} aria-label="Changer le thème">{theme==='dark'?<Sun size={18}/>:<Moon size={18}/>}</button><a className="grl-classic" href="?classic=1">Version classique B5</a></header>
   <div className="grl-frame"><nav className="grl-nav" aria-label="Navigation Risk Analytics Lab">{views.map((x,i)=><button key={x.id} className={view===x.id?'is-active':''} aria-current={view===x.id?'page':undefined} onClick={()=>go(x.id)}><span className="grl-nav-count">0{i+1}</span><strong>{x.short}</strong><small>{x.summary}</small></button>)}</nav>
    <main id="guided-main" className="grl-main" data-view={view} aria-label={chosen.label}>
     {view==='overview'&&<Overview go={go}/>}
-    {view==='credit'&&<Credit filters={filters} setFilters={setFilters} go={go}/>}
-    {view==='fraud'&&<Fraud go={go}/>}
-    {view==='models'&&<Models go={go}/>}
+    {view==='credit'&&<Credit filters={filters} setFilters={setFilters} go={go} openModel={openModel}/>}
+    {view==='fraud'&&<Fraud go={go} axis={fraudAxis} setAxis={setFraudAxis} selection={fraudSelection} setSelection={setFraudSelection} openModel={openModel}/>}
+    {view==='models'&&<Models go={go} domain={modelDomain} setDomain={setModelDomain}/>}
     {view==='evidence'&&<Evidence filters={filters} source={proofSource} onSource={setProofSource} go={go}/>}
    </main></div><footer className="grl-status"><span>UCI · historique 2005</span><span>PaySim · simulation indépendante</span><span>Portfolio analytique · pas de décision réelle</span></footer>
  </div>;
