@@ -59,7 +59,7 @@ test('R4 — model test metrics do not depend on descriptive filters and source 
  await expect(page.getByTestId('guided-models')).toBeVisible();
  await expect(page.locator('.grl-model-metrics')).toContainText('0,5486');
  await expect(page.locator('.grl-model-metrics')).toContainText('0,7758');
- await expect(page.getByTestId('guided-models')).toContainText('aucune décision');
+ await expect(page.getByTestId('guided-models')).toContainText('pas pour refuser un crédit');
  await page.getByRole('tab',{name:'Fraude B4'}).click();
  await expect(page.locator('.grl-model-metrics')).toContainText('0,3651');
  await expect(page.getByTestId('guided-models')).toContainText('Dérive de prévalence');
