@@ -19,6 +19,12 @@ export default function CrossGovernanceWorkspace({filters,fraud,onReset,theme,on
   fraud.day!=='Tous'?fraudDays.filter(x=>String(x.day)===fraud.day):fraudTypes;
  const isCreditFiltered=Object.values(filters).some(x=>x!=='Tout');
  const isFraudFiltered=fraud.day!=='Tous'||fraud.channel!=='Tous';
+ const creditSelection=filteredSegments(filters);
+ const selectedCreditDossiers=creditSelection.reduce((total,row)=>total+row.client_count,0);
+ const selectedCreditDefaults=creditSelection.reduce((total,row)=>total+row.default_count,0);
+ const selectedFraud=fraud.channel!=='Tous'?fraudTypes.find(x=>x.type===fraud.channel):
+  fraud.day!=='Tous'?fraudDays.find(x=>String(x.day)===fraud.day):undefined;
+ const selectedFraudLabel=fraud.channel!=='Tous'?fraud.channel:'J'+fraud.day;
  const exportItems=useMemo(()=>[
   {id:'portfolio',name:'Portefeuille agrégé',source:'Crédit · UCI',dataset:{name:'bank360-x1-portefeuille',columns:['age_band','credit_limit_band','september_status','client_count','default_count','delayed_count','total_credit_limit_ntd','total_age_years'],rows:filteredSegments(filters).map(r=>({...r}))} as ReportDataset},
   {id:'payments',name:'Paiements · six mois',source:'Crédit · UCI',dataset:{name:'bank360-x1-paiements',columns:['period','observations','delayed','rate'],rows:paymentSeries(filters).map(r=>({...r}))} as ReportDataset},
@@ -35,18 +41,18 @@ export default function CrossGovernanceWorkspace({filters,fraud,onReset,theme,on
  const visibleExports=exportItems.filter(x=>scope==='all'||(scope==='credit'?x.id!=='alerts':x.id==='alerts'));
  const visibleDocs=docs.filter(x=>scope==='all'||(scope==='credit'?x.source.includes('UCI'):x.source.includes('PaySim')));
  const relevantCounts=scope==='all'?[
-  ['Dossiers historiques',fmtInt(checks.population)],
-  ['Transactions simulées',fmtInt(b4.observed.rows)]
+  [isCreditFiltered?'Dossiers UCI · sélection':'Dossiers UCI · total historique',fmtInt(isCreditFiltered?selectedCreditDossiers:checks.population)],
+  [isFraudFiltered?'PaySim · '+selectedFraudLabel+' · test':'Opérations PaySim · simulation totale',fmtInt(isFraudFiltered?(selectedFraud?.transactions??0):b4.observed.rows)]
  ]:scope==='credit'?[
-  ['Dossiers historiques UCI',fmtInt(checks.population)],
-  ['Défauts historiques',fmtInt(checks.defaults)]
+  [isCreditFiltered?'Dossiers · sélection UCI':'Dossiers · historique UCI',fmtInt(isCreditFiltered?selectedCreditDossiers:checks.population)],
+  [isCreditFiltered?'Défauts · sélection UCI':'Défauts · historique UCI',fmtInt(isCreditFiltered?selectedCreditDefaults:checks.defaults)]
  ]:[
-  ['Transactions PaySim',fmtInt(b4.observed.rows)],
-  ['Fraudes simulées',fmtInt(b4.observed.frauds)]
+  [isFraudFiltered?'Transactions · '+selectedFraudLabel+' · test':'Opérations · simulation totale',fmtInt(isFraudFiltered?(selectedFraud?.transactions??0):b4.observed.rows)],
+  [isFraudFiltered?'Fraudes · '+selectedFraudLabel+' · test':'Fraudes · simulation totale',fmtInt(isFraudFiltered?(selectedFraud?.frauds??0):b4.observed.frauds)]
  ];
  return <div className="x1-root x1-governance" data-testid="x1-governance">
   <div className="x1-gov-toolbar"><div role="group" aria-label="Périmètre de gouvernance">{([{id:'all',label:'Toutes sources'},{id:'credit',label:'Crédit'},{id:'fraud',label:'Fraude'}] as const).map(x=><button key={x.id} aria-pressed={scope===x.id} onClick={()=>{setScope(x.id);setSelected(null)}}>{x.label}</button>)}</div><button onClick={onAnalysis}><Layers3 size={15}/> Analyse 360</button></div>
-  <section className={'x1-gov-banner '+(qualityOk?'pass':'fail')}><ShieldCheck size={29}/><div><h2>{qualityOk?'Sources réconciliées':'Contrôles à examiner'}</h2><small>Vérifications indépendantes des agrégats historiques UCI et simulés PaySim.</small></div><span><b>{visibleControls.filter(x=>x.ok).length} / {visibleControls.length}</b><small>Contrôles du périmètre</small></span>{relevantCounts.map(([label,value])=><span key={label}><b>{value}</b><small>{label}</small></span>)}</section>
+  <section className={'x1-gov-banner '+(qualityOk?'pass':'fail')}><ShieldCheck size={29}/><div><h2>{qualityOk?'Sources réconciliées':'Contrôles à examiner'}</h2><small>Contrôles globaux des sources · chiffres ajustés aux filtres actifs, si présents.</small></div><span><b>{visibleControls.filter(x=>x.ok).length} / {visibleControls.length}</b><small>Contrôles du périmètre</small></span>{relevantCounts.map(([label,value])=><span key={label}><b>{value}</b><small>{label}</small></span>)}</section>
   <div className="x1-gov-grid">
    <section className="x1-card x1-gov-quality"><div className="x1-card-head"><div><h2>Qualité & preuves</h2><small>Inspecter les contrôles de cohérence réels</small></div><CheckCircle2 size={19}/></div>
     <div className="x1-gov-rows">{visibleControls.map(x=><button key={x.id} aria-expanded={selected===x.id} onClick={()=>setSelected(selected===x.id?null:x.id)} className="x1-proof-row">
