@@ -346,3 +346,19 @@ test('X1.7 — Aurora is the default route, governance has a bookmark and classi
  await page.goto('/?classic=1');
  await expect(page.getByRole('heading',{name:'Vue d’ensemble'})).toBeVisible();
 });
+
+
+test('X1.8 — mobile heatmap announces sideways exploration and keeps the final column reachable',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await openX1(page);
+ const matrix=page.getByRole('region',{name:/Carte des taux de défaut, défilement horizontal/});
+ await expect(matrix.getByText('Balayez pour voir →')).toBeVisible();
+ await expect(matrix).toHaveAttribute('tabindex','0');
+ const bounds=await matrix.evaluate(el=>({scrollWidth:el.scrollWidth,clientWidth:el.clientWidth}));
+ expect(bounds.scrollWidth).toBeGreaterThan(bounds.clientWidth);
+ const last=matrix.locator('.x1-matrix-row').first().getByRole('button').last();
+ await last.click();
+ await expect(page.getByLabel('Âge Analyse 360')).toHaveValue('18-29');
+ await expect(page.getByLabel('Plafond Analyse 360')).toHaveValue('500k+');
+ expect(await matrix.evaluate(el=>el.scrollLeft)).toBeGreaterThan(0);
+});
