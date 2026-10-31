@@ -472,3 +472,59 @@ test('X1.9.1 — mobile KPI and comparison labels are not truncated with ellipse
  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(3);
  await page.screenshot({path:'test-results/x19-mobile-legible-390x844.png',fullPage:true});
 });
+
+
+test('X2 — Aurora Unified has one continuous analysis canvas, aligned domains and intact interactions',async({page})=>{
+ for(const [width,height] of [[1648,928],[1440,810],[1280,720]] as const){
+  await page.setViewportSize({width,height});
+  await openX1(page);
+  const sheet=page.locator('.x2-analysis>.x2-surface');
+  await expect(sheet).toBeVisible();
+  await expect(sheet.locator('.x1-analysis-grid>.x1-card')).toHaveCount(2);
+  await expect(sheet.locator('.x1-summary>div')).toHaveCount(4);
+  const g=await page.evaluate(()=>{
+   const sheet=document.querySelector('.x2-analysis>.x2-surface')!;
+   const cards=[...document.querySelectorAll('.x1-analysis-grid>.x1-card')];
+   const a=cards[0].getBoundingClientRect(),b=cards[1].getBoundingClientRect();
+   const root=sheet.getBoundingClientRect();
+   return {
+    widthDiff:Math.abs(a.width-b.width),
+    rowTop:Math.abs(a.top-b.top),
+    gap:b.left-a.right,
+    sheetBorder:getComputedStyle(sheet).borderTopWidth,
+    panelBorder:getComputedStyle(cards[0]).borderTopWidth,
+    bodyOverflow:document.documentElement.scrollWidth-innerWidth,
+    mainOverflow:(document.querySelector('#main-content') as HTMLElement).scrollHeight-(document.querySelector('#main-content') as HTMLElement).clientHeight,
+    within:a.left>=root.left&&b.right<=root.right
+   };
+  });
+  expect(g.widthDiff).toBeLessThan(45);
+  expect(g.rowTop).toBeLessThanOrEqual(2);
+  expect(g.gap).toBeLessThan(20);
+  expect(g.sheetBorder).toBe('1px');
+  expect(g.panelBorder).toBe('0px');
+  expect(g.within).toBe(true);
+  expect(g.bodyOverflow).toBeLessThanOrEqual(3);
+  expect(g.mainOverflow).toBeLessThanOrEqual(3);
+  await page.screenshot({path:'test-results/x2-unified-analysis-'+width+'x'+height+'.png',fullPage:true});
+ }
+ await page.getByLabel('Âge Analyse 360').selectOption('18-29');
+ await expect(page.locator('.x1-summary>div').first()).toContainText('9 618');
+ await page.getByRole('button',{name:'Comparer la sélection au portefeuille'}).click();
+ await expect(page.getByRole('dialog',{name:'Inspecteur analytique agrandi'})).toBeVisible();
+ await page.keyboard.press('Escape');
+ await expect(page.locator('.x1-inspector')).not.toHaveClass(/x1-inspector-expanded/);
+});
+test('X2 — unified governance keeps proof, provenance and downloads in one sheet',async({page})=>{
+ await page.setViewportSize({width:1648,height:928});
+ await openX1(page);
+ await page.getByRole('button',{name:'Ouvrir la gouvernance et les preuves'}).click();
+ await expect(page.getByTestId('x1-governance')).toBeVisible();
+ const sheet=page.locator('.x2-governance .x2-gov-surface');
+ await expect(sheet).toBeVisible();
+ await expect(sheet.locator('.x1-gov-grid>.x1-card')).toHaveCount(4);
+ await expect(sheet).toContainText('pas certification bancaire');
+ const noCards=await sheet.locator('.x1-gov-grid>.x1-card').evaluateAll(cards=>cards.every(el=>getComputedStyle(el).borderTopWidth==='0px'));
+ expect(noCards).toBe(true);
+ await page.screenshot({path:'test-results/x2-unified-governance-1648x928.png',fullPage:true});
+});
