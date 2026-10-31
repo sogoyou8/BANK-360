@@ -546,3 +546,82 @@ test('X2 — mobile domain titles are complete and the unified sheet stays insid
  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(3);
  await page.screenshot({path:'test-results/x2-unified-mobile-390x844.png',fullPage:true});
 });
+
+test('X2.1 — primary domain metrics lead before local filters and charts at desktop widths',async({page})=>{
+ for(const [width,height] of [[1648,928],[1440,810],[1280,720]] as const){
+  await page.setViewportSize({width,height});
+  await openX1(page);
+  const stage=page.locator('.x21-surface');
+  await expect(stage).toBeVisible();
+  const geometry=await stage.evaluate(el=>{
+   const rect=(sel:string)=>el.querySelector(sel)!.getBoundingClientRect();
+   const primaryCredit=rect('.x1-summary>div:nth-child(2)');
+   const primaryFraud=rect('.x1-summary>div:nth-child(4)');
+   const creditFilters=rect('.x1-filter-group:first-child');
+   const fraudFilters=rect('.x1-filter-group:nth-child(2)');
+   const creditGraph=rect('.x1-credit-panel .x1-matrix-section');
+   const fraudGraph=rect('.x1-fraud-panel .x1-fraud-charts');
+   const inspector=rect('.x1-inspector');
+   const creditPane=rect('.x1-credit-panel');
+   const fraudPane=rect('.x1-fraud-panel');
+   return {
+    primaryCreditTop:primaryCredit.top,primaryFraudTop:primaryFraud.top,
+    primaryCreditFont:parseFloat(getComputedStyle(el.querySelector('.x1-summary>div:nth-child(2) b')!).fontSize),
+    creditFiltersTop:creditFilters.top,fraudFiltersTop:fraudFilters.top,
+    creditGraphTop:creditGraph.top,fraudGraphTop:fraudGraph.top,
+    creditPaneBottom:creditPane.bottom,fraudPaneBottom:fraudPane.bottom,
+    inspectorTop:inspector.top,
+    colsAligned:Math.abs(creditPane.top-fraudPane.top),
+    scroll:document.querySelector('#main-content')!.scrollHeight-document.querySelector('#main-content')!.clientHeight,
+    overflowX:document.documentElement.scrollWidth-innerWidth
+   };
+  });
+  expect(geometry.primaryCreditFont).toBeGreaterThanOrEqual(35);
+  expect(geometry.primaryCreditTop).toBeLessThan(geometry.creditFiltersTop);
+  expect(geometry.primaryFraudTop).toBeLessThan(geometry.fraudFiltersTop);
+  expect(geometry.creditFiltersTop).toBeLessThan(geometry.creditGraphTop);
+  expect(geometry.fraudFiltersTop).toBeLessThan(geometry.fraudGraphTop);
+  expect(geometry.colsAligned).toBeLessThanOrEqual(2);
+  expect(geometry.creditPaneBottom).toBeLessThanOrEqual(geometry.inspectorTop+2);
+  expect(geometry.fraudPaneBottom).toBeLessThanOrEqual(geometry.inspectorTop+2);
+  expect(geometry.scroll).toBeLessThanOrEqual(3);
+  expect(geometry.overflowX).toBeLessThanOrEqual(3);
+  await page.screenshot({path:'test-results/x21-domain-stage-'+width+'x'+height+'.png',fullPage:true});
+ }
+ await expect(page.locator('.x1-credit-panel .x1-comparison')).toContainText('Écart à la référence');
+ await expect(page.locator('.x1-summary>div').nth(1)).toContainText('22,1');
+ await expect(page.locator('.x1-summary>div').nth(3)).toContainText('790');
+ await page.getByLabel('Type Analyse 360').selectOption('TRANSFER');
+ await expect(page.locator('.x1-summary>div').nth(3)).toContainText('486');
+ await expect(page.getByLabel('Jour Analyse 360')).toHaveValue('Tous');
+});
+test('X2.1 — mobile stage follows credit then fraud, without clipped filters or extra horizontal scroll',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await openX1(page);
+ const stage=page.locator('.x21-surface');
+ const g=await stage.evaluate(el=>{
+  const r=(s:string)=>el.querySelector(s)!.getBoundingClientRect();
+  return {
+   titleCredit:r('.x2-domain-titles span:first-child').top,
+   heroCredit:r('.x1-summary>div:nth-child(2)').top,
+   filterCredit:r('.x1-filter-group:first-child').top,
+   paneCredit:r('.x1-credit-panel').top,
+   titleFraud:r('.x2-domain-titles span:nth-child(2)').top,
+   heroFraud:r('.x1-summary>div:nth-child(4)').top,
+   filterFraud:r('.x1-filter-group:nth-child(2)').top,
+   paneFraud:r('.x1-fraud-panel').top,
+   inspector:r('.x1-inspector').top,
+   overflowX:document.documentElement.scrollWidth-innerWidth
+  };
+ });
+ expect(g.titleCredit).toBeLessThan(g.heroCredit);
+ expect(g.heroCredit).toBeLessThan(g.filterCredit);
+ expect(g.filterCredit).toBeLessThan(g.paneCredit);
+ expect(g.paneCredit).toBeLessThan(g.titleFraud);
+ expect(g.titleFraud).toBeLessThan(g.heroFraud);
+ expect(g.heroFraud).toBeLessThan(g.filterFraud);
+ expect(g.filterFraud).toBeLessThan(g.paneFraud);
+ expect(g.paneFraud).toBeLessThan(g.inspector);
+ expect(g.overflowX).toBeLessThanOrEqual(3);
+ await page.screenshot({path:'test-results/x21-domain-stage-mobile-390x844.png',fullPage:true});
+});
