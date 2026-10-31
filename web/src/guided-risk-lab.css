@@ -203,3 +203,23 @@
 :root[data-theme=light] .grl-app .grl-side-reading>strong{color:#1b4b83}
 :root[data-theme=light] .grl-app .grl-path .grl-primary{color:#fff}
 :root[data-theme=light] .grl-app .grl-confusion>div,:root[data-theme=light] .grl-app .grl-axis-controls>div{background:#dce9fa}
+
+/* R5.1 — post-video readability: navigation, comparison context and selected data are unmistakable. */
+@media(min-width:901px){
+ .grl-nav button{min-height:69px}
+ .grl-nav strong{font-size:14px}
+ .grl-nav small{font-size:11px;line-height:1.35;color:#aabbd5}
+ .grl-nav-count{font-size:11px}
+}
+.grl-heat-row button.is-active{
+ border-color:#b2edff!important;
+ box-shadow:0 0 0 2px #73d0f5ad,inset 0 0 0 1px #caecff77!important;
+ background:#326f9b!important;
+}
+.grl-heat-row button:not(:disabled):hover:not(.is-active){
+ border-color:#88c8f2;box-shadow:0 0 0 1px #64b0e064;
+}
+.grl-bar.is-active{border:2px solid #e4acfb;background:#6043865e;box-shadow:inset 0 0 0 1px #e7bffa4a}
+.grl-bar:hover:not(.is-active){border:1px solid #ae77d57a;background:#513a794a}
+.grl-side-reading .grl-context{margin-top:auto}
+:root[data-theme=light] .grl-nav small{color:#4c6584}
