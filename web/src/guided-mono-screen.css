@@ -81,7 +81,7 @@
  .grl-orientation strong{font-size:12px}
  .grl-orientation small{font-size:10px;line-height:1.2}
  /* Credit: matrix on the left, interpretation AND monthly series on the right. */
- .grl-page[data-testid="guided-credit"]{grid-template-rows:57px 72px 50px minmax(0,1fr) 69px}
+ .grl-page[data-testid="guided-credit"]{grid-template-rows:70px 72px 50px minmax(0,1fr) 69px}
  .grl-credit-grid{min-height:0;min-width:0;display:grid;
   grid-template-columns:minmax(0,1.34fr) minmax(260px,.86fr);
   grid-template-rows:minmax(0,1fr) minmax(0,.95fr);gap:8px}
@@ -103,7 +103,7 @@
  .grl-month span{font-size:8px}
  .grl-month-track{min-height:25px}
  /* Fraud: primary interaction and honest alerts remain together. */
- .grl-page[data-testid="guided-fraud"]{grid-template-rows:57px 76px 45px minmax(0,1fr) 48px 69px}
+ .grl-page[data-testid="guided-fraud"]{grid-template-rows:70px 76px 45px minmax(0,1fr) 48px 69px}
  .grl-fraud-grid{min-height:0;grid-template-columns:minmax(0,1.6fr) minmax(260px,.8fr);gap:9px}
  .grl-fraud-grid>.grl-stage{display:flex;flex-direction:column}
  .grl-bars{flex:1;min-height:0;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));gap:8px}
@@ -112,7 +112,7 @@
  .grl-bar b,.grl-bar small{font-size:10px}
  .grl-page[data-testid="guided-fraud"]>.grl-warning{height:100%;align-items:center;overflow:hidden}
  /* Models: four diagnostics fit in one 2x2 analytical grid. */
- .grl-page[data-testid="guided-models"]{grid-template-rows:57px 46px 74px minmax(0,1fr) 49px}
+ .grl-page[data-testid="guided-models"]{grid-template-rows:70px 46px 74px minmax(0,1fr) 49px}
  .grl-model-dashboard{display:grid;min-height:0;grid-template-columns:1fr 1fr;
   grid-template-rows:minmax(0,1.22fr) minmax(0,.78fr);gap:8px}
  .grl-model-dashboard>.grl-model-grid{display:contents}
@@ -136,7 +136,7 @@
  .grl-model-footer>.grl-context{flex:1;min-width:0;height:100%;align-items:center}
  .grl-model-footer>.grl-footer-actions{flex:none}
  /* Evidence: technical controls left, source documents and limits right. */
- .grl-page[data-testid="guided-evidence"]{grid-template-rows:57px 46px minmax(0,1fr) 83px}
+ .grl-page[data-testid="guided-evidence"]{grid-template-rows:70px 46px minmax(0,1fr) 83px}
  .grl-evidence-workspace{display:grid;grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);
   grid-template-rows:minmax(0,1.1fr) minmax(0,.9fr);gap:8px;min-height:0}
  .grl-evidence-workspace>.grl-stage:first-child{grid-area:1/1/3/2;display:flex;flex-direction:column}
