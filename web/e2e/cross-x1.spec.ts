@@ -461,7 +461,7 @@ test('X1.9.1 — mobile KPI and comparison labels are not truncated with ellipse
  expect(metrics.every(x=>x.scrollWidth<=x.clientWidth+1),'all KPI texts fit horizontally').toBe(true);
  expect(metrics.every(x=>x.scrollHeight<=x.clientHeight+1),'all KPI texts fit vertically').toBe(true);
  const reference=page.locator('.x1-credit-panel .x1-comparison small').nth(2);
- await expect(reference).toContainText('Référence');
+ await expect(reference).toContainText('Écart à la référence');
  const ref=await reference.evaluate(el=>({
   whiteSpace:getComputedStyle(el).whiteSpace,
   scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,scrollHeight:el.scrollHeight,clientHeight:el.clientHeight
@@ -533,7 +533,7 @@ test('X2 — mobile domain titles are complete and the unified sheet stays insid
  await page.setViewportSize({width:390,height:844});
  await openX1(page);
  const title=page.locator('.x1-credit-panel .x1-card-head h2');
- await expect(title).toHaveText('Crédit · portefeuille et paiements');
+ await expect(title).toHaveText('Défauts et segments');
  await expect(page.locator('.x1-credit-panel .x1-scope-pill')).toBeHidden();
  const metrics=await title.evaluate(el=>({
   scroll:el.scrollWidth,client:el.clientWidth,
