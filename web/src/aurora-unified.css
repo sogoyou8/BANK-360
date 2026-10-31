@@ -274,7 +274,7 @@
 :root[data-theme=light] .x2-root .x1-summary{background:none}
 :root[data-theme=light] .x2-root .x1-summary small{color:#315473}
 :root[data-theme=light] .x2-root .x1-summary b{color:#193b5e}
-:root[data-theme=light] .x2-root .x1-filter-group select{background:#ebf4ff;color:#193a5c}
+:root[data-theme=light] .x2-root .x1-filter-group select{background:#ebf4ff;color:#163456}
 :root[data-theme=light] .x2-root .x1-card-head h2{color:#1e4165}
 :root[data-theme=light] .x2-root .x1-comparison,
 :root[data-theme=light] .x2-root .x1-month-inline,
@@ -286,3 +286,6 @@
 :root[data-theme=light] .x2-governance .x1-proof-row,
 :root[data-theme=light] .x2-governance .x1-method-link,
 :root[data-theme=light] .x2-governance .x1-export-row{background:none}
+
+/* Keep X1.9 readability contract on compact desktop heights. */
+@media(min-width:901px) and (max-height:850px){.x2-root .x1-summary small{font-size:9.5px}}
