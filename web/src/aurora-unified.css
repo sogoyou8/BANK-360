@@ -545,3 +545,8 @@
  .x21-root .x1-fraud-charts .x1-horizontal-bars{gap:4px}
  .x21-root .x1-fraud-charts .x1-horizontal-bars button{grid-template-columns:54px minmax(0,1fr) 23px;gap:3px}
 }
+
+/* Visual review: never show a half-cut second aggregate row in the compact desktop dock. */
+@media(min-width:901px){
+ .x21-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table tbody tr:not(:first-child){display:none}
+}
