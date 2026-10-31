@@ -87,7 +87,7 @@ function Credit({go,filters,setFilters}:{go:(p:View)=>void;filters:CreditFilters
  const difference=totals.total&&ref.total?100*(totals.rate-ref.rate):null;
  const selected=filters.age!=='Tout'||filters.limit!=='Tout'||filters.status!=='Tout';
  const monthly=useMemo(()=>paymentSeries(filters),[filters]);
- const heat=ages.map(a=>({age:a,cells:limits.map(l=>({limit:l,...creditTotals(filteredSegments({age:a,limit:l,status:filters.status}))}))}));
+ const heat=ages.map(a=>({age:a,cells:limits.map(l=>({...creditTotals(filteredSegments({age:a,limit:l,status:filters.status})),limitBand:l}))}));
  const maxMonth=Math.max(.001,...monthly.map(x=>x.rate));
  const choose=(age:string,limit:string)=>setFilters({...filters,age:filters.age===age&&filters.limit===limit?'Tout':age,limit:filters.age===age&&filters.limit===limit?'Tout':limit});
  return <div className="grl-page" data-testid="guided-credit">
@@ -103,7 +103,7 @@ function Credit({go,filters,setFilters}:{go:(p:View)=>void;filters:CreditFilters
    <section className="grl-stage"><div className="grl-stage-heading"><div><h2>Carte des défauts · âge × plafond</h2><p>Taux de défaut du mois suivant · la couleur correspond au taux, pas au volume.</p></div><small>Cliquez une cellule pour filtrer</small></div>
     <div className="grl-heat-scroll" tabIndex={0} role="region" aria-label="Matrice Crédit : défilement horizontal possible">
      <div className="grl-heat"><span className="grl-heat-axis">Âge / plafond</span>{limits.map(l=><span className="grl-heat-col" key={l}>{l}</span>)}
-      {heat.map(group=><div className="grl-heat-row" key={group.age}><b>{group.age}</b>{group.cells.map(x=><button key={x.limit} className={filters.age===group.age&&filters.limit===x.limit?'is-active':''} style={{backgroundColor:'rgba(77,130,218,'+(.14+.6*x.rate/.5)+')'}} disabled={!x.total} aria-pressed={filters.age===group.age&&filters.limit===x.limit} onClick={()=>choose(group.age,x.limit)} title={group.age+' · '+x.limit+' : '+num(x.defaults)+' défauts / '+num(x.total)+' dossiers'}>{x.total?pct(x.rate):'—'}</button>)}</div>)}
+      {heat.map(group=><div className="grl-heat-row" key={group.age}><b>{group.age}</b>{group.cells.map(x=><button key={x.limitBand} className={filters.age===group.age&&filters.limit===x.limitBand?'is-active':''} style={{backgroundColor:'rgba(77,130,218,'+(.14+.6*x.rate/.5)+')'}} disabled={!x.total} aria-pressed={filters.age===group.age&&filters.limit===x.limitBand} onClick={()=>choose(group.age,x.limitBand)} title={group.age+' · '+x.limitBand+' : '+num(x.defaults)+' défauts / '+num(x.total)+' dossiers'}>{x.total?pct(x.rate):'—'}</button>)}</div>)}
      </div>
     </div><p className="grl-footnote">Plafond = limite de crédit, pas encours de prêt. Le taux de chaque cellule est calculé à partir des effectifs.</p>
    </section>
