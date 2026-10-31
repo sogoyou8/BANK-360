@@ -4,6 +4,7 @@ const desktopSizes=[[1648,928],[1440,810],[1280,720]] as const;
 const views=['overview','credit','fraud','models','evidence'] as const;
 
 test('M1 — five journeys fit fully within a desktop screen, without nested page clipping',async({page})=>{
+ const failures:string[]=[];
  for(const [w,h] of desktopSizes){
   await page.setViewportSize({width:w,height:h});
   for(const view of views){
@@ -24,15 +25,16 @@ test('M1 — five journeys fit fully within a desktop screen, without nested pag
      viewportHeight:innerHeight
     };
    });
-   expect(metrics.screenOverflowY,`${view} ${w} viewport height`).toBeLessThanOrEqual(3);
-   expect(metrics.screenOverflowX,`${view} ${w} viewport width`).toBeLessThanOrEqual(3);
-   expect(metrics.stageOverflow,`${view} ${w} clipped page contents`).toBeLessThanOrEqual(3);
-   expect(metrics.childMinTop).toBeGreaterThanOrEqual(metrics.pageTop-2);
-   expect(metrics.childMaxBottom).toBeLessThanOrEqual(metrics.pageBottom+2);
-   expect(metrics.pageBottom).toBeLessThanOrEqual(metrics.viewportHeight);
+   if(metrics.screenOverflowY>3)failures.push(`${view} ${w}: page scroll +${metrics.screenOverflowY}`);
+   if(metrics.screenOverflowX>3)failures.push(`${view} ${w}: horizontal scroll +${metrics.screenOverflowX}`);
+   if(metrics.stageOverflow>3)failures.push(`${view} ${w}: clipped ${metrics.stageOverflow}px`);
+   if(metrics.childMinTop<metrics.pageTop-2||metrics.childMaxBottom>metrics.pageBottom+2)
+    failures.push(`${view} ${w}: child outside page [${Math.round(metrics.childMinTop-metrics.pageTop)},${Math.round(metrics.childMaxBottom-metrics.pageBottom)}]`);
+   if(metrics.pageBottom>metrics.viewportHeight)failures.push(`${view} ${w}: content below viewport`);
    if(w===1280||w===1648)await page.screenshot({path:`test-results/mono-${view}-${w}x${h}.png`,fullPage:true});
   }
  }
+ expect(failures,'Desktop mono-screen geometry regressions').toEqual([]);
 });
 
 test('M1 — credit matrix and monthly series remain visible at 1280×720',async({page})=>{
