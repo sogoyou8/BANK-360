@@ -14,18 +14,29 @@ npm run dev
 
 Le rendu est disponible sur `http://127.0.0.1:5173`. Pour les tests de navigateur : `npx playwright install chromium` puis `npm run test:e2e` (ou via GitHub Actions).
 
-## Navigation X1.7 — Aurora validée sur la branche de revue
+## Navigation R0–R5 — BANK 360 Risk Analytics Lab
 
-La disposition Aurora à **deux espaces** est maintenant l'ouverture par défaut de la branche `feature/x1-cross-analysis-two-pages` :
+**Branche de revue :** `feature/r0-r5-guided-risk-lab` · PR #25 en brouillon. Aucun déploiement ni fusion.
 
-- `/` : Analyse 360 (Crédit UCI historique et Fraude PaySim simulée, indépendants).
-- `/?view=governance` : Gouvernance & preuves.
-- `/?classic=1` : ancienne interface à six destinations, conservée pour comparaison et régression.
-- `/?x1=1` : ancien lien de prévisualisation X1, toujours pris en charge ; il ouvre Analyse 360.
+L'ouverture par défaut est une expérience guidée à **cinq vues**, conçue autour de deux études distinctes et de leurs preuves, plutôt qu'un cockpit simultané Crédit + Fraude.
 
-Le bouton « Version classique / Analyse 360 » permet de basculer sans déployer ni changer les données. Les URLs suivent l'espace affiché pour préserver les favoris et les actualisations. L'export HTML autonome fonctionne également avec `?classic=1`.
+| URL | Vue / usage |
+|---|---|
+| `/` | Accueil / découverte des deux études |
+| `/?view=credit` | Crédit historique UCI, cohortes âge × plafond × statut, retards mensuels |
+| `/?view=fraud` | Alertes PaySim simulées, sélection exclusive par jour OU par type |
+| `/?view=models` | Évaluation de test B3 / B4, diagnostics et limites non filtrés |
+| `/?view=evidence` | Provenance, contrôles, méthodologies et exports agrégés CSV/XLSX |
+| `/?classic=1` | Interface classique B5 à six pages, conservée sans changement |
+| `/?x1=1` | Ancien cockpit X1/X2, conservé comme référence historique |
+| `/?view=governance` | Ancienne page Gouvernance X1/X2 |
 
-**Statut de publication :** intégration uniquement sur branche de travail et PR #23 brouillon ; aucune fusion dans `main` et aucun déploiement avant validation finale.
+Les URLs sont actualisables et compatibles avec le bouton précédent/suivant du navigateur.
+Les filtres UCI ne modifient jamais PaySim ; les métriques modèles restent celles de leurs tests globaux.
+Ne jamais interpréter les deux sources comme les données d'une même clientèle bancaire.
+
+Les nouveaux composants sont `src/GuidedRiskLab.tsx` et `src/guided-risk-lab.css` ; leurs tests sont `e2e/guided-risk-lab.spec.ts`.
+Le contrat de refonte et les critères de recette sont dans `../docs/R0-R5-guided-risk-analytics-delivery.md`.
 
 ## Navigation classique (référence B5)
 

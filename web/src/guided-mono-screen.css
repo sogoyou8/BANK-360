@@ -1,0 +1,222 @@
+/*
+ * M0 — Five genuine desktop single-screen journeys, not a five-way split screen.
+ * Data and domain semantics are unchanged. On-demand aggregate drawers can open
+ * beyond the stage; mobile intentionally retains natural scrolling.
+ */
+@media (min-width:901px) and (min-height:650px){
+ html:has(.grl-app),body:has(.grl-app),#root:has(.grl-app){height:100%;overflow:hidden}
+ .grl-app{height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+ .grl-topbar{flex:0 0 58px;height:58px;min-height:58px;padding-top:4px;padding-bottom:4px}
+ .grl-frame{flex:1 1 0;height:auto;min-height:0;max-height:none;
+  grid-template-columns:clamp(146px,13vw,193px) minmax(0,1fr);
+  gap:clamp(10px,1.4vw,24px);padding:8px clamp(12px,1.7vw,29px) 5px;
+  overflow:hidden}
+ .grl-nav{height:100%;min-height:0;position:static;gap:clamp(3px,.8vh,8px);overflow:hidden;padding:4px 0}
+ .grl-nav button{flex:0 1 auto;min-height:0;height:clamp(61px,10.8vh,82px);padding:7px 8px;grid-template-columns:23px minmax(0,1fr);gap:2px 5px}
+ .grl-nav strong{font-size:clamp(11px,.98vw,14px)}
+ .grl-nav small{font-size:clamp(9px,.74vw,11px);line-height:1.25}
+ .grl-main{min-height:0;height:100%;overflow:hidden}
+ .grl-page{height:100%;min-height:0;max-height:none;padding:0;
+  display:grid;grid-template-columns:minmax(0,1fr);gap:7px;overflow:hidden}
+ .grl-page>*{min-width:0;min-height:0}
+ .grl-status{flex:0 0 20px;min-height:20px;height:20px;align-items:center;padding:0 20px 3px;font-size:9px}
+ .grl-page-title{min-height:0;margin:0;padding:2px 1px 5px;align-items:center;overflow:hidden}
+ .grl-page-title h1{font-size:clamp(19px,1.55vw,26px);line-height:1.16}
+ .grl-page-title p{font-size:clamp(10px,.8vw,12px);line-height:1.25;margin:4px 0 0}
+ .grl-eyebrow{font-size:9px;margin-bottom:3px}
+ .grl-page-title .grl-inline-link{min-height:30px;padding:6px 9px;font-size:11px;white-space:nowrap}
+ .grl-metrics{min-height:0;height:100%;align-items:center;padding:0 0 5px;overflow:hidden}
+ .grl-figure{min-height:0;padding:3px 11px 1px 4px;gap:3px}
+ .grl-figure:not(:first-child){padding-left:17px}
+ .grl-figure strong{font-size:clamp(23px,2.25vw,37px)}
+ .grl-figure small{font-size:10px}
+ .grl-figure span{font-size:10px;line-height:1.2}
+ .grl-fraud-metrics .grl-figure strong,.grl-model-metrics .grl-figure strong{font-size:clamp(22px,1.95vw,32px)}
+ .grl-filters{height:100%;min-height:0;align-items:center;gap:9px;flex-wrap:nowrap;padding:0 1px 4px}
+ .grl-filters label{min-width:0;flex:1;font-size:10px;gap:2px}
+ .grl-filters select{height:32px;min-height:32px;padding:3px 8px;font-size:11px}
+ .grl-filters .grl-quiet{min-height:31px;padding:5px 8px;flex:none}
+ .grl-axis-controls{height:100%;min-height:0;padding:4px 9px;gap:8px;flex-wrap:nowrap;overflow:hidden}
+ .grl-axis-controls>div{flex:none;padding:2px}
+ .grl-axis-controls button{min-height:30px;padding:5px 10px}
+ .grl-axis-controls span{font-size:10px;min-width:0;line-height:1.2}
+ .grl-axis-controls .grl-quiet{flex:none}
+ .grl-stage{padding:10px 12px;min-height:0;overflow:hidden;border-radius:13px}
+ .grl-stage-heading{margin:0 0 8px;gap:6px}
+ .grl-stage-heading h2{font-size:clamp(12px,1.03vw,15px);line-height:1.15}
+ .grl-stage-heading p{font-size:10px;line-height:1.2;margin:3px 0 0}
+ .grl-stage-heading>small{font-size:9px}
+ .grl-side-reading{min-height:0;overflow:hidden;padding:11px 12px;gap:clamp(3px,.55vh,8px)}
+ .grl-side-reading h3{font-size:clamp(13px,1.1vw,16px);line-height:1.2}
+ .grl-side-reading p,.grl-side-reading>span:not(.grl-eyebrow){font-size:clamp(10px,.8vw,12px);line-height:1.38}
+ .grl-side-reading>strong{font-size:clamp(24px,2.1vw,33px)}
+ .grl-reading-compare{padding:7px 0 4px;font-size:10px}
+ .grl-context{padding:7px 8px;gap:6px;font-size:10px;line-height:1.3}
+ .grl-context svg{width:13px;height:13px;margin-top:1px}
+ .grl-bottom-actions{display:flex;align-items:center;min-width:0;min-height:0;gap:10px;justify-content:space-between}
+ .grl-bottom-actions>.grl-details{flex:0 1 27%;min-width:140px;max-width:290px}
+ .grl-bottom-actions>.grl-details>summary{height:100%;min-height:34px;padding:6px 9px;gap:3px;align-items:center;line-height:1.1}
+ .grl-bottom-actions>.grl-details>summary span{font-size:9px}
+ .grl-bottom-actions>.grl-footer-actions{display:flex;flex:1 1 auto;min-width:0;justify-content:flex-end;gap:8px;flex-wrap:nowrap}
+ .grl-bottom-actions .grl-export{padding:0;gap:5px;min-width:0}
+ .grl-bottom-actions .grl-export label{flex:0 0 63px;font-size:9px;gap:1px}
+ .grl-bottom-actions .grl-export select{padding:3px 5px;min-height:29px;height:29px;font-size:10px}
+ .grl-bottom-actions .grl-export button{padding:5px 7px;min-height:30px;height:30px;font-size:11px;gap:4px}
+ .grl-bottom-actions .grl-export button span{font-size:9px}
+ .grl-bottom-actions .grl-inline-link{padding:5px 9px;min-height:30px;height:30px;font-size:10px}
+ /* Overview: orientation and two independent entry paths stay in a single viewport. */
+ .grl-overview{grid-template-rows:minmax(95px,.95fr) minmax(0,2.5fr) minmax(66px,.63fr);gap:10px}
+ .grl-intro{min-height:0;margin:0;display:flex;flex-direction:column;justify-content:center;gap:2px}
+ .grl-intro h1{font-size:clamp(27px,2.9vw,43px);line-height:1.13}
+ .grl-intro p{font-size:12px;line-height:1.45;margin:7px 0 0}
+ .grl-paths{min-height:0;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .grl-path{min-height:0;padding:clamp(13px,1.5vw,24px);display:flex;flex-direction:column;gap:6px;overflow:hidden}
+ .grl-path h2{font-size:clamp(18px,1.75vw,27px);margin:9px 0 0}
+ .grl-path p{font-size:11px;line-height:1.45}
+ .grl-path-metrics{margin:auto 0 8px;align-items:center}
+ .grl-path-metrics .grl-figure strong{font-size:clamp(23px,2vw,34px)}
+ .grl-path .grl-primary{align-self:flex-start;min-height:36px;padding:7px 12px;font-size:12px}
+ .grl-orientation{min-height:0;grid-template-columns:1fr 1fr;gap:12px}
+ .grl-orientation button{min-height:0;padding:9px 12px;gap:9px;overflow:hidden}
+ .grl-orientation strong{font-size:12px}
+ .grl-orientation small{font-size:10px;line-height:1.2}
+ /* Credit: matrix on the left, interpretation AND monthly series on the right. */
+ .grl-page[data-testid="guided-credit"]{grid-template-rows:70px 72px 50px minmax(0,1fr) 69px}
+ .grl-credit-grid{min-height:0;min-width:0;display:grid;
+  grid-template-columns:minmax(0,1.34fr) minmax(260px,.86fr);
+  grid-template-rows:minmax(0,1fr) minmax(0,.95fr);gap:8px}
+ .grl-credit-grid>.grl-stage:first-child{grid-area:1/1/3/2;display:flex;flex-direction:column}
+ .grl-credit-grid>.grl-side-reading{grid-area:1/2/2/3}
+ .grl-credit-grid>.grl-monthly{grid-area:2/2/3/3;display:flex;flex-direction:column}
+ .grl-heat-scroll{flex:1;min-height:0;overflow-x:auto;overflow-y:hidden;padding:0 1px}
+ .grl-heat{min-width:500px;gap:clamp(2px,.45vh,5px);grid-template-columns:65px repeat(5,minmax(0,1fr))}
+ .grl-heat-row button{min-height:clamp(27px,4.8vh,40px);font-size:10px}
+ .grl-heat-row b{font-size:11px}
+ .grl-heat-col,.grl-heat-axis{font-size:10px;line-height:1.3}
+ .grl-footnote{font-size:9px;line-height:1.25;margin:4px 0 0;min-height:0}
+ .grl-monthly{padding:9px 11px}
+ .grl-monthly .grl-stage-heading{margin-bottom:5px}
+ .grl-monthly .grl-stage-heading p{font-size:9px}
+ .grl-month-chart{height:auto;flex:1;min-height:0;gap:6px;padding:0}
+ .grl-month{gap:2px}
+ .grl-month b,.grl-month small{font-size:10px}
+ .grl-month span{font-size:8px}
+ .grl-month-track{min-height:25px}
+ /* Fraud: primary interaction and honest alerts remain together. */
+ .grl-page[data-testid="guided-fraud"]{grid-template-rows:70px 76px 45px minmax(0,1fr) 48px 69px}
+ .grl-fraud-grid{min-height:0;grid-template-columns:minmax(0,1.6fr) minmax(260px,.8fr);gap:9px}
+ .grl-fraud-grid>.grl-stage{display:flex;flex-direction:column}
+ .grl-bars{flex:1;min-height:0;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));gap:8px}
+ .grl-bar{min-height:0;gap:3px;padding:3px 4px}
+ .grl-bar-track{height:auto;flex:1;min-height:25px;max-height:none}
+ .grl-bar b,.grl-bar small{font-size:10px}
+ .grl-page[data-testid="guided-fraud"]>.grl-warning{height:100%;align-items:center;overflow:hidden}
+ /* Models: four diagnostics fit in one 2x2 analytical grid. */
+ .grl-page[data-testid="guided-models"]{grid-template-rows:70px 46px 74px minmax(0,1fr) 49px}
+ .grl-model-dashboard{display:grid;min-height:0;grid-template-columns:1fr 1fr;
+  grid-template-rows:minmax(0,1.22fr) minmax(0,.78fr);gap:8px}
+ .grl-model-dashboard>.grl-model-grid{display:contents}
+ .grl-model-dashboard .grl-stage{min-height:0;overflow:hidden}
+ .grl-model-dashboard .grl-stage-heading{margin-bottom:5px}
+ .grl-rank-list{gap:clamp(2px,.45vh,5px)}
+ .grl-rank-row{min-height:0;grid-template-columns:60px minmax(0,1fr) 56px 43px;gap:6px;font-size:10px;line-height:1.25}
+ .grl-rank-row i{height:8px}
+ .grl-calibration{gap:clamp(2px,.45vh,5px)}
+ .grl-cal-legend{margin:0 0 3px;font-size:9px}
+ .grl-cal-row{grid-template-columns:64px minmax(0,1fr) 108px;gap:5px;font-size:9px}
+ .grl-cal-row>div{height:17px;gap:2px}
+ .grl-cal-row>div span,.grl-cal-row>div em{height:5px}
+ .grl-cal-row b{font-size:9px}
+ .grl-confusion{height:calc(100% - 26px);min-height:0;gap:5px}
+ .grl-confusion>div{min-height:0;padding:5px 8px;gap:2px;overflow:hidden}
+ .grl-confusion small{font-size:clamp(9px,.74vw,11px);line-height:1.1}
+ .grl-confusion strong{font-size:clamp(17px,1.4vw,24px);line-height:1.1}
+ .grl-model-bottom .grl-limit p{font-size:clamp(10px,.78vw,12px);line-height:1.25;margin:0 0 5px}
+ .grl-model-footer{min-height:0;display:flex;gap:8px;align-items:center}
+ .grl-model-footer>.grl-context{flex:1;min-width:0;height:100%;align-items:center}
+ .grl-model-footer>.grl-footer-actions{flex:none}
+ /* Evidence: technical controls left, source documents and limits right. */
+ .grl-page[data-testid="guided-evidence"]{grid-template-rows:70px 46px minmax(0,1fr) 83px}
+ .grl-evidence-workspace{display:grid;grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);
+  grid-template-rows:minmax(0,1.1fr) minmax(0,.9fr);gap:8px;min-height:0}
+ .grl-evidence-workspace>.grl-stage:first-child{grid-area:1/1/3/2;display:flex;flex-direction:column}
+ .grl-evidence-workspace>.grl-model-grid{display:contents}
+ .grl-evidence-workspace>.grl-model-grid>.grl-stage:first-child{grid-area:1/2/2/3}
+ .grl-evidence-workspace>.grl-model-grid>.grl-stage:last-child{grid-area:2/2/3/3}
+ .grl-evidence-links{gap:0;overflow:auto;min-height:0}
+ .grl-evidence-links a{min-height:0;padding:clamp(4px,.7vh,8px) 5px;gap:7px;font-size:11px}
+ .grl-evidence-links a svg{width:14px;height:14px}
+ .grl-limit p{font-size:clamp(10px,.81vw,12px);line-height:1.4;margin:0 0 6px}
+ .grl-control-list{min-height:0;overflow:auto}
+ .grl-control-list summary{padding:clamp(8px,1.6vh,15px) 0}
+ .grl-control-list summary small{font-size:10px}
+ /* On-demand tables never steal chart height; summary remains a close control. */
+ .grl-details-overlay[open]::before,.grl-evidence-export-details[open]::before{
+  content:"";position:fixed;inset:0;background:#020715c5;z-index:139}
+ .grl-details-overlay[open]>summary,.grl-evidence-export-details[open]>summary{
+  position:fixed;left:max(10vw,120px);right:max(10vw,120px);top:10vh;
+  min-height:48px!important;z-index:141;display:flex;align-items:center;
+  padding:12px 18px;background:#203963;color:#f2f7ff;
+  border:1px solid #87abd8;border-radius:13px 13px 0 0;
+  box-shadow:0 16px 70px #0009;font-size:14px}
+ .grl-details-overlay[open]>.grl-table-scroll{
+  position:fixed;z-index:141;left:max(10vw,120px);right:max(10vw,120px);
+  top:calc(10vh + 48px);bottom:10vh;max-height:none;margin:0;
+  overflow:auto;padding:10px 15px 26px;
+  background:linear-gradient(155deg,#152849,#0c1833);border:1px solid #7491ba;
+  border-top:0;border-radius:0 0 13px 13px;box-shadow:0 30px 80px #000a}
+ .grl-details-overlay[open]>small{position:fixed;z-index:142;left:calc(max(10vw,120px) + 18px);bottom:calc(10vh + 6px);color:#a9c7e5}
+ .grl-details-overlay[open]>.grl-table-scroll table{font-size:12px}
+ .grl-evidence-export-details[open]>.grl-stage{
+  position:fixed;z-index:141;left:max(10vw,120px);right:max(10vw,120px);
+  top:calc(10vh + 48px);bottom:10vh;min-height:0;padding:20px;overflow:auto;
+  background:linear-gradient(155deg,#152849,#0c1833);
+  border:1px solid #7491ba;border-top:0;border-radius:0 0 13px 13px;box-shadow:0 30px 80px #000a}
+ .grl-evidence-export-details[open] .grl-proof-exports{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .grl-evidence-export-details[open] .grl-export{flex-wrap:wrap}
+}
+@media (min-width:901px) and (min-height:650px) and (max-height:765px){
+ .grl-topbar{flex-basis:52px;height:52px;min-height:52px}
+ .grl-frame{padding-top:5px;padding-bottom:3px}
+ .grl-page{gap:5px}
+ .grl-page-title h1{font-size:20px}
+ .grl-page[data-testid="guided-credit"]{grid-template-rows:58px 63px 45px minmax(0,1fr) 66px}
+ .grl-page[data-testid="guided-fraud"]{grid-template-rows:58px 64px 40px minmax(0,1fr) 45px 66px}
+ .grl-page[data-testid="guided-models"]{grid-template-rows:58px 41px 64px minmax(0,1fr) 43px}
+ .grl-page[data-testid="guided-evidence"]{grid-template-rows:58px 41px minmax(0,1fr) 84px}
+ .grl-figure strong{font-size:25px}
+ .grl-figure span{font-size:9px}
+ .grl-stage{padding:8px 10px}
+ .grl-stage-heading{margin-bottom:5px}
+ .grl-credit-grid{grid-template-rows:minmax(0,1.05fr) minmax(0,.95fr)}
+ .grl-heat-row button{min-height:29px}
+ .grl-monthly .grl-stage-heading p{display:none}
+ .grl-month-chart{gap:3px}
+ .grl-model-dashboard{grid-template-rows:minmax(0,1.23fr) minmax(0,.77fr);gap:5px}
+ .grl-rank-list{gap:2px}
+ .grl-rank-row{font-size:9px}
+ .grl-calibration{gap:2px}
+ .grl-cal-row{line-height:1.1}
+ .grl-orientation button{padding:7px 10px}
+}
+
+@media (min-width:901px) and (min-height:650px){
+/* Reserve enough height for a clearly labeled format selector and its export action. */
+.grl-bottom-actions{align-self:stretch;overflow:visible}
+.grl-bottom-actions>.grl-details{align-self:center}
+.grl-bottom-actions>.grl-footer-actions{align-self:center}
+}
+
+@media(min-width:901px) and (min-height:650px){
+ /* Open detail headers must be above their scrollable table, so Close is clickable. */
+ .grl-details-overlay[open]>summary,
+ .grl-evidence-export-details[open]>summary{z-index:160!important;pointer-events:auto;isolation:isolate}
+ .grl-details-overlay[open]>.grl-table-scroll,
+ .grl-evidence-export-details[open]>.grl-stage{z-index:145}
+}
+
+@media(min-width:901px) and (min-height:650px) and (max-height:765px){
+ /* The page question and data disclaimer remain readable at laptop heights. */
+ .grl-page-title{padding-top:1px;padding-bottom:2px}
+ .grl-page-title p{line-height:1.15;margin-top:3px}
+}
