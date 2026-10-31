@@ -272,6 +272,12 @@ test('X1.8 — short desktop inspector offers a complete data preview and expand
  });
  expect(visuallyOnTop,'expanded inspector must be on top of the credit/fraud panels').toBe(true);
  await page.screenshot({path:'test-results/x18-expanded-1280x720.png',fullPage:true});
+ for(const [width,height] of [[1440,810],[1648,928],[390,844]] as const){
+  await page.setViewportSize({width,height});
+  const expandedHeight=await expanded.evaluate(el=>el.getBoundingClientRect().height);
+  expect(expandedHeight,'expanded inspector height at '+width+'×'+height).toBeGreaterThan(height*0.66);
+ }
+ await page.screenshot({path:'test-results/x18-expanded-mobile-390x844.png',fullPage:true});
 });
 
 
