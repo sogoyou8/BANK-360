@@ -151,6 +151,7 @@ function App(){
   if(page==='cross'){
    next.searchParams.delete('classic');
    next.searchParams.delete('view');
+   next.searchParams.set('x1','1'); // legacy X1 stays reloadable beside guided default
   }else if(page==='cross-governance'){
    next.searchParams.delete('classic');
    next.searchParams.set('view','governance');
