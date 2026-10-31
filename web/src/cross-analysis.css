@@ -254,6 +254,9 @@
 .x1-model-items>div{display:flex;justify-content:space-between;gap:15px;border-bottom:1px solid #8ca7e446;padding:8px}
 .x1-model-items>small{color:#acc2e2}
 .x1-inspector-expanded{position:fixed;inset:0;z-index:100;height:auto;pointer-events:none}
+/* Keep the expanded dialog at viewport height even when compact @media rules
+   later set .x1-inspector to 144px/180px; otherwise top/bottom leave a 17px strip. */
+.x1-inspector.x1-inspector-expanded{height:100dvh;max-height:none}
 .x1-inspector-backdrop{position:absolute;inset:0;background:#020817c9;backdrop-filter:blur(8px);pointer-events:auto}
 .x1-inspector-expanded .x1-inspector-surface{position:absolute;top:103px;bottom:24px;left:121px;right:19px;height:auto;z-index:1;pointer-events:auto;border-color:#91bafe9e;box-shadow:0 25px 80px #000a}
 .x1-inspector-expanded .x1-inspector-head{min-height:60px;padding:10px 18px}
