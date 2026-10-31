@@ -119,7 +119,13 @@ function FilterBar({value,onChange,withStatus=false}:{value:CreditFilters,onChan
 function Empty(){return <div className="empty"><Info size={18}/> Aucun résultat pour cette sélection.</div>}
 
 function App(){
- const [page,setPage]=useState<Page>(()=>new URLSearchParams(window.location.search).get('x1')==='1'?'cross':'home');
+ const [page,setPage]=useState<Page>(()=>{
+  const params=new URLSearchParams(window.location.search);
+  // Aurora is the default experience on the X1 branch. Legacy routes stay opt-in.
+  if(params.get('classic')==='1'||params.get('x1')==='0')return 'home';
+  if(params.get('view')==='governance')return 'cross-governance';
+  return 'cross'; // also accepts the historical ?x1=1 preview link
+ });
  const [menu,setMenu]=useState<string|null>(null);
  const [searchOpen,setSearchOpen]=useState(false),[query,setQuery]=useState('');
  const [theme,setTheme]=useState<'dark'|'light'>('dark');
@@ -135,6 +141,24 @@ function App(){
  useEffect(()=>{const handler=(e:KeyboardEvent)=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();setSearchOpen(true)}if(e.key==='Escape'){setSearchOpen(false);setMenu(null)}};window.addEventListener('keydown',handler);return()=>window.removeEventListener('keydown',handler)},[]);
  const go=(id:Page|'risk'|'payments'|'alerts'|'explorer')=>{if(id==='risk'||id==='payments'){setCreditMode(id);setPage('portfolio')}else if(id==='alerts'){setFraudMode('alerts');setPage('fraud')}else if(id==='explorer'){setIntelligencePerspective('explorer');setPage('models')}else{if(id==='fraud')setFraudMode('overview');if(id==='models')setIntelligencePerspective('overview');setPage(id)}setMenu(null);setSearchOpen(false);setQuery('')};
  const crossMode=page==='cross'||page==='cross-governance';
+ useEffect(()=>{
+  // Keep shareable URLs synchronized with the selected experience.
+  // The offline single-file build keeps working without History API rewrites.
+  if(window.location.protocol==='file:')return;
+  const next=new URL(window.location.href);
+  next.searchParams.delete('x1');
+  if(page==='cross'){
+   next.searchParams.delete('classic');
+   next.searchParams.delete('view');
+  }else if(page==='cross-governance'){
+   next.searchParams.delete('classic');
+   next.searchParams.set('view','governance');
+  }else{
+   next.searchParams.set('classic','1');
+   next.searchParams.delete('view');
+  }
+  if(next.href!==window.location.href)window.history.replaceState(window.history.state,'',next.pathname+next.search+next.hash);
+ },[page]);
  const currentGroups=crossMode?crossGroups:groups;
  const selected=byId[page];
  const credit=useMemo(()=>filteredSegments(filters),[filters]);
