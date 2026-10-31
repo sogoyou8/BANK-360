@@ -301,3 +301,30 @@ test('X1.6 — light mode has readable labels and preserves X1 navigation',async
  await page.getByRole('button',{name:'Revenir aux six pages classiques'}).click();
  await expect(page.locator('.nav-dock .dock-link')).toHaveCount(6);
 });
+
+
+test('X1.7 — Aurora is the default route, governance has a bookmark and classic stays reachable',async({page})=>{
+ await page.goto('/');
+ await expect(page.getByTestId('x1-analysis')).toBeVisible();
+ await expect(page.locator('.nav-dock .dock-link')).toHaveCount(2);
+ await page.getByRole('button',{name:'Gouvernance & preuves',exact:true}).click();
+ await expect(page.getByTestId('x1-governance')).toBeVisible();
+ await expect(page).toHaveURL(/\?view=governance$/);
+ await page.reload();
+ await expect(page.getByTestId('x1-governance')).toBeVisible();
+ await page.locator('.nav-dock').getByRole('button',{name:'Analyse 360',exact:true}).click();
+ await expect(page.getByTestId('x1-analysis')).toBeVisible();
+ await expect(page).not.toHaveURL(/view=governance/);
+ await page.getByRole('button',{name:'Revenir aux six pages classiques'}).click();
+ await expect(page.locator('.nav-dock .dock-link')).toHaveCount(6);
+ await expect(page).toHaveURL(/\?classic=1$/);
+ await page.reload();
+ await expect(page.getByRole('heading',{name:'Vue d’ensemble'})).toBeVisible();
+ await page.getByRole('button',{name:'Ouvrir Analyse 360'}).click();
+ await expect(page.getByTestId('x1-analysis')).toBeVisible();
+ await expect(page).not.toHaveURL(/classic=1/);
+ await page.goto('/?x1=1');
+ await expect(page.getByTestId('x1-analysis')).toBeVisible();
+ await page.goto('/?classic=1');
+ await expect(page.getByRole('heading',{name:'Vue d’ensemble'})).toBeVisible();
+});
