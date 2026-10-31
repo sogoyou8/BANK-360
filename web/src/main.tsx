@@ -21,6 +21,7 @@ import QualityWorkspace from './QualityWorkspace';
 import ReportsWorkspace from './ReportsWorkspace';
 import CrossAnalysisWorkspace from './CrossAnalysisWorkspace';
 import CrossGovernanceWorkspace from './CrossGovernanceWorkspace';
+import GuidedRiskLab from './GuidedRiskLab';
 
 type Page='home'|'portfolio'|'fraud'|'models'|'quality'|'reports'|'cross'|'cross-governance';
 type Domain='credit'|'fraud';
@@ -205,4 +206,8 @@ onCalibration={()=>{go('models');setIntelligenceContext('fraud');setModelView('d
   {searchOpen&&<div className="command-backdrop" onMouseDown={()=>setSearchOpen(false)}><div className="command-panel" role="dialog" aria-modal="true" aria-label="Navigation rapide" onMouseDown={e=>e.stopPropagation()}><div className="command-input"><Search size={21}/><input ref={input} autoFocus placeholder="Rechercher une page…" value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={e=>{if(e.key==='Enter'&&navMatches[0])go(navMatches[0].id)}}/><button onClick={()=>setSearchOpen(false)} aria-label="Fermer la recherche"><X size={19}/></button></div><div className="command-results">{navMatches.map(x=>{const Icon=x.icon;return <button key={x.id} onClick={()=>go(x.id)}><Icon size={18}/><span>{x.title}</span><small>{x.domain}</small><ArrowRight size={15}/></button>})}{navMatches.length===0&&<div className="command-empty">Aucun résultat.</div>}</div><div className="command-hint">Navigation uniquement · Entrée pour ouvrir · Échap pour fermer</div></div></div>}
  </div>
 }
-createRoot(document.getElementById('root')!).render(<App/>);
+// R1: new guided portfolio is the default on this branch. The original X1
+// cockpit and the frozen six-page B5 application remain accessible unchanged.
+const entryParams=new URLSearchParams(window.location.search);
+const legacyExperience=entryParams.get('classic')==='1'||entryParams.has('x1')||entryParams.get('view')==='governance';
+createRoot(document.getElementById('root')!).render(legacyExperience?<App/>:<GuidedRiskLab/>);
