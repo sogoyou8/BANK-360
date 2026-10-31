@@ -303,7 +303,7 @@
 .x21-root{gap:2px}
 .x21-surface{
  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
- grid-template-rows:29px 94px 58px minmax(0,1fr) 120px;
+ grid-template-rows:29px 94px 58px minmax(0,1fr) 135px;
  column-gap:0;row-gap:0;isolation:isolate;
  border-color:rgba(115,144,193,.20);border-radius:18px;
  background:
@@ -430,7 +430,7 @@
 
 /* Desktop mono-screen density is controlled by the stage, not many cards. */
 @media(min-width:901px) and (max-height:850px){
- .x21-surface{grid-template-rows:23px 69px 51px minmax(0,1fr) 107px}
+ .x21-surface{grid-template-rows:23px 69px 51px minmax(0,1fr) 132px}
  .x21-surface>.x1-summary>div:nth-child(2) b,
  .x21-surface>.x1-summary>div:nth-child(4) b{font-size:clamp(36px,3.3vw,49px)}
  .x21-surface>.x1-summary small{font-size:10px!important}
@@ -444,7 +444,7 @@
  .x21-root .x1-source-axis{font-size:9px}
 }
 @media(min-width:901px) and (max-height:750px){
- .x21-surface{grid-template-rows:20px 57px 45px minmax(0,1fr) 101px}
+ .x21-surface{grid-template-rows:20px 57px 45px minmax(0,1fr) 131px}
  .x21-surface>.x1-summary>div:nth-child(2) b,
  .x21-surface>.x1-summary>div:nth-child(4) b{font-size:38px}
  .x21-surface>.x1-summary>div{padding-top:2px!important;padding-bottom:0!important}
