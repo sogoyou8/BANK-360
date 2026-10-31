@@ -410,7 +410,7 @@ test('X1.9 — model glossary and comparisons explain metrics without recomputin
  await expect(dialog.locator('.x1-model-kpis')).toHaveText(initial);
  await dialog.getByRole('button',{name:'Modèles Fraude B4'}).click();
  await expect(guide).toContainText('PR-AUC');
- await expect(dialog).toContainText('tests globaux');
+ await expect(dialog).toContainText('jeux de test globaux');
 });
 test('X1.9 — compact and expanded explanations remain readable without page overflow',async({page})=>{
  for(const [width,height] of [[1648,928],[1440,810],[1280,720]] as const){
