@@ -625,3 +625,21 @@ test('X2.1 — mobile stage follows credit then fraud, without clipped filters o
  expect(g.overflowX).toBeLessThanOrEqual(3);
  await page.screenshot({path:'test-results/x21-domain-stage-mobile-390x844.png',fullPage:true});
 });
+
+test('X2.1 — compact desktop inspector never reveals a clipped second record',async({page})=>{
+ for(const [width,height] of [[1648,928],[1440,810],[1280,720]] as const){
+  await page.setViewportSize({width,height});
+  await openX1(page);
+  const dock=page.locator('.x1-inspector:not(.x1-inspector-expanded)');
+  const table=dock.locator('.x1-inspector-table tbody tr');
+  await expect(table.first()).toBeVisible();
+  await expect(table.nth(1)).toBeHidden();
+  const bounds=await dock.evaluate(el=>{
+   const first=el.querySelector('.x1-inspector-table tbody tr')!.getBoundingClientRect();
+   const visible=el.querySelector('.x1-inspector-scroll')!.getBoundingClientRect();
+   return {rowTop:first.top,rowBottom:first.bottom,visibleTop:visible.top,visibleBottom:visible.bottom};
+  });
+  expect(bounds.rowTop).toBeGreaterThanOrEqual(bounds.visibleTop-1);
+  expect(bounds.rowBottom).toBeLessThanOrEqual(bounds.visibleBottom+1);
+ }
+});
