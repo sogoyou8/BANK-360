@@ -5,6 +5,7 @@ import {exportReport,type ExportFormat,type ReportDataset} from './reportExports
 import {type FraudScope} from './FraudWorkspace';
 import {creditDrivers,creditCalibration,creditAudit,driverLabels} from './riskEvidence';
 import './cross-analysis.css';
+import './aurora-unified.css';
 
 type Props={filters:CreditFilters,onFilters:(next:CreditFilters)=>void,fraud:FraudScope,onFraud:(next:FraudScope)=>void,onGovernance:()=>void};
 type Detail='credit'|'fraud';
