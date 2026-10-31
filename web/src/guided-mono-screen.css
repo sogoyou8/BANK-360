@@ -81,7 +81,7 @@
  .grl-orientation strong{font-size:12px}
  .grl-orientation small{font-size:10px;line-height:1.2}
  /* Credit: matrix on the left, interpretation AND monthly series on the right. */
- .grl-page[data-testid="guided-credit"]{grid-template-rows:57px 72px 50px minmax(0,1fr) 56px}
+ .grl-page[data-testid="guided-credit"]{grid-template-rows:57px 72px 50px minmax(0,1fr) 69px}
  .grl-credit-grid{min-height:0;min-width:0;display:grid;
   grid-template-columns:minmax(0,1.34fr) minmax(260px,.86fr);
   grid-template-rows:minmax(0,1fr) minmax(0,.95fr);gap:8px}
@@ -103,7 +103,7 @@
  .grl-month span{font-size:8px}
  .grl-month-track{min-height:25px}
  /* Fraud: primary interaction and honest alerts remain together. */
- .grl-page[data-testid="guided-fraud"]{grid-template-rows:57px 76px 45px minmax(0,1fr) 48px 56px}
+ .grl-page[data-testid="guided-fraud"]{grid-template-rows:57px 76px 45px minmax(0,1fr) 48px 69px}
  .grl-fraud-grid{min-height:0;grid-template-columns:minmax(0,1.6fr) minmax(260px,.8fr);gap:9px}
  .grl-fraud-grid>.grl-stage{display:flex;flex-direction:column}
  .grl-bars{flex:1;min-height:0;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));gap:8px}
@@ -136,7 +136,7 @@
  .grl-model-footer>.grl-context{flex:1;min-width:0;height:100%;align-items:center}
  .grl-model-footer>.grl-footer-actions{flex:none}
  /* Evidence: technical controls left, source documents and limits right. */
- .grl-page[data-testid="guided-evidence"]{grid-template-rows:57px 46px minmax(0,1fr) 54px}
+ .grl-page[data-testid="guided-evidence"]{grid-template-rows:57px 46px minmax(0,1fr) 74px}
  .grl-evidence-workspace{display:grid;grid-template-columns:minmax(0,1.03fr) minmax(0,.97fr);
   grid-template-rows:minmax(0,1.1fr) minmax(0,.9fr);gap:8px;min-height:0}
  .grl-evidence-workspace>.grl-stage:first-child{grid-area:1/1/3/2;display:flex;flex-direction:column}
@@ -180,10 +180,10 @@
  .grl-frame{padding-top:5px;padding-bottom:3px}
  .grl-page{gap:5px}
  .grl-page-title h1{font-size:20px}
- .grl-page[data-testid="guided-credit"]{grid-template-rows:49px 63px 45px minmax(0,1fr) 53px}
- .grl-page[data-testid="guided-fraud"]{grid-template-rows:49px 64px 40px minmax(0,1fr) 45px 53px}
+ .grl-page[data-testid="guided-credit"]{grid-template-rows:49px 63px 45px minmax(0,1fr) 66px}
+ .grl-page[data-testid="guided-fraud"]{grid-template-rows:49px 64px 40px minmax(0,1fr) 45px 66px}
  .grl-page[data-testid="guided-models"]{grid-template-rows:49px 41px 64px minmax(0,1fr) 43px}
- .grl-page[data-testid="guided-evidence"]{grid-template-rows:49px 41px minmax(0,1fr) 53px}
+ .grl-page[data-testid="guided-evidence"]{grid-template-rows:49px 41px minmax(0,1fr) 75px}
  .grl-figure strong{font-size:25px}
  .grl-figure span{font-size:9px}
  .grl-stage{padding:8px 10px}
@@ -205,4 +205,12 @@
 .grl-bottom-actions{align-self:stretch;overflow:visible}
 .grl-bottom-actions>.grl-details{align-self:center}
 .grl-bottom-actions>.grl-footer-actions{align-self:center}
+}
+
+@media(min-width:901px) and (min-height:650px){
+ /* Open detail headers must be above their scrollable table, so Close is clickable. */
+ .grl-details-overlay[open]>summary,
+ .grl-evidence-export-details[open]>summary{z-index:160!important;pointer-events:auto;isolation:isolate}
+ .grl-details-overlay[open]>.grl-table-scroll,
+ .grl-evidence-export-details[open]>.grl-stage{z-index:145}
 }
