@@ -503,3 +503,22 @@
 :root[data-theme=light] .x1-gov-toolbar button:not([aria-pressed=true]){color:#355679}
 :root[data-theme=light] .x1-inspector-limit{background:#eef6ff;color:#23476c;border-color:#8aa8cd}
 :root[data-theme=light] .x1-selection-feedback{background:#d9edfa;color:#184668;border-color:#82b4d8}
+
+/* X1.6 contrast audit — secondary labels, numeric evidence and actionable controls. */
+:root[data-theme=light] .x1-kpi span,
+:root[data-theme=light] .x1-inspector-compare-kpis small,
+:root[data-theme=light] .x1-model-kpis small,
+:root[data-theme=light] .x1-decile-grid small{color:#3c5b78}
+:root[data-theme=light] .x1-inspector-compare-kpis b,
+:root[data-theme=light] .x1-model-kpis b,
+:root[data-theme=light] .x1-decile-grid b,
+:root[data-theme=light] .x1-gov-banner>span b{color:#20466d}
+:root[data-theme=light] .x1-month-inline button,
+:root[data-theme=light] .x1-proof-footer a,
+:root[data-theme=light] .x1-inspector-foot>button{color:#165883}
+:root[data-theme=light] .x1-summary>button{background:#176080;color:#f5ffff}
+:root[data-theme=light] .x1-filter-group>button{background:#e6f1fc;color:#1f5281;border-color:#8aaad0}
+:root[data-theme=light] .x1-proof-row .x1-ok{background:#c5e9dd;color:#116c58}
+:root[data-theme=light] .x1-proof-row .x1-bad{background:#f6d8db;color:#8c3044}
+:root[data-theme=light] .x1-gov-exports .x1-export-row button,
+:root[data-theme=light] .x1-setting-row button{background:#2d5994;color:#fff}
