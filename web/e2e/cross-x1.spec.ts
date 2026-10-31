@@ -249,3 +249,55 @@ test('X1.5.3 — short viewport does not show half a data row; expanded inspecto
  await expect(expanded.locator('.x1-inspector-table tbody tr').first()).toBeVisible();
  await page.screenshot({path:'test-results/x15-expanded-1280x720.png',fullPage:true});
 });
+
+
+test('X1.6 — expanded inspector is a keyboard-accessible dialog with restored focus',async({page})=>{
+ await openX1(page);
+ const opener=page.getByRole('button',{name:'Comparer la sélection au portefeuille'});
+ await opener.click();
+ const dialog=page.getByRole('dialog',{name:'Inspecteur analytique agrandi'});
+ await expect(dialog).toBeVisible();
+ await expect(dialog.getByRole('button',{name:/Réduire/})).toBeFocused();
+ await page.keyboard.press('Tab');
+ expect(await page.evaluate(()=>Boolean(document.activeElement?.closest('[role="dialog"]')))).toBe(true);
+ await dialog.getByRole('tab',{name:'Données'}).focus();
+ await page.keyboard.press('ArrowRight');
+ await expect(dialog.getByRole('tab',{name:'Retards'})).toHaveAttribute('aria-selected','true');
+ await page.keyboard.press('Escape');
+ await expect(dialog).not.toBeVisible();
+ await expect(opener).toBeFocused();
+});
+
+test('X1.6 — governance makes active selection distinct from global controls',async({page})=>{
+ await openX1(page);
+ await page.getByLabel('Âge Analyse 360').selectOption('18-29');
+ const creditCount=await page.locator('.x1-summary>div').first().locator('b').innerText();
+ await page.getByRole('button',{name:'Ouvrir la gouvernance et les preuves'}).click();
+ await page.getByRole('group',{name:'Périmètre de gouvernance'}).getByRole('button',{name:'Crédit',exact:true}).click();
+ await expect(page.locator('.x1-gov-banner')).toContainText(creditCount);
+ await expect(page.locator('.x1-gov-banner')).toContainText('sélection UCI');
+ await expect(page.locator('.x1-gov-banner')).toContainText('Contrôles globaux');
+ await page.getByRole('button',{name:'Analyse 360',exact:true}).last().click();
+ await page.getByLabel('Jour Analyse 360').selectOption('28');
+ const fraudCount=await page.locator('.x1-summary>div').nth(2).locator('b').innerText();
+ await page.getByRole('button',{name:'Ouvrir la gouvernance et les preuves'}).click();
+ await page.getByRole('group',{name:'Périmètre de gouvernance'}).getByRole('button',{name:'Fraude',exact:true}).click();
+ await expect(page.locator('.x1-gov-banner')).toContainText(fraudCount);
+ await expect(page.locator('.x1-gov-banner')).toContainText('J28 · test');
+ await expect(page.locator('.x1-gov-banner')).not.toContainText('6 362 620');
+});
+
+test('X1.6 — light mode has readable labels and preserves X1 navigation',async({page})=>{
+ await openX1(page);
+ await page.getByRole('button',{name:'Basculer le thème'}).click();
+ await expect(page.locator('html')).toHaveAttribute('data-theme','light');
+ await expect(page.locator('.x1-matrix-row button').first()).toHaveCSS('color','rgb(20, 52, 88)');
+ await expect(page.locator('.x1-root select').first()).toHaveCSS('color','rgb(22, 52, 86)');
+ await page.getByRole('button',{name:'Ouvrir la gouvernance et les preuves'}).click();
+ await expect(page.locator('.x1-gov-banner')).toBeVisible();
+ await expect(page.locator('.x1-gov-banner h2')).toHaveCSS('color','rgb(10, 112, 95)');
+ await page.getByRole('button',{name:'Analyse 360',exact:true}).last().click();
+ await expect(page.getByTestId('x1-analysis')).toBeVisible();
+ await page.getByRole('button',{name:'Revenir aux six pages classiques'}).click();
+ await expect(page.locator('.nav-dock .dock-link')).toHaveCount(6);
+});
