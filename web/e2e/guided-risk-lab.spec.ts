@@ -104,3 +104,34 @@ test('R3-R4 — fraud model link opens B4 and keeps the chosen day on return',as
  await page.locator('.grl-nav button').filter({hasText:'Fraude'}).click();
  await expect(page.locator('.grl-fraud-metrics')).toContainText('299');
 });
+
+
+test('R5.1 — first-visit interpretation does not simply duplicate global metrics',async({page})=>{
+ await page.goto('/?view=credit');
+ const creditReading=page.locator('.grl-side-reading');
+ await expect(creditReading).toContainText('Choisissez un segment');
+ await expect(creditReading).not.toContainText('0,0 point(s)');
+ await page.locator('.grl-heat-row button[title^="40-49 · 50k-99k"]').click();
+ await expect(creditReading).toContainText('Sélection active');
+ await expect(creditReading).toContainText('27,1 %');
+ await expect(creditReading).toContainText('+5,0 pt');
+ await page.goto('/?view=fraud');
+ const fraudReading=page.locator('.grl-fraud-reading');
+ await expect(fraudReading).toContainText("Une alerte n'est pas une fraude confirmée");
+ await expect(fraudReading).toContainText('1 075 fraudes manquées');
+ await expect(fraudReading).not.toContainText('790 alertes');
+ await page.getByRole('button',{name:/J28 : 299 alertes/}).click();
+ await expect(fraudReading).toContainText('299 alertes');
+ await expect(fraudReading).toContainText('214 fausses');
+});
+
+test('R5.1 — B3 credit confusion is not mislabeled as fraud alerts',async({page})=>{
+ await page.goto('/?view=models');
+ const matrix=page.locator('.grl-confusion');
+ await expect(matrix).toContainText('défauts prédits à tort');
+ await expect(matrix).toContainText('défauts manqués');
+ await expect(matrix).not.toContainText('fausses alertes');
+ await page.getByRole('tab',{name:'Fraude B4'}).click();
+ await expect(matrix).toContainText('fausses alertes');
+ await expect(matrix).toContainText('fraudes manquées');
+});
