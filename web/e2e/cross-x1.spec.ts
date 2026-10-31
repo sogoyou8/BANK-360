@@ -333,8 +333,8 @@ test('X1.6 — light mode has readable labels and preserves X1 navigation',async
 });
 
 
-test('X1.7 — Aurora is the default route, governance has a bookmark and classic stays reachable',async({page})=>{
- await page.goto('/');
+test('X1.7 — archived Aurora route, governance bookmark and classic stay reachable',async({page})=>{
+ await page.goto('/?x1=1');
  await expect(page.getByTestId('x1-analysis')).toBeVisible();
  await expect(page.locator('.nav-dock .dock-link')).toHaveCount(2);
  await page.getByRole('button',{name:'Gouvernance & preuves',exact:true}).click();
@@ -377,7 +377,7 @@ test('X1.8 — mobile heatmap announces sideways exploration and keeps the final
 
 
 test('X1.9 — first visitor understands independent sources, KPI meanings and matrix action',async({page})=>{
- await page.goto('/');
+ await page.goto('/?x1=1');
  await expect(page.getByTestId('x1-analysis')).toBeVisible();
  const heading=page.locator('.x1-heading-copy small');
  await expect(heading).toContainText('UCI (2005)');
