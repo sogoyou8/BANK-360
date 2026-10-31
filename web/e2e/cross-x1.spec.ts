@@ -407,7 +407,7 @@ test('X1.9 — model glossary and comparisons explain metrics without recomputin
  await page.keyboard.press('Escape');
  await page.getByLabel('Âge Analyse 360').selectOption('18-29');
  await page.locator('.x1-model-note').click();
- await expect(dialog.locator('.x1-model-kpis')).toHaveText(initial);
+ await expect.poll(async()=>dialog.locator('.x1-model-kpis').innerText()).toBe(initial);
  await dialog.getByRole('button',{name:'Modèles Fraude B4'}).click();
  await expect(guide).toContainText('PR-AUC');
  await expect(dialog).toContainText('jeux de test globaux');
