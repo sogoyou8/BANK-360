@@ -40,3 +40,19 @@ Rejet explicite de X1.9.1 pour son esthétique trop découpée : panneaux, sous-
 - Revue visuelle humaine avant de considérer la direction comme approuvée. Les tests seuls ne valident pas l'esthétique.
 
 **Contrainte de livraison** : la branche X2 n'est pas fusionnée dans X1/main et n'est pas publiée tant que le visuel n'est pas validé.
+
+
+## X2.1 — Recomposition de la hiérarchie (après revue locale)
+
+La version X2 initiale supprimait les cadres sans modifier suffisamment l'ordre de lecture : filtres globaux, quatre KPI, puis deux colonnes et tableau. L'utilisateur a confirmé une amélioration insuffisante.
+
+### Nouvelle disposition, effectivement implémentée
+1. Les deux libellés de provenance définissent les deux zones principales.
+2. À gauche, **le taux de défaut** est le chiffre dominant et le volume de dossiers devient une statistique d'appui ; à droite, **le nombre d'alertes** domine et le volume PaySim lui est subordonné.
+3. Les trois filtres Crédit sont situés sous le héros Crédit, les deux filtres Fraude sous le héros Fraude. Ils contrôlent exactement les mêmes champs qu'avant.
+4. Les analyses graphiques et la comparaison sont développées **dans leurs propres domaines**, sans bandeau KPI horizontal partagé.
+5. L'écart de défaut en points apparaît à la place du taux UCI dupliqué ; la valeur de référence demeure affichée en contexte et le calcul de l'écart n'est pas modifié.
+6. L'inspecteur conserve ses quatre onglets et une ligne agrégée d'aperçu, mais forme un dock secondaire dans le prolongement de l'écran.
+7. Mobile : ordre Crédit (source, KPI, filtres, matrice) puis Fraude (source, KPI, filtres, graphes), puis inspecteur.
+
+**Validation attendue :** tests X2.1 des positions réellement rendues aux formats desktop (1648, 1440, 1280) et mobile 390, anciens contrats X1/B5 (sources, filtres, exports, clavier), et captures de la nouvelle hiérarchie. La nouvelle direction ne sera pas considérée esthétiquement validée tant que l'utilisateur ne l'aura pas examinée.
