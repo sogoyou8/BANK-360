@@ -4,7 +4,7 @@ const credit=async(page:Page)=>{await page.locator('.nav-dock').getByRole('butto
 const section=async(page:Page,name:string,target?:string)=>{await page.getByRole('button',{name,exact:true}).click();if(target)await page.getByRole('menuitem',{name:new RegExp(target)}).click()};
 
 test('Architecture : six pages, six sections, une seule vue Crédit et données séparées',async({page})=>{
- await page.goto('/');await expect(page.getByRole('heading',{name:'Vue d’ensemble'})).toBeVisible();
+ await page.goto('/?classic=1');await expect(page.getByRole('heading',{name:'Vue d’ensemble'})).toBeVisible();
  await expect(page.locator('.dock-link')).toHaveCount(6);
  await credit(page);await expect(page.getByRole('heading',{name:'Portefeuille & segmentation'})).toBeVisible();
  await expect(page.getByRole('tab',{name:'Vue globale'})).toBeVisible();
@@ -14,14 +14,14 @@ test('Architecture : six pages, six sections, une seule vue Crédit et données 
  await noMainScroll(page);
 });
 test('Mono-écran à 1440×900 : six routes et crédit trois modes',async({page})=>{
- await page.setViewportSize({width:1440,height:900});await page.goto('/');await noMainScroll(page);
+ await page.setViewportSize({width:1440,height:900});await page.goto('/?classic=1');await noMainScroll(page);
  await credit(page);for(const tab of ['Vue globale','Risque','Paiements']){await page.getByRole('tab',{name:tab}).click();await noMainScroll(page)}
  await section(page,'Fraude');for(const mode of ['Vue globale','Détection','Alertes']){await page.getByRole('tab',{name:mode}).click();await noMainScroll(page)}
  await section(page,'Intelligence');for(const tab of ['Vue globale','Modèles','Explorer']){await page.getByRole('tablist',{name:'Perspectives Intelligence'}).getByRole('tab',{name:tab}).click();await noMainScroll(page)}
  await section(page,'Qualité');await noMainScroll(page);await section(page,'Rapports');await noMainScroll(page);
 });
 test('Portefeuille : population officielle, KPI pondérés, six panneaux',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  await expect(page.locator('.cw-panel')).toHaveCount(6);
  await expect(page.getByText('6 636').first()).toBeVisible();
  await expect(page.getByText('167 484 NTD')).toBeVisible();
@@ -29,7 +29,7 @@ test('Portefeuille : population officielle, KPI pondérés, six panneaux',async(
  await expect(page.locator('.cw-monthtable tbody tr')).toHaveCount(6);
 });
 test('Filtre âge croise portefeuille, défaut et six mois, reset restaure 30k',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  await page.locator('#filter-age').selectOption('18-29');
  await expect(page.locator('.cw-kpi').first()).toContainText('9 618');
  await expect(page.locator('.cw-kpi').nth(1)).toContainText('2 197');
@@ -41,7 +41,7 @@ test('Filtre âge croise portefeuille, défaut et six mois, reset restaure 30k',
  await expect(page.locator('.cw-kpi').first()).toContainText('30 000');
 });
 test('Crossfilter âge × plafond préserve les intersections réelles',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  await page.locator('#filter-age').selectOption('18-29');
  await page.locator('#filter-limit').selectOption('<50k');
  const shown=await page.locator('.cw-kpi').first().textContent();
@@ -54,7 +54,7 @@ test('Crossfilter âge × plafond préserve les intersections réelles',async({p
  await expect(page.locator('#filter-limit')).toHaveValue('<50k');
 });
 test('Clic graphique âge et plafond active puis désactive le filtre réel',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  await page.locator('.cw-age-bar').filter({hasText:'18-29'}).click();
  await expect(page.locator('#filter-age')).toHaveValue('18-29');
  await page.locator('.cw-age-bar').filter({hasText:'18-29'}).click();
@@ -63,7 +63,7 @@ test('Clic graphique âge et plafond active puis désactive le filtre réel',asy
  await expect(page.locator('#filter-limit')).toHaveValue('<50k');
 });
 test('Mesures Dossiers / Défaut sur âge et plafond changent sans changer les effectifs',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  const age=page.locator('.cw-age');
  await age.getByRole('button',{name:'Dossiers',exact:true}).click();
  await expect(age.locator('.cw-age-bar').filter({hasText:'18-29'})).toContainText('9 618');
@@ -73,7 +73,7 @@ test('Mesures Dossiers / Défaut sur âge et plafond changent sans changer les e
  await expect(page.locator('.cw-limit-row').first()).toContainText('4 311');
 });
 test('Chronologie avril-septembre : sélection d’un mois ne modifie pas le portefeuille',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  await expect(page.locator('.cw-trend-axis')).toContainText('0 %');
  await page.locator('.cw-month-picks button').filter({hasText:'04'}).click();
  await expect(page.locator('.cw-month-foot')).toContainText('2005-04 : 3 079 retards');
@@ -81,7 +81,7 @@ test('Chronologie avril-septembre : sélection d’un mois ne modifie pas le por
  await expect(page.locator('.cw-monthtable tbody tr.active')).toContainText('2005-04');
 });
 test('Statuts septembre : quatre catégories réconciliées, sélection et drilldown code',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  await expect(page.locator('.cw-status-list>button:not(.cw-drill)')).toHaveCount(4);
  await expect(page.locator('.cw-status-list')).toContainText('14 737');
  await expect(page.locator('.cw-status-list')).toContainText('6 818');
@@ -94,7 +94,7 @@ test('Statuts septembre : quatre catégories réconciliées, sélection et drill
  await expect(page.locator('.cw-kpi').first()).toContainText('2 667');
 });
 test('Sélection par statut de septembre : historique rétrospectif et observation unique',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  await page.locator('#filter-status').selectOption('-1');
  await expect(page.locator('.cw-kpi').first()).toContainText('5 686');
  const obs=await page.locator('.cw-monthtable tbody tr').evaluateAll(rs=>rs.map(r=>(r.cells[1].textContent||'').replace(/\s/g,' ').trim()));
@@ -103,7 +103,7 @@ test('Sélection par statut de septembre : historique rétrospectif et observati
  await expect(page.locator('.cw-kpi').first()).toContainText('5 686');
 });
 test('Table contextuelle : dimensions, tri, recherche et CSV sur sélection',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  await expect(page.locator('.cw-detail tbody tr')).toHaveCount(5);
  await page.locator('.cw-detail').getByRole('button',{name:'Plafond',exact:true}).click();
  await expect(page.locator('.cw-detail tbody tr')).toHaveCount(5);
@@ -117,12 +117,12 @@ test('Table contextuelle : dimensions, tri, recherche et CSV sur sélection',asy
  await expect(page.locator('.cw-detail tbody tr')).toHaveCount(11);
 });
 test('Export des mois : données agrégées, six périodes',async({page})=>{
- await page.goto('/');await credit(page);const promise=page.waitForEvent('download');
+ await page.goto('/?classic=1');await credit(page);const promise=page.waitForEvent('download');
  await page.getByRole('button',{name:'Exporter le détail mensuel en CSV'}).click();
  const download=await promise;expect(download.suggestedFilename()).toBe('bank360-retards-mensuels-selection.csv');
 });
 test('Population vide : aucun taux artificiel et panneaux explicites',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  await page.locator('#filter-age').selectOption('60+');
  await page.locator('#filter-limit').selectOption('<50k');
  await page.locator('#filter-status').selectOption('8');
@@ -131,15 +131,15 @@ test('Population vide : aucun taux artificiel et panneaux explicites',async({pag
  await expect(page.locator('.cw-kpi').nth(2).locator('strong')).toHaveText('—');
 });
 test('Navigation depuis accueil vers Risque sélectionne le mode interne',async({page})=>{
- await page.goto('/');await page.locator('.home-kpi').filter({hasText:'Taux de défaut'}).click();
+ await page.goto('/?classic=1');await page.locator('.home-kpi').filter({hasText:'Taux de défaut'}).click();
  await expect(page.locator('#main-content')).toHaveAttribute('data-page','portfolio');
  await expect(page.getByRole('tab',{name:'Risque'})).toHaveAttribute('aria-selected','true');
- await page.goto('/');await page.locator('.home-credit-column').filter({hasText:'18-29'}).click();
+ await page.goto('/?classic=1');await page.locator('.home-credit-column').filter({hasText:'18-29'}).click();
  await expect(page.locator('#filter-age')).toHaveValue('18-29');
  await expect(page.getByRole('tab',{name:'Risque'})).toHaveAttribute('aria-selected','true');
 });
 test('Fraude, investigations et modèles ne régressent pas',async({page})=>{
- await page.goto('/');await section(page,'Fraude');
+ await page.goto('/?classic=1');await section(page,'Fraude');
  await expect(page.getByText('6 362 620').first()).toBeVisible();
  await expect(page.getByText('790').first()).toBeVisible();
  await page.getByRole('tab',{name:'Alertes'}).click();
@@ -154,7 +154,7 @@ test('Fraude, investigations et modèles ne régressent pas',async({page})=>{
  await expect(page.getByText('0,365').first()).toBeVisible();
 });
 test('Explorateur, rapports, gouvernance, recherche et thème',async({page})=>{
- await page.goto('/');await section(page,'Intelligence');await page.getByRole('tab',{name:'Explorer'}).click();
+ await page.goto('/?classic=1');await section(page,'Intelligence');await page.getByRole('tab',{name:'Explorer'}).click();
  await expect(page.getByText('196').first()).toBeVisible();
  await page.getByRole('group',{name:'Jeu de données'}).getByRole('button',{name:'Fraude'}).click();
  await expect(page.getByText('0,365').first()).toBeVisible();
@@ -167,12 +167,12 @@ test('Explorateur, rapports, gouvernance, recherche et thème',async({page})=>{
  await expect(page.locator('#main-content')).toHaveAttribute('data-page','portfolio');
 });
 test('Dock fixe ne provoque aucun reflow',async({page})=>{
- await page.goto('/');const nav=await page.locator('.nav-dock').boundingBox(),body=await page.locator('.work-area').boundingBox();
+ await page.goto('/?classic=1');const nav=await page.locator('.nav-dock').boundingBox(),body=await page.locator('.work-area').boundingBox();
  await credit(page);const nav2=await page.locator('.nav-dock').boundingBox(),body2=await page.locator('.work-area').boundingBox();
  expect(Math.round(nav!.width)).toBe(Math.round(nav2!.width));expect(Math.round(body!.width)).toBe(Math.round(body2!.width));
 });
 test('Mobile : vue Crédit empilée, dock permanent, pas de débordement',async({page})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/');await credit(page);
+ await page.setViewportSize({width:390,height:844});await page.goto('/?classic=1');await credit(page);
  await expect(page.locator('.cw-panel')).toHaveCount(6);
  expect((await page.locator('.nav-dock').boundingBox())!.y).toBeGreaterThan(700);
  const width=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);expect(width).toBeLessThanOrEqual(2);
@@ -180,16 +180,18 @@ test('Mobile : vue Crédit empilée, dock permanent, pas de débordement',async(
 });
 test('L’aperçu HTML autonome ouvre la nouvelle page crédit',async({page})=>{
  const {resolve}=await import('node:path');const {pathToFileURL}=await import('node:url');
- await page.goto(pathToFileURL(resolve('dist/BANK-360-B5-APERCU-LOCAL.html')).href);
+ const offlineUrl=pathToFileURL(resolve('dist/BANK-360-B5-APERCU-LOCAL.html'));
+  offlineUrl.searchParams.set('classic','1');
+  await page.goto(offlineUrl.href);
  await credit(page);await expect(page.locator('.cw-panel')).toHaveCount(6);
 });
 test('Capture de la référence crédit desktop 1672×941',async({page})=>{
- await page.setViewportSize({width:1672,height:941});await page.goto('/');await credit(page);
+ await page.setViewportSize({width:1672,height:941});await page.goto('/?classic=1');await credit(page);
  await noMainScroll(page);await expect(page.locator('.cw-panel')).toHaveCount(6);
  await page.screenshot({path:'test-results/credit-integrated-1672.png',fullPage:true});
 });
 test('Capture de la référence crédit desktop 1440×900 sans panneau tronqué',async({page})=>{
- await page.setViewportSize({width:1440,height:900});await page.goto('/');await credit(page);
+ await page.setViewportSize({width:1440,height:900});await page.goto('/?classic=1');await credit(page);
  await noMainScroll(page);
  const boxes=await page.locator('.cw-board>.cw-panel').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();const content=n.querySelector('.cw-panel-body')!;return{top:r.top,bottom:r.bottom,h:r.height,scroll:content.scrollHeight-content.clientHeight}}));
  expect(boxes).toHaveLength(6);expect(boxes.every(x=>x.h>=150&&x.bottom<=905)).toBe(true);
@@ -198,7 +200,7 @@ test('Capture de la référence crédit desktop 1440×900 sans panneau tronqué'
 
 test('Les six mois y compris septembre sont intégralement visibles sans scroll interne à 1440 et 1672',async({page})=>{
  for(const width of [1440,1672]){
-  await page.setViewportSize({width,height:width===1440?900:941});await page.goto('/');await credit(page);
+  await page.setViewportSize({width,height:width===1440?900:941});await page.goto('/?classic=1');await credit(page);
   const v=await page.locator('.cw-monthtable').evaluate(el=>{
     const view=el.querySelector('.cw-table-scroll')!.getBoundingClientRect();const last=el.querySelector('tbody tr:last-child')!.getBoundingClientRect();
     return {scroll:el.querySelector('.cw-table-scroll')!.scrollTop,last:last.bottom,limit:view.bottom};
@@ -210,7 +212,7 @@ test('Les six mois y compris septembre sont intégralement visibles sans scroll 
 
 test('C2.1 — les 5 segments et les 6 mois tiennent sans défilement interne à 1440 et 1672',async({page})=>{
  for(const width of [1440,1672]){
-  await page.setViewportSize({width,height:width===1440?900:941});await page.goto('/');await credit(page);
+  await page.setViewportSize({width,height:width===1440?900:941});await page.goto('/?classic=1');await credit(page);
   await expect(page.locator('.cw-detail tbody tr')).toHaveCount(5);
   await expect(page.locator('.cw-monthtable tbody tr')).toHaveCount(6);
   for(const selector of ['.cw-detail','.cw-monthtable']){
@@ -229,7 +231,7 @@ test('C2.1 — les 5 segments et les 6 mois tiennent sans défilement interne à
  }
 });
 test('C2.1 — flèches KPI ouvrent une perspective utile sans quitter la page Crédit',async({page})=>{
- await page.goto('/');await credit(page);
+ await page.goto('/?classic=1');await credit(page);
  await expect(page.locator('.cw-kpi-action')).toHaveCount(4);
  await page.getByRole('button',{name:'Examiner le risque de crédit'}).click();
  await expect(page.getByRole('tab',{name:'Risque'})).toHaveAttribute('aria-selected','true');
@@ -244,7 +246,7 @@ test('C2.1 — flèches KPI ouvrent une perspective utile sans quitter la page C
  await noMainScroll(page);
 });
 test('C2.1 — KPI et tableau restent lisibles sur téléphone et thème clair',async({page})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/');await credit(page);
+ await page.setViewportSize({width:390,height:844});await page.goto('/?classic=1');await credit(page);
  const metrics=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-innerWidth,buttons:[...document.querySelectorAll('.cw-kpi-action')].every(el=>getComputedStyle(el).display!=='none')}));
  expect(metrics.overflow).toBeLessThanOrEqual(2);expect(metrics.buttons).toBe(true);
  await page.getByRole('button',{name:'Rapports',exact:true}).click();
@@ -260,7 +262,7 @@ test('C2.2 — tables fully visible on short and intermediate desktop viewports'
  // These CSS viewports also represent reduced usable space when browser zoom increases.
  const sizes:[[number,number],...[number,number][]]=[[1280,720],[1366,768],[1440,800],[1440,900],[1512,820],[1672,860],[1672,941]];
  for(const [width,height] of sizes){
-  await page.setViewportSize({width,height});await page.goto('/');await credit(page);
+  await page.setViewportSize({width,height});await page.goto('/?classic=1');await credit(page);
   await noMainScroll(page);
   for(const [selector,expected] of [['.cw-detail',5],['.cw-monthtable',6]] as const){
    const geometry=await page.locator(selector).evaluate(el=>{
@@ -287,7 +289,7 @@ test('C2.2 — tables fully visible on short and intermediate desktop viewports'
 });
 
 test('C2.2 — three perspectives retain fitted tables and long status list still scrolls',async({page})=>{
- await page.setViewportSize({width:1440,height:800});await page.goto('/');await credit(page);
+ await page.setViewportSize({width:1440,height:800});await page.goto('/?classic=1');await credit(page);
  for(const tab of ['Vue globale','Risque','Paiements']){
   await page.getByRole('tab',{name:tab}).click();
   for(const selector of ['.cw-detail','.cw-monthtable']){
@@ -311,7 +313,7 @@ test('C2.2 — three perspectives retain fitted tables and long status list stil
 });
 
 test('C3 — Fraud has one route, six panels, four true KPI and three perspectives',async({page})=>{
- await page.setViewportSize({width:1672,height:941});await page.goto('/');
+ await page.setViewportSize({width:1672,height:941});await page.goto('/?classic=1');
  await section(page,'Fraude');
  await expect(page.locator('.fw-panel')).toHaveCount(6);
  await expect(page.locator('.fw-kpi')).toHaveCount(4);
@@ -326,7 +328,7 @@ test('C3 — Fraud has one route, six panels, four true KPI and three perspectiv
  await page.screenshot({path:'test-results/fraud-c3-1672x941.png',fullPage:true});
 });
 test('C3 — source-derived channels and days reconcile; no individual transactions',async({page})=>{
- await page.goto('/');await section(page,'Fraude');
+ await page.goto('/?classic=1');await section(page,'Fraude');
  await expect(page.locator('.fw-day')).toHaveCount(6);
  await expect(page.locator('.fw-channel-row')).toHaveCount(2);
  await expect(page.locator('.fw-invest-row')).toHaveCount(2);
@@ -340,7 +342,7 @@ test('C3 — source-derived channels and days reconcile; no individual transacti
  for(const fake of ['TXN_','CUST_','Score modèle','Montant moyen','2025-09-30'])expect(src).not.toContain(fake);
 });
 test('C3 — channel, day, and alert status are never silently joined',async({page})=>{
- await page.goto('/');await section(page,'Fraude');
+ await page.goto('/?classic=1');await section(page,'Fraude');
  await page.getByLabel('Canal',{exact:true}).selectOption('TRANSFER');
  await expect(page.getByLabel('Canal',{exact:true})).toHaveValue('TRANSFER');
  await expect(page.locator('.fw-ring')).toHaveAttribute('aria-label',/125 vraies alertes et 361 fausses/);
@@ -356,7 +358,7 @@ test('C3 — channel, day, and alert status are never silently joined',async({pa
  await expect(page.locator('.fw-ring')).toHaveAttribute('aria-label',/413 vraies alertes et 377 fausses/);
 });
 test('C3 — aggregation exploration, search, keyboard, and exports',async({page})=>{
- await page.goto('/');await section(page,'Fraude');
+ await page.goto('/?classic=1');await section(page,'Fraude');
  await page.getByRole('button',{name:'Canaux',exact:true}).click();
  await expect(page.locator('.fw-detail-table tbody tr')).toHaveCount(2);
  await page.getByLabel('Rechercher un agrégat').fill('CASH_OUT');
@@ -372,7 +374,7 @@ test('C3 — aggregation exploration, search, keyboard, and exports',async({page
 });
 test('C3 — compact desktop geometries and mobile theme parity',async({page})=>{
  for(const [width,height] of [[1672,941],[1440,900],[1366,768]] as const){
-  await page.setViewportSize({width,height});await page.goto('/');await section(page,'Fraude');
+  await page.setViewportSize({width,height});await page.goto('/?classic=1');await section(page,'Fraude');
   const result=await page.evaluate(()=>{
    const main=document.querySelector('#main-content') as HTMLElement;
    const panels=[...document.querySelectorAll('.fw-panel')].map(el=>{const rect=el.getBoundingClientRect();return{bottom:rect.bottom,height:rect.height,client:(el.querySelector('.fw-panel-body') as HTMLElement).clientHeight,scroll:(el.querySelector('.fw-panel-body') as HTMLElement).scrollHeight}});
@@ -389,7 +391,7 @@ test('C3 — compact desktop geometries and mobile theme parity',async({page})=>
   expect(labelOverflow.every(x=>x<=1),'no truncated fraud quality legend at '+width+'×'+height).toBe(true);
   await page.screenshot({path:'test-results/fraud-c3-'+width+'x'+height+'.png',fullPage:true});
  }
- await page.setViewportSize({width:390,height:844});await page.goto('/');await section(page,'Fraude');
+ await page.setViewportSize({width:390,height:844});await page.goto('/?classic=1');await section(page,'Fraude');
  await expect(page.locator('.fw-panel')).toHaveCount(6);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
  await page.getByRole('button',{name:'Basculer le thème'}).click();
@@ -399,7 +401,7 @@ test('C3 — compact desktop geometries and mobile theme parity',async({page})=>
 
 test('C3 — six daily aggregate rows and all channel rows fit without an internal scrollbar',async({page})=>{
  for(const [width,height] of [[1672,941],[1440,900],[1366,768],[1280,720]] as const){
-  await page.setViewportSize({width,height});await page.goto('/');await section(page,'Fraude');
+  await page.setViewportSize({width,height});await page.goto('/?classic=1');await section(page,'Fraude');
   const dims=await page.locator('.fw-detail-table').evaluate(el=>{
    const box=el.getBoundingClientRect(),first=el.querySelector('tbody tr:first-child')!.getBoundingClientRect(),last=el.querySelector('tbody tr:last-child')!.getBoundingClientRect();
    return {scroll:el.scrollHeight-el.clientHeight,firstTop:first.top,lastBottom:last.bottom,top:box.top,bottom:box.bottom};
@@ -414,7 +416,7 @@ test('C3 — six daily aggregate rows and all channel rows fit without an intern
 });
 
 test('C3.6/C3.10 — combinée initiale, alertes et transactions restent accessibles et cohérentes',async({page})=>{
- await page.setViewportSize({width:1440,height:900});await page.goto('/');await section(page,'Fraude');
+ await page.setViewportSize({width:1440,height:900});await page.goto('/?classic=1');await section(page,'Fraude');
  const options=page.getByRole('group',{name:"Lecture de l'évolution"});
  await expect(options.getByRole('button',{name:'Combinée'})).toHaveAttribute('aria-pressed','true');
  await expect(page.locator('.fw-trend-labels button b')).toHaveText(['10 655','8 574','14 522','55 037','11 283','282']);
@@ -442,7 +444,7 @@ test('C3.6/C3.10 — combinée initiale, alertes et transactions restent accessi
 });
 
 test('C3.7 — les deux canaux montrent uniquement les diagnostics PaySim vérifiés',async({page})=>{
- await page.setViewportSize({width:1672,height:941});await page.goto('/');await section(page,'Fraude');
+ await page.setViewportSize({width:1672,height:941});await page.goto('/?classic=1');await section(page,'Fraude');
  const cash=page.locator('.fw-channel-row').filter({hasText:'CASH_OUT'});
  const transfer=page.locator('.fw-channel-row').filter({hasText:'TRANSFER'});
  await expect(cash).toContainText('304');
@@ -464,7 +466,7 @@ test('C3.7 — les deux canaux montrent uniquement les diagnostics PaySim vérif
 
 test('C3.8–C3.9 — nouveau contenu visible sans débordement à chaque résolution',async({page})=>{
  for(const [width,height] of [[1672,941],[1440,900],[1366,768],[1280,720]] as const){
-  await page.setViewportSize({width,height});await page.goto('/');await section(page,'Fraude');
+  await page.setViewportSize({width,height});await page.goto('/?classic=1');await section(page,'Fraude');
   const check=await page.locator('.fw-channels').evaluate(panel=>{
    const body=panel.querySelector('.fw-panel-body') as HTMLElement;
    const rows=[...panel.querySelectorAll('.fw-channel-row')].map(el=>el.getBoundingClientRect());
@@ -486,7 +488,7 @@ test('C3.8–C3.9 — nouveau contenu visible sans débordement à chaque résol
   expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
   await page.screenshot({path:'test-results/fraud-c39-'+width+'x'+height+'.png',fullPage:true});
  }
- await page.setViewportSize({width:390,height:844});await page.goto('/');await section(page,'Fraude');
+ await page.setViewportSize({width:390,height:844});await page.goto('/?classic=1');await section(page,'Fraude');
  await expect(page.locator('.fw-channel-metrics')).toHaveCount(2);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
  await page.getByRole('button',{name:'Basculer le thème'}).click();
@@ -498,7 +500,7 @@ test('C3.8–C3.9 — nouveau contenu visible sans débordement à chaque résol
 
 test('C3.10 — statistiques des canaux lisibles sans débordement sur desktop et mobile',async({page})=>{
  for(const [width,height] of [[1672,941],[1440,900],[1366,768],[1280,720]] as const){
-  await page.setViewportSize({width,height});await page.goto('/');await section(page,'Fraude');
+  await page.setViewportSize({width,height});await page.goto('/?classic=1');await section(page,'Fraude');
   const readability=await page.locator('.fw-channel-row').evaluateAll(rows=>rows.map(row=>{
    const metrics=row.querySelector('.fw-channel-metrics') as HTMLElement;
    const box=row.getBoundingClientRect();
@@ -526,7 +528,7 @@ test('C3.10 — statistiques des canaux lisibles sans débordement sur desktop e
   await expect(page.locator('.fw-combo-axis.fw-right')).toHaveCount(1);
   await page.screenshot({path:'test-results/fraud-c310-'+width+'x'+height+'.png',fullPage:true});
  }
- await page.setViewportSize({width:390,height:844});await page.goto('/');await section(page,'Fraude');
+ await page.setViewportSize({width:390,height:844});await page.goto('/?classic=1');await section(page,'Fraude');
  await expect(page.locator('.fw-channel-metrics')).toHaveCount(2);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(2);
  await page.screenshot({path:'test-results/fraud-c310-mobile.png',fullPage:true});

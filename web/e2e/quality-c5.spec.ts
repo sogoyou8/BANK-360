@@ -1,7 +1,7 @@
 import {test,expect,type Page} from '@playwright/test';
 
 async function openQuality(page:Page){
- await page.goto('/');
+ await page.goto('/?classic=1');
  await page.getByRole('button',{name:'Qualité',exact:true}).click();
  await expect(page.getByTestId('quality-workspace')).toBeVisible();
 }

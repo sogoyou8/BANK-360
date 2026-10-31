@@ -1,5 +1,5 @@
 import {test,expect,type Page} from '@playwright/test';
-const intelligence=async(page:Page)=>{await page.goto('/');await page.getByRole('button',{name:'Intelligence',exact:true}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page','models')};
+const intelligence=async(page:Page)=>{await page.goto('/?classic=1');await page.getByRole('button',{name:'Intelligence',exact:true}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page','models')};
 const contexts=(page:Page)=>page.getByRole('group',{name:'Jeu de données'});
 const noScroll=async(page:Page)=>{const v=await page.locator('#main-content').evaluate(el=>el.scrollHeight-el.clientHeight);expect(v).toBeLessThanOrEqual(3)};
 
@@ -255,7 +255,7 @@ test('C4.11 — diagnostic viewport CSS explicite, actif uniquement sur demande'
  await page.setViewportSize({width:1648,height:928});
  await intelligence(page);
  await expect(page.getByTestId('iw-viewport-diagnostic')).toHaveCount(0);
- await page.goto('/?c4diag=1');
+ await page.goto('/?classic=1&c4diag=1');
  await page.getByRole('button',{name:'Intelligence',exact:true}).click();
  const diag=page.getByTestId('iw-viewport-diagnostic');
  await expect(diag).toBeVisible();
@@ -289,7 +289,7 @@ test('C4.11 — DPR 125 % sans changement du viewport CSS ne réduit pas le nomb
  const context=await browser.newContext({viewport:{width:1648,height:928},deviceScaleFactor:1.25});
  try{
   const page=await context.newPage();
-  await page.goto('/?c4diag=1');
+  await page.goto('/?classic=1&c4diag=1');
   await page.getByRole('button',{name:'Intelligence',exact:true}).click();
   await expect(page.getByTestId('iw-css-viewport')).toHaveText('1648 × 928');
   const resolution=await page.evaluate(()=>({w:innerWidth,h:innerHeight,dpr:devicePixelRatio}));
@@ -337,7 +337,7 @@ test('C4.12 — same 1440×722 CSS viewport at DPR 2 keeps nine rows',async({bro
  const context=await browser.newContext({viewport:{width:1440,height:722},deviceScaleFactor:2});
  try{
   const page=await context.newPage();
-  await page.goto('/?c4diag=1');await page.getByRole('button',{name:'Intelligence',exact:true}).click();
+  await page.goto('/?classic=1&c4diag=1');await page.getByRole('button',{name:'Intelligence',exact:true}).click();
   await expect(page.getByTestId('iw-css-viewport')).toHaveText('1440 × 722');
   await expect.poll(async()=>Number(await page.getByTestId('iw-full-rows').textContent())).toBeGreaterThanOrEqual(9);
   await expect(page.getByTestId('iw-viewport-diagnostic')).toContainText('1'); // scale visual 1 while DPR 2
@@ -381,7 +381,7 @@ test('C4.13 — measured 1440×810, devicePixelRatio 2 retains nine complete row
  const context=await browser.newContext({viewport:{width:1440,height:810},deviceScaleFactor:2});
  try{
   const page=await context.newPage();
-  await page.goto('/?c4diag=1');
+  await page.goto('/?classic=1&c4diag=1');
   await page.getByRole('button',{name:'Intelligence',exact:true}).click();
   await expect(page.getByTestId('iw-css-viewport')).toHaveText('1440 × 810');
   await expect.poll(async()=>Number(await page.getByTestId('iw-full-rows').textContent())).toBeGreaterThanOrEqual(9);
