@@ -4,6 +4,7 @@ import {b3,b4,filteredSegments,paymentSeries,fraudDays,fraudTypes,fmtInt,type Cr
 import {type FraudScope} from './FraudWorkspace';
 import {exportReport,type ExportFormat,type ReportDataset} from './reportExports';
 import './cross-analysis.css';
+import './aurora-unified.css';
 
 type Props={filters:CreditFilters,fraud:FraudScope,onReset:()=>void,theme:'dark'|'light',onTheme:()=>void,checks:ReturnType<typeof reconcile>,onAnalysis:()=>void};
 const docs=[
@@ -50,8 +51,9 @@ export default function CrossGovernanceWorkspace({filters,fraud,onReset,theme,on
   [isFraudFiltered?'Transactions · '+selectedFraudLabel+' · test':'Opérations · simulation totale',fmtInt(isFraudFiltered?(selectedFraud?.transactions??0):b4.observed.rows)],
   [isFraudFiltered?'Fraudes · '+selectedFraudLabel+' · test':'Fraudes · simulation totale',fmtInt(isFraudFiltered?(selectedFraud?.frauds??0):b4.observed.frauds)]
  ];
- return <div className="x1-root x1-governance" data-testid="x1-governance">
+ return <div className="x1-root x1-governance x2-root x2-governance" data-testid="x1-governance">
   <div className="x1-gov-toolbar"><div role="group" aria-label="Périmètre de gouvernance">{([{id:'all',label:'Toutes sources'},{id:'credit',label:'Crédit'},{id:'fraud',label:'Fraude'}] as const).map(x=><button key={x.id} aria-pressed={scope===x.id} onClick={()=>{setScope(x.id);setSelected(null)}}>{x.label}</button>)}</div><button onClick={onAnalysis}><Layers3 size={15}/> Analyse 360</button></div>
+  <main className="x2-surface x2-gov-surface" aria-label="Gouvernance et preuves unifiées">
   <section className={'x1-gov-banner '+(qualityOk?'pass':'fail')}><ShieldCheck size={29}/><div><h2>{qualityOk?'Contrôles d’agrégats conformes':'Contrôles à examiner'}</h2><small>Contrôles globaux de cohérence, pas certification bancaire · sources UCI et PaySim indépendantes.</small></div><span><b>{visibleControls.filter(x=>x.ok).length} / {visibleControls.length}</b><small>Contrôles du périmètre</small></span>{relevantCounts.map(([label,value])=><span key={label}><b>{value}</b><small>{label}</small></span>)}</section>
   <div className="x1-gov-grid">
    <section className="x1-card x1-gov-quality"><div className="x1-card-head"><div><h2>Qualité & preuves</h2><small>Vérifications des volumes et méthodes, sans certification bancaire</small></div><CheckCircle2 size={19}/></div>
@@ -74,5 +76,6 @@ export default function CrossGovernanceWorkspace({filters,fraud,onReset,theme,on
     <div className="x1-limit-text"><CircleAlert size={15}/><span>Pas de décisions de crédit, ni d'alertes opérationnelles. Les modèles B3/B4 sont des évaluations de test non recalculées sur les segments.</span></div>
    </section>
   </div>
+  </main>
  </div>;
 }

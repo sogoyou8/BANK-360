@@ -461,7 +461,7 @@ test('X1.9.1 — mobile KPI and comparison labels are not truncated with ellipse
  expect(metrics.every(x=>x.scrollWidth<=x.clientWidth+1),'all KPI texts fit horizontally').toBe(true);
  expect(metrics.every(x=>x.scrollHeight<=x.clientHeight+1),'all KPI texts fit vertically').toBe(true);
  const reference=page.locator('.x1-credit-panel .x1-comparison small').nth(2);
- await expect(reference).toContainText('Référence');
+ await expect(reference).toContainText('Écart à la référence');
  const ref=await reference.evaluate(el=>({
   whiteSpace:getComputedStyle(el).whiteSpace,
   scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,scrollHeight:el.scrollHeight,clientHeight:el.clientHeight
@@ -471,4 +471,175 @@ test('X1.9.1 — mobile KPI and comparison labels are not truncated with ellipse
  expect(ref.scrollHeight).toBeLessThanOrEqual(ref.clientHeight+1);
  expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(3);
  await page.screenshot({path:'test-results/x19-mobile-legible-390x844.png',fullPage:true});
+});
+
+
+test('X2 — Aurora Unified has one continuous analysis canvas, aligned domains and intact interactions',async({page})=>{
+ for(const [width,height] of [[1648,928],[1440,810],[1280,720]] as const){
+  await page.setViewportSize({width,height});
+  await openX1(page);
+  const sheet=page.locator('.x2-analysis>.x2-surface');
+  await expect(sheet).toBeVisible();
+  await expect(sheet.locator('.x1-analysis-grid>.x1-card')).toHaveCount(2);
+  await expect(sheet.locator('.x1-summary>div')).toHaveCount(4);
+  const g=await page.evaluate(()=>{
+   const sheet=document.querySelector('.x2-analysis>.x2-surface')!;
+   const cards=[...document.querySelectorAll('.x1-analysis-grid>.x1-card')];
+   const a=cards[0].getBoundingClientRect(),b=cards[1].getBoundingClientRect();
+   const root=sheet.getBoundingClientRect();
+   return {
+    widthDiff:Math.abs(a.width-b.width),
+    rowTop:Math.abs(a.top-b.top),
+    gap:b.left-a.right,
+    sheetBorder:getComputedStyle(sheet).borderTopWidth,
+    panelBorder:getComputedStyle(cards[0]).borderTopWidth,
+    bodyOverflow:document.documentElement.scrollWidth-innerWidth,
+    mainOverflow:(document.querySelector('#main-content') as HTMLElement).scrollHeight-(document.querySelector('#main-content') as HTMLElement).clientHeight,
+    within:a.left>=root.left&&b.right<=root.right
+   };
+  });
+  expect(g.widthDiff).toBeLessThan(45);
+  expect(g.rowTop).toBeLessThanOrEqual(2);
+  expect(g.gap).toBeLessThan(20);
+  expect(g.sheetBorder).toBe('1px');
+  expect(g.panelBorder).toBe('0px');
+  expect(g.within).toBe(true);
+  expect(g.bodyOverflow).toBeLessThanOrEqual(3);
+  expect(g.mainOverflow).toBeLessThanOrEqual(3);
+  await page.screenshot({path:'test-results/x2-unified-analysis-'+width+'x'+height+'.png',fullPage:true});
+ }
+ await page.getByLabel('Âge Analyse 360').selectOption('18-29');
+ await expect(page.locator('.x1-summary>div').first()).toContainText('9 618');
+ await page.getByRole('button',{name:'Comparer la sélection au portefeuille'}).click();
+ await expect(page.getByRole('dialog',{name:'Inspecteur analytique agrandi'})).toBeVisible();
+ await page.keyboard.press('Escape');
+ await expect(page.locator('.x1-inspector')).not.toHaveClass(/x1-inspector-expanded/);
+});
+test('X2 — unified governance keeps proof, provenance and downloads in one sheet',async({page})=>{
+ await page.setViewportSize({width:1648,height:928});
+ await openX1(page);
+ await page.getByRole('button',{name:'Ouvrir la gouvernance et les preuves'}).click();
+ await expect(page.getByTestId('x1-governance')).toBeVisible();
+ const sheet=page.locator('.x2-governance .x2-gov-surface');
+ await expect(sheet).toBeVisible();
+ await expect(sheet.locator('.x1-gov-grid>.x1-card')).toHaveCount(4);
+ await expect(sheet).toContainText('pas certification bancaire');
+ const noCards=await sheet.locator('.x1-gov-grid>.x1-card').evaluateAll(cards=>cards.every(el=>getComputedStyle(el).borderTopWidth==='0px'));
+ expect(noCards).toBe(true);
+ await page.screenshot({path:'test-results/x2-unified-governance-1648x928.png',fullPage:true});
+});
+
+test('X2 — mobile domain titles are complete and the unified sheet stays inside the viewport',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await openX1(page);
+ const title=page.locator('.x1-credit-panel .x1-card-head h2');
+ await expect(title).toHaveText('Défauts et segments');
+ await expect(page.locator('.x1-credit-panel .x1-scope-pill')).toBeHidden();
+ const metrics=await title.evaluate(el=>({
+  scroll:el.scrollWidth,client:el.clientWidth,
+  whiteSpace:getComputedStyle(el).whiteSpace,
+  ellipsis:getComputedStyle(el).textOverflow
+ }));
+ expect(metrics.scroll).toBeLessThanOrEqual(metrics.client+1);
+ expect(metrics.whiteSpace).toBe('normal');
+ expect(metrics.ellipsis).not.toBe('ellipsis');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(3);
+ await page.screenshot({path:'test-results/x2-unified-mobile-390x844.png',fullPage:true});
+});
+
+test('X2.1 — primary domain metrics lead before local filters and charts at desktop widths',async({page})=>{
+ for(const [width,height] of [[1648,928],[1440,810],[1280,720]] as const){
+  await page.setViewportSize({width,height});
+  await openX1(page);
+  const stage=page.locator('.x21-surface');
+  await expect(stage).toBeVisible();
+  const geometry=await stage.evaluate(el=>{
+   const rect=(sel:string)=>el.querySelector(sel)!.getBoundingClientRect();
+   const primaryCredit=rect('.x1-summary>div:nth-child(2)');
+   const primaryFraud=rect('.x1-summary>div:nth-child(4)');
+   const creditFilters=rect('.x1-filter-group:first-child');
+   const fraudFilters=rect('.x1-filter-group:nth-child(2)');
+   const creditGraph=rect('.x1-credit-panel .x1-matrix-section');
+   const fraudGraph=rect('.x1-fraud-panel .x1-fraud-charts');
+   const inspector=rect('.x1-inspector');
+   const creditPane=rect('.x1-credit-panel');
+   const fraudPane=rect('.x1-fraud-panel');
+   return {
+    primaryCreditTop:primaryCredit.top,primaryFraudTop:primaryFraud.top,
+    primaryCreditFont:parseFloat(getComputedStyle(el.querySelector('.x1-summary>div:nth-child(2) b')!).fontSize),
+    creditFiltersTop:creditFilters.top,fraudFiltersTop:fraudFilters.top,
+    creditGraphTop:creditGraph.top,fraudGraphTop:fraudGraph.top,
+    creditPaneBottom:creditPane.bottom,fraudPaneBottom:fraudPane.bottom,
+    inspectorTop:inspector.top,
+    colsAligned:Math.abs(creditPane.top-fraudPane.top),
+    scroll:document.querySelector('#main-content')!.scrollHeight-document.querySelector('#main-content')!.clientHeight,
+    overflowX:document.documentElement.scrollWidth-innerWidth
+   };
+  });
+  expect(geometry.primaryCreditFont).toBeGreaterThanOrEqual(35);
+  expect(geometry.primaryCreditTop).toBeLessThan(geometry.creditFiltersTop);
+  expect(geometry.primaryFraudTop).toBeLessThan(geometry.fraudFiltersTop);
+  expect(geometry.creditFiltersTop).toBeLessThan(geometry.creditGraphTop);
+  expect(geometry.fraudFiltersTop).toBeLessThan(geometry.fraudGraphTop);
+  expect(geometry.colsAligned).toBeLessThanOrEqual(2);
+  expect(geometry.creditPaneBottom).toBeLessThanOrEqual(geometry.inspectorTop+2);
+  expect(geometry.fraudPaneBottom).toBeLessThanOrEqual(geometry.inspectorTop+2);
+  expect(geometry.scroll).toBeLessThanOrEqual(3);
+  expect(geometry.overflowX).toBeLessThanOrEqual(3);
+  await page.screenshot({path:'test-results/x21-domain-stage-'+width+'x'+height+'.png',fullPage:true});
+ }
+ await expect(page.locator('.x1-credit-panel .x1-comparison')).toContainText('Écart à la référence');
+ await expect(page.locator('.x1-summary>div').nth(1)).toContainText('22,1');
+ await expect(page.locator('.x1-summary>div').nth(3)).toContainText('790');
+ await page.getByLabel('Type Analyse 360').selectOption('TRANSFER');
+ await expect(page.locator('.x1-summary>div').nth(3)).toContainText('486');
+ await expect(page.getByLabel('Jour Analyse 360')).toHaveValue('Tous');
+});
+test('X2.1 — mobile stage follows credit then fraud, without clipped filters or extra horizontal scroll',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await openX1(page);
+ const stage=page.locator('.x21-surface');
+ const g=await stage.evaluate(el=>{
+  const r=(s:string)=>el.querySelector(s)!.getBoundingClientRect();
+  return {
+   titleCredit:r('.x2-domain-titles span:first-child').top,
+   heroCredit:r('.x1-summary>div:nth-child(2)').top,
+   filterCredit:r('.x1-filter-group:first-child').top,
+   paneCredit:r('.x1-credit-panel').top,
+   titleFraud:r('.x2-domain-titles span:nth-child(2)').top,
+   heroFraud:r('.x1-summary>div:nth-child(4)').top,
+   filterFraud:r('.x1-filter-group:nth-child(2)').top,
+   paneFraud:r('.x1-fraud-panel').top,
+   inspector:r('.x1-inspector').top,
+   overflowX:document.documentElement.scrollWidth-innerWidth
+  };
+ });
+ expect(g.titleCredit).toBeLessThan(g.heroCredit);
+ expect(g.heroCredit).toBeLessThan(g.filterCredit);
+ expect(g.filterCredit).toBeLessThan(g.paneCredit);
+ expect(g.paneCredit).toBeLessThan(g.titleFraud);
+ expect(g.titleFraud).toBeLessThan(g.heroFraud);
+ expect(g.heroFraud).toBeLessThan(g.filterFraud);
+ expect(g.filterFraud).toBeLessThan(g.paneFraud);
+ expect(g.paneFraud).toBeLessThan(g.inspector);
+ expect(g.overflowX).toBeLessThanOrEqual(3);
+ await page.screenshot({path:'test-results/x21-domain-stage-mobile-390x844.png',fullPage:true});
+});
+
+test('X2.1 — compact desktop inspector never reveals a clipped second record',async({page})=>{
+ for(const [width,height] of [[1648,928],[1440,810],[1280,720]] as const){
+  await page.setViewportSize({width,height});
+  await openX1(page);
+  const dock=page.locator('.x1-inspector:not(.x1-inspector-expanded)');
+  const table=dock.locator('.x1-inspector-table tbody tr');
+  await expect(table.first()).toBeVisible();
+  await expect(table.nth(1)).toBeHidden();
+  const bounds=await dock.evaluate(el=>{
+   const first=el.querySelector('.x1-inspector-table tbody tr')!.getBoundingClientRect();
+   const visible=el.querySelector('.x1-inspector-scroll')!.getBoundingClientRect();
+   return {rowTop:first.top,rowBottom:first.bottom,visibleTop:visible.top,visibleBottom:visible.bottom};
+  });
+  expect(bounds.rowTop).toBeGreaterThanOrEqual(bounds.visibleTop-1);
+  expect(bounds.rowBottom).toBeLessThanOrEqual(bounds.visibleBottom+1);
+ }
 });
