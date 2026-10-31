@@ -374,3 +374,76 @@ test('X1.8 — mobile heatmap announces sideways exploration and keeps the final
  await expect(page.getByLabel('Plafond Analyse 360')).toHaveValue('500k+');
  expect(await matrix.evaluate(el=>el.scrollLeft)).toBeGreaterThan(0);
 });
+
+
+test('X1.9 — first visitor understands independent sources, KPI meanings and matrix action',async({page})=>{
+ await page.goto('/');
+ await expect(page.getByTestId('x1-analysis')).toBeVisible();
+ const heading=page.locator('.x1-heading-copy small');
+ await expect(heading).toContainText('UCI (2005)');
+ await expect(heading).toContainText('PaySim simulées');
+ await expect(heading).toContainText('ne sont pas reliées');
+ await expect(page.locator('.x1-summary>div').nth(1)).toHaveAttribute('title',/Taux de défaut/);
+ await expect(page.locator('.x1-summary>div').nth(3)).toHaveAttribute('title',/une alerte n'est pas nécessairement une fraude/);
+ const matrix=page.getByRole('region',{name:/Carte des taux de défaut/});
+ await expect(matrix).toContainText('Cliquez une case pour filtrer âge et plafond');
+ const active=matrix.locator('.x1-matrix-row button').first();
+ await expect(active).toHaveCSS('cursor','pointer');
+ await active.click();
+ await expect(page.getByLabel('Âge Analyse 360')).toHaveValue('18-29');
+ await expect(page.locator('.x1-comparison').first()).toContainText('Référence');
+});
+test('X1.9 — model glossary and comparisons explain metrics without recomputing test scores',async({page})=>{
+ await openX1(page);
+ await page.locator('.x1-model-note').click();
+ const dialog=page.getByRole('dialog',{name:'Inspecteur analytique agrandi'});
+ await expect(dialog).toBeVisible();
+ const guide=dialog.locator('.x1-metric-glossary');
+ await expect(guide).toContainText('Comment lire ces scores');
+ for(const term of ['ROC-AUC','PR-AUC','Brier','rappel','ne changent pas avec les filtres']){
+  await expect(guide).toContainText(term,{ignoreCase:true});
+ }
+ const initial=await dialog.locator('.x1-model-kpis').innerText();
+ await page.keyboard.press('Escape');
+ await page.getByLabel('Âge Analyse 360').selectOption('18-29');
+ await page.locator('.x1-model-note').click();
+ await expect(dialog.locator('.x1-model-kpis')).toHaveText(initial);
+ await dialog.getByRole('button',{name:'Modèles Fraude B4'}).click();
+ await expect(guide).toContainText('PR-AUC');
+ await expect(dialog).toContainText('tests globaux');
+});
+test('X1.9 — compact and expanded explanations remain readable without page overflow',async({page})=>{
+ for(const [width,height] of [[1648,928],[1440,810],[1280,720]] as const){
+  await page.setViewportSize({width,height});
+  await openX1(page);
+  const fonts=await page.evaluate(()=>({
+   heading:parseFloat(getComputedStyle(document.querySelector('.x1-heading-copy small')!).fontSize),
+   filter:parseFloat(getComputedStyle(document.querySelector('.x1-filter-group label')!).fontSize),
+   summary:parseFloat(getComputedStyle(document.querySelector('.x1-summary small')!).fontSize),
+   horizontal:document.documentElement.scrollWidth-innerWidth,
+   vertical:(document.querySelector('#main-content') as HTMLElement).scrollHeight-(document.querySelector('#main-content') as HTMLElement).clientHeight
+  }));
+  expect(fonts.heading).toBeGreaterThanOrEqual(11);
+  expect(fonts.filter).toBeGreaterThanOrEqual(10);
+  expect(fonts.summary).toBeGreaterThanOrEqual(9.5);
+  expect(fonts.horizontal).toBeLessThanOrEqual(3);
+  expect(fonts.vertical).toBeLessThanOrEqual(3);
+  await page.getByRole('button',{name:'Comparer la sélection au portefeuille'}).click();
+  const chart=page.locator('.x1-inspector-expanded .x1-inspector-compare-charts>div').first();
+  await expect(chart).toBeVisible();
+  expect((await chart.boundingBox())!.height).toBeGreaterThanOrEqual(200);
+  await page.keyboard.press('Escape');
+ }
+ await page.setViewportSize({width:390,height:844});
+ await openX1(page);
+ await expect(page.getByRole('region',{name:/Carte des taux de défaut/})).toContainText('Balayez pour voir');
+});
+test('X1.9 — governance avoids implying official certification and explains evidence',async({page})=>{
+ await openX1(page);
+ await page.getByRole('button',{name:'Ouvrir la gouvernance et les preuves'}).click();
+ await expect(page.locator('.x1-gov-banner h2')).toHaveText('Contrôles d’agrégats conformes');
+ await expect(page.locator('.x1-gov-banner')).toContainText('pas certification bancaire');
+ await expect(page.locator('.x1-gov-banner')).toContainText('indépendantes');
+ await expect(page.locator('.x1-gov-methods')).toContainText('validation');
+ await expect(page.locator('.x1-gov-exports')).toContainText('Données agrégées à télécharger');
+});
