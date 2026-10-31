@@ -15,7 +15,7 @@ const statusCodes=[...new Set(segments.map(s=>s.september_status))].sort((a,b)=>
 const statusLabel=(v:string)=>v==='-1'?'−1 · à jour':v==='-2'||v==='0'?v.replace('-','−')+' · non précisé':v+' · '+v+' mois';
 const format3=(x:number)=>new Intl.NumberFormat('fr-FR',{minimumFractionDigits:3,maximumFractionDigits:3}).format(x);
 function Card({title,note,children,extra,className=''}:{title:string,note?:string,children:React.ReactNode,extra?:React.ReactNode,className?:string}){
- return <section className={'x1-card '+className}><div className="x1-card-head"><div><h2>{title}</h2>{note&&<small>{note}</small>}</div>{extra}</div>{children}</section>;
+ return <section className={'x1-card '+className}><div className="x1-card-head"><div><h2>{title}</h2>{note&&<small title={note}>{note}</small>}</div>{extra}</div>{children}</section>;
 }
 function Bars({items,label,selected,onClick,max,unit='rate'}:{items:{name:string,count:number,rate:number}[],label:string,selected:string,onClick:(name:string)=>void,max:number,unit?:'rate'|'count'}){
  return <div className="x1-bars" role="group" aria-label={label}>
