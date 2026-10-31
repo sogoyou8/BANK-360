@@ -87,7 +87,7 @@ test('R5 — 1648, 1440, 1280 and 390 render all five views with no global horiz
    await expect(page.getByTestId('guided-'+view)).toBeVisible();
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth);
    expect(overflow,'global horizontal overflow '+w+' '+view).toBeLessThanOrEqual(3);
-   await page.screenshot({path:'test-results/guided-'+view+'-'+w+'x'+h+'.png',fullPage:true});
+   if(w===1648||w===390||(w===1280&&view==='credit'))await page.screenshot({path:'test-results/guided-'+view+'-'+w+'x'+h+'.png',fullPage:true});
   }
  }
 });
