@@ -91,3 +91,16 @@ test('R5 — 1648, 1440, 1280 and 390 render all five views with no global horiz
   }
  }
 });
+
+
+test('R3-R4 — fraud model link opens B4 and keeps the chosen day on return',async({page})=>{
+ await page.goto('/?view=fraud');
+ await page.getByRole('button',{name:/J28 : 299 alertes/}).click();
+ await expect(page.locator('.grl-fraud-metrics')).toContainText('299');
+ await page.getByRole('button',{name:/Voir l’évaluation B4|Voir l'évaluation B4/}).click();
+ await expect(page.getByTestId('guided-models')).toBeVisible();
+ await expect(page.getByRole('tab',{name:'Fraude B4'})).toHaveAttribute('aria-selected','true');
+ await expect(page.locator('.grl-model-metrics')).toContainText('0,3651');
+ await page.locator('.grl-nav button').filter({hasText:'Fraude'}).click();
+ await expect(page.locator('.grl-fraud-metrics')).toContainText('299');
+});
