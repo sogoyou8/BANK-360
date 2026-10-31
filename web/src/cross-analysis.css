@@ -407,23 +407,20 @@
 }
 
 
-/* X1.5.3 — short desktop viewports: never expose half of a table row.
-   The full inspector remains available through Agrandir (same page, same state). */
+/* X1.8 — short desktop viewports: show one truthful complete preview row,
+   never a blank table or a clipped second row. Agrandir reveals all groups. */
 @media(min-width:901px) and (max-height:750px){
  .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-scroll{
   overflow:hidden;position:relative;
  }
- .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-scroll:has(.x1-inspector-table)::after{
-  content:"Agrandir pour consulter les lignes complètes";
-  position:absolute;left:11px;right:11px;top:30px;
-  padding:3px 8px;color:#a7c9f7;background:#173567;
-  border:1px solid #769fe35a;border-radius:5px;text-align:center;font-size:10px;
- }
- .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table tbody{
-  visibility:hidden;
+ .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table tbody tr:not(:first-child){
+  display:none;
  }
  .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table thead th{
-  padding-top:5px;padding-bottom:5px;
+  padding-top:4px;padding-bottom:4px;
+ }
+ .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table tbody td{
+  padding-top:3px;padding-bottom:3px;
  }
  .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-foot{
   min-height:21px;padding-top:2px;padding-bottom:2px;
@@ -431,8 +428,14 @@
  .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-head small{
   max-width:25vw;
  }
+ .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-size{
+  padding:5px 7px;
+ }
+ .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-size span{
+  display:inline;
+  font-size:10px;
+ }
  .x1-inspector-expanded .x1-inspector-scroll{overflow:auto}
- .x1-inspector-expanded .x1-inspector-table tbody{visibility:visible}
 }
 
 /* X1.6 — true readable light mode for the two Aurora workspaces (no layout shift). */
