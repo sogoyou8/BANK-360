@@ -145,8 +145,8 @@ export default function CrossAnalysisWorkspace({filters,onFilters,fraud,onFraud,
      <div><small>{referenceLabel}</small><b>{creditReference.total?asPct(creditReference.rate):'—'}</b><small>{difference===null?'Aucune comparaison':(difference>=0?'+':'')+new Intl.NumberFormat('fr-FR',{maximumFractionDigits:1,minimumFractionDigits:1}).format(difference)+' point(s)'}</small></div>
      <button className="x1-compare-open" onClick={()=>{setDetail('credit');setInspectTab('compare');setExpanded(true)}} aria-label="Comparer la sélection au portefeuille"><ChevronRight size={17}/></button>
     </div>
-    <div className="x1-matrix-section">
-     <div className="x1-subtitle"><h3>Carte des défauts · âge × plafond</h3><span>Couleur = taux · cliquer pour croiser</span></div>
+    <div className="x1-matrix-section" role="region" aria-label="Carte des taux de défaut, défilement horizontal possible sur mobile" tabIndex={0}>
+     <div className="x1-subtitle"><h3>Carte des défauts · âge × plafond</h3><span className="x1-matrix-desktop-help">Couleur = taux · cliquer pour croiser</span><span className="x1-matrix-mobile-help">Balayez pour voir →</span></div>
      <div className="x1-matrix" role="group" aria-label="Matrice taux de défaut âge par plafond">
       <div className="x1-matrix-head"><span>Âge / plafond</span>{limits.map(l=><span key={l} title={l}>{l}</span>)}</div>
       {matrix.map(row=><div className="x1-matrix-row" key={row.age}><strong>{row.age}</strong>{row.cells.map(c=>{
