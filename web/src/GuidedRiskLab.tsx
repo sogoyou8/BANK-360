@@ -8,6 +8,7 @@ import {
 import {creditCalibration,creditDrivers,driverLabels} from './riskEvidence';
 import {exportReport,type ReportDataset,type ExportFormat} from './reportExports';
 import './guided-risk-lab.css';
+import './guided-mono-screen.css';
 
 type View='overview'|'credit'|'fraud'|'models'|'evidence';
 type Domain='credit'|'fraud';
@@ -118,14 +119,16 @@ function Credit({go,filters,setFilters,openModel}:{go:(p:View)=>void;filters:Cre
      <Context>Une couleur plus forte indique un taux plus élevé, pas davantage de dossiers. Survolez une case pour connaître les effectifs.</Context>
     </>}
    </aside>
-  </div>
   <section className="grl-stage grl-monthly"><div className="grl-stage-heading"><div><h2>Retards de paiement · avril à septembre 2005</h2><p>Même cohorte filtrée sur les six mois ; les observations mensuelles ne sont pas de nouveaux clients.</p></div></div>
     <div className="grl-month-chart" role="img" aria-label="Taux de retard sur six mois, même cohorte">
      {monthly.map(x=><div key={x.period} className="grl-month"><b>{x.observations?pct(x.rate):'—'}</b><div className="grl-month-track"><i style={{height:(x.observations?Math.max(2,x.rate/maxMonth*100):0)+'%'}}/></div><small>{x.period.slice(5)}/05</small><span>n={num(x.observations)}</span></div>)}
     </div>
    </section>
-   <details className="grl-details"><summary>Consulter les groupes agrégés <span>{num(rows.length)} lignes · détails et export</span></summary><div className="grl-table-scroll"><table><thead><tr><th>Âge</th><th>Plafond</th><th>Statut</th><th>Dossiers</th><th>Défauts</th><th>Taux</th></tr></thead><tbody>{rows.slice(0,40).map((r,i)=><tr key={i}><td>{r.age_band}</td><td>{r.credit_limit_band}</td><td>{statusName(r.september_status)}</td><td>{num(r.client_count)}</td><td>{num(r.default_count)}</td><td>{r.client_count?pct(r.default_count/r.client_count):'—'}</td></tr>)}</tbody></table></div>{rows.length>40&&<small>Aperçu des 40 premiers groupes ; l'export contient l'intégralité des {num(rows.length)} groupes.</small>}</details>
+  </div>
+  <div className="grl-bottom-actions">
+   <details className="grl-details grl-details-overlay" onKeyDown={e=>{if(e.key==='Escape')e.currentTarget.open=false}}><summary>Consulter les groupes agrégés <span>{num(rows.length)} lignes · détails et export</span></summary><div className="grl-table-scroll"><table><thead><tr><th>Âge</th><th>Plafond</th><th>Statut</th><th>Dossiers</th><th>Défauts</th><th>Taux</th></tr></thead><tbody>{rows.slice(0,40).map((r,i)=><tr key={i}><td>{r.age_band}</td><td>{r.credit_limit_band}</td><td>{statusName(r.september_status)}</td><td>{num(r.client_count)}</td><td>{num(r.default_count)}</td><td>{r.client_count?pct(r.default_count/r.client_count):'—'}</td></tr>)}</tbody></table></div>{rows.length>40&&<small>Aperçu des 40 premiers groupes ; l'export contient l'intégralité des {num(rows.length)} groupes.</small>}</details>
    <div className="grl-footer-actions"><Export dataset={creditDataset(rows)}/><Export dataset={monthsDataset(filters)}/><button onClick={()=>go('evidence')} className="grl-inline-link">Source et contrôles UCI <ChevronRight size={16}/></button></div>
+  </div>
  </div>;
 }
 function Fraud({go,axis,setAxis,selection,setSelection,openModel}:{go:(p:View)=>void;axis:FraudAxis;setAxis:(axis:FraudAxis)=>void;selection:string;setSelection:(key:string)=>void;openModel:(domain:Domain)=>void}){
@@ -154,8 +157,10 @@ function Fraud({go,axis,setAxis,selection,setSelection,openModel}:{go:(p:View)=>
    </>}
   </aside></div>
   <Context kind="warning"><strong>Limite majeure B4.</strong> La prévalence des fraudes simulées passe de {pct(b4.prevalence_by_partition.train,2)} à l'entraînement à {pct(b4.prevalence_by_partition.test,2)} au test. La probabilité moyenne prédite ({pct(b4.test_predicted_probability_mean,2)}) sous-estime la fréquence observée : pas d'usage opérationnel des scores.</Context>
-  <details className="grl-details"><summary>Voir les groupes et les erreurs <span>{source.length} groupes · agrégats du test</span></summary><div className="grl-table-scroll"><table><thead><tr><th>Groupe</th><th>Transactions</th><th>Fraudes</th><th>Alertes</th><th>VP</th><th>FP</th><th>FN</th></tr></thead><tbody>{source.map(x=><tr key={'day' in x?x.day:x.type}><td>{'day' in x?'J'+x.day:x.type}</td><td>{num(x.transactions)}</td><td>{num(x.frauds)}</td><td>{num(x.alerts)}</td><td>{num(x.tp)}</td><td>{num(x.fp)}</td><td>{num(x.fn)}</td></tr>)}</tbody></table></div></details>
+  <div className="grl-bottom-actions">
+  <details className="grl-details grl-details-overlay" onKeyDown={e=>{if(e.key==='Escape')e.currentTarget.open=false}}><summary>Voir les groupes et les erreurs <span>{source.length} groupes · agrégats du test</span></summary><div className="grl-table-scroll"><table><thead><tr><th>Groupe</th><th>Transactions</th><th>Fraudes</th><th>Alertes</th><th>VP</th><th>FP</th><th>FN</th></tr></thead><tbody>{source.map(x=><tr key={'day' in x?x.day:x.type}><td>{'day' in x?'J'+x.day:x.type}</td><td>{num(x.transactions)}</td><td>{num(x.frauds)}</td><td>{num(x.alerts)}</td><td>{num(x.tp)}</td><td>{num(x.fp)}</td><td>{num(x.fn)}</td></tr>)}</tbody></table></div></details>
   <div className="grl-footer-actions"><Export dataset={fraudDataset(axis,selection)}/><button className="grl-inline-link" onClick={()=>go('evidence')}>Provenance PaySim et validation <ChevronRight size={16}/></button></div>
+  </div>
  </div>;
 }
 function Models({go,domain,setDomain}:{go:(p:View)=>void;domain:Domain;setDomain:(domain:Domain)=>void}){
@@ -168,6 +173,7 @@ function Models({go,domain,setDomain}:{go:(p:View)=>void;domain:Domain;setDomain
   <div className="grl-page-title"><div><span className="grl-eyebrow">MODÈLES · RECHERCHE UNIQUEMENT</span><h1>Que valent les modèles sur leurs tests ?</h1><p>Performances expérimentales, jamais recalculées avec les filtres descriptifs.</p></div></div>
   <div className="grl-axis-controls"><div role="tablist" aria-label="Étude de modèle"><button role="tab" aria-selected={credit} className={credit?'is-active':''} onClick={()=>setDomain('credit')}>Crédit B3</button><button role="tab" aria-selected={!credit} className={!credit?'is-active':''} onClick={()=>setDomain('fraud')}>Fraude B4</button></div><span>{credit?'UCI 2005 · 6 000 dossiers de test · séparation aléatoire stratifiée':'PaySim simulé · 100 353 transactions de test · séparation chronologique'}</span></div>
   <div className="grl-metrics grl-model-metrics"><Figure label="PR-AUC · test" value={decimals(m.pr_auc,4)} detail="Qualité du classement précision-rappel"/><Figure label="ROC-AUC · test" value={decimals(m.roc_auc,4)} detail="Séparation entre classes"/><Figure label="Brier · test" value={decimals(m.brier,4)} detail="Erreur de probabilité · plus bas = mieux"/><Figure label="Rappel · seuil expérimental" value={pct(m.recall)} detail="Part des positifs retrouvés"/></div>
+  <div className="grl-model-dashboard">
   <div className="grl-model-grid"><section className="grl-stage"><div className="grl-stage-heading"><div><h2>Risque observé par décile du score</h2><p>{credit?'Part des défauts dans chaque décile de test':'Part de fraudes simulées dans chaque décile de test'}</p></div></div><RankBars values={deciles}/></section>
    <section className="grl-stage"><div className="grl-stage-heading"><div><h2>Calibration · probabilité et fréquence observée</h2><p>Deux valeurs sur une même population de test ; comparaison descriptive.</p></div></div><div className="grl-calibration"><div className="grl-cal-legend"><i/> Score prédit <i/> Taux observé</div>{calibration.map(x=><div className="grl-cal-row" key={x.label}><small>{x.label}</small><div><span style={{width:Math.min(100,x.predicted*100)+'%'}}/><em style={{width:Math.min(100,x.observed*100)+'%'}}/></div><b>{pct(x.predicted,1)} / {pct(x.observed,1)}</b></div>)}</div></section>
   </div>
@@ -177,8 +183,11 @@ function Models({go,domain,setDomain}:{go:(p:View)=>void;domain:Domain;setDomain
     ).map(([label,n])=><div key={String(label)}><small>{label}</small><strong>{num(Number(n))}</strong></div>)}</div></section>
    <section className="grl-stage grl-limit"><div className="grl-stage-heading"><h2>Interprétation et limites</h2></div>{credit?<><p><strong>Seuil expérimental : {decimals(b3.protocol.threshold,2)}.</strong> Choisi sur validation avec F2, pas pour refuser un crédit.</p><p>Entraînement/test stratifiés sans validation temporelle. Les résultats ne sont pas transférables à une banque contemporaine.</p><p>Variable influente sur validation : {driverLabels[creditDrivers[0].name]||creditDrivers[0].name} — importance non causale.</p></>:<><p><strong>Dérive de prévalence importante.</strong> Train {pct(b4.prevalence_by_partition.train,2)}, test {pct(b4.prevalence_by_partition.test,2)}.</p><p>La moyenne des scores prédits est {pct(b4.test_predicted_probability_mean,2)} pour {pct(b4.test_observed_fraud_rate,2)} de fraudes observées sur le test.</p><p>Les probabilités ne sont pas calibrées pour ce test : aucun transfert possible vers la production.</p></>}
    </section></div>
+  </div>
+  <div className="grl-model-footer">
   <Context>Les PR-AUC B3 et B4 concernent des populations, prévalences et protocoles différents : ne pas les classer comme deux modèles d'un même problème.</Context>
   <div className="grl-footer-actions"><button className="grl-inline-link" onClick={()=>go('evidence')}>Consulter les protocoles et rapports <ChevronRight size={16}/></button></div>
+  </div>
  </div>;
 }
 function Evidence({filters,source,onSource,go}:{filters:CreditFilters;source:Scope;onSource:(x:Scope)=>void;go:(p:View)=>void}){
@@ -198,12 +207,18 @@ function Evidence({filters,source,onSource,go}:{filters:CreditFilters;source:Sco
  ].filter(x=>source==='all'||x.domain===source);
  return <div className="grl-page" data-testid="guided-evidence"><div className="grl-page-title"><div><span className="grl-eyebrow">GOUVERNANCE ET REPRODUCTIBILITÉ</span><h1>Peut-on vérifier les résultats ?</h1><p>Sources indépendantes, contrôles techniques, méthodes et exports agrégés.</p></div></div>
   <div className="grl-axis-controls"><div role="group" aria-label="Périmètre des preuves">{([{id:'all',label:'Toutes sources'},{id:'credit',label:'Crédit'},{id:'fraud',label:'Fraude'}] as const).map(x=><button key={x.id} aria-pressed={source===x.id} className={source===x.id?'is-active':''} onClick={()=>onSource(x.id)}>{x.label}</button>)}</div><span>Ces contrôles ne constituent pas une certification bancaire.</span></div>
+  <div className="grl-evidence-workspace">
   <section className="grl-stage"><div className="grl-stage-heading"><div><h2>Contrôles de cohérence</h2><p>Vérifications globales de données et de rapports, indépendantes des filtres de consultation.</p></div></div>
    <div className="grl-control-list">{controls.map(x=><details key={x.id}><summary><span><strong>{x.title}</strong><small>{x.description}</small></span><b className={x.ok?'grl-ok':'grl-bad'}>{x.ok?'Conforme':'À examiner'}</b></summary><p>{x.method}</p></details>)}</div></section>
   <div className="grl-model-grid"><section className="grl-stage"><div className="grl-stage-heading"><h2>Provenance et rapports</h2></div><div className="grl-evidence-links">{links.map(x=><a href={x.url} key={x.title} target="_blank" rel="noopener noreferrer"><BookOpen size={17}/>{x.title}<ArrowRight size={15}/></a>)}</div></section>
    <section className="grl-stage grl-limit"><div className="grl-stage-heading"><h2>Limites du périmètre</h2></div><p>UCI : échantillon taïwanais historique de 2005, pas une banque française ni un ratio NPL réglementaire.</p><p>PaySim : simulation de paiement mobile, pas de clients réels ni de monitoring connecté.</p><p>Les métriques de modèles sont expérimentales ; aucune jointure UCI × PaySim et aucune décision individuelle.</p></section></div>
-  <section className="grl-stage"><div className="grl-stage-heading"><h2>Exports des données agrégées</h2></div><div className="grl-proof-exports">{source!=='fraud'&&<><div><strong>Portefeuille UCI · sélection active</strong><small>{num(credit.total)} dossiers · segments réellement filtrés</small><Export dataset={creditDataset(filteredSegments(filters))}/></div><div><strong>Retards UCI · mêmes dossiers</strong><small>Six observations mensuelles de la cohorte filtrée</small><Export dataset={monthsDataset(filters)}/></div></>}{source!=='credit'&&<div><strong>PaySim · types du test</strong><small>Transactions simulées et alertes agrégées</small><Export dataset={fraudDataset('type','Tous')}/></div>}</div></section>
+  </div>
+  <div className="grl-bottom-actions">
+  <details className="grl-details grl-evidence-export-details" onKeyDown={e=>{if(e.key==='Escape')e.currentTarget.open=false}}><summary>Exports des données agrégées <span>CSV / XLSX · toutes les sources disponibles</span></summary>
+   <section className="grl-stage"><div className="grl-stage-heading"><h2>Exports des données agrégées</h2></div><div className="grl-proof-exports">{source!=='fraud'&&<><div><strong>Portefeuille UCI · sélection active</strong><small>{num(credit.total)} dossiers · segments réellement filtrés</small><Export dataset={creditDataset(filteredSegments(filters))}/></div><div><strong>Retards UCI · mêmes dossiers</strong><small>Six observations mensuelles de la cohorte filtrée</small><Export dataset={monthsDataset(filters)}/></div></>}{source!=='credit'&&<div><strong>PaySim · types du test</strong><small>Transactions simulées et alertes agrégées</small><Export dataset={fraudDataset('type','Tous')}/></div>}</div></section>
+  </details>
   <button className="grl-inline-link" onClick={()=>go('overview')}><ArrowLeft size={16}/> Retour à la découverte</button>
+  </div>
  </div>;
 }
 export default function GuidedRiskLab(){
