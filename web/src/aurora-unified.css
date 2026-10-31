@@ -289,3 +289,10 @@
 
 /* Keep X1.9 readability contract on compact desktop heights. */
 @media(min-width:901px) and (max-height:850px){.x2-root .x1-summary small{font-size:9.5px}}
+
+/* X2 mobile polish: source scope is already explained in KPI/header, so let domain titles breathe. */
+@media(max-width:520px){
+ .x2-root .x1-analysis-grid .x1-card-head{min-height:55px;align-items:center}
+ .x2-root .x1-analysis-grid .x1-card-head h2{font-size:13px;line-height:1.25;white-space:normal;overflow:visible;text-overflow:clip}
+ .x2-root .x1-analysis-grid .x1-scope-pill{display:none}
+}
