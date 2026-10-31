@@ -6,7 +6,7 @@ const navigate=async(page:import('@playwright/test').Page,section:string,target:
 };
 
 test('Référence 1672 × 941 : proportions des panneaux, zéro contenu coupé et capture',async({page})=>{
- await page.setViewportSize({width:1672,height:941});await page.goto('/');
+ await page.setViewportSize({width:1672,height:941});await page.goto('/?classic=1');
  await expect(page.locator('.home-kpi')).toHaveCount(4);
  await expect(page.locator('.home-credit-column')).toHaveCount(5);
  await expect(page.locator('.home-watch-row')).toHaveCount(3);
@@ -29,7 +29,7 @@ test('Référence 1672 × 941 : proportions des panneaux, zéro contenu coupé e
 });
 
 test('Référence 1440 × 900 : mono écran, panneau vigilance entièrement visible',async({page})=>{
- await page.setViewportSize({width:1440,height:900});await page.goto('/');
+ await page.setViewportSize({width:1440,height:900});await page.goto('/?classic=1');
  const result=await page.evaluate(()=>{
   const watch=document.querySelector('.home-watch-panel')!.getBoundingClientRect();
   const rows=[...document.querySelectorAll('.home-watch-row')].map(el=>el.getBoundingClientRect());
@@ -42,11 +42,11 @@ test('Référence 1440 × 900 : mono écran, panneau vigilance entièrement visi
 
 test('Accueil : les quatre KPI sont de vrais liens de navigation',async({page})=>{
  const checks:[string,string][]=[['Dossiers de crédit','portfolio'],['Taux de défaut','portfolio'],['Transactions analysées','fraud'],['Alertes de test','fraud']];
- for(const [name,destination] of checks){await page.goto('/');await page.locator('.home-kpi').filter({hasText:name}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page',destination)}
+ for(const [name,destination] of checks){await page.goto('/?classic=1');await page.locator('.home-kpi').filter({hasText:name}).click();await expect(page.locator('#main-content')).toHaveAttribute('data-page',destination)}
 });
 
 test('Graphique crédit : les âges réutilisent le filtre réel dans Risque',async({page})=>{
- await page.goto('/');
+ await page.goto('/?classic=1');
  const age=page.locator('.home-credit-column').filter({hasText:'18-29'});
  await expect(age).toHaveAttribute('title',/9\s?618 dossiers/);
  await age.click();
@@ -57,7 +57,7 @@ test('Graphique crédit : les âges réutilisent le filtre réel dans Risque',as
 });
 
 test('Canal fraude : approfondissement préselectionné dans les investigations',async({page})=>{
- await page.goto('/');
+ await page.goto('/?classic=1');
  await page.locator('.home-fraud-channel').filter({hasText:'CASH OUT'}).click();
  await expect(page.locator('#main-content')).toHaveAttribute('data-page','fraud');
  await expect(page.getByRole('tab',{name:'Alertes'})).toHaveAttribute('aria-selected','true');
@@ -66,21 +66,21 @@ test('Canal fraude : approfondissement préselectionné dans les investigations'
 });
 
 test('Vigilances : navigation directe vers les alertes, la dérive et la provenance',async({page})=>{
- await page.goto('/');
+ await page.goto('/?classic=1');
  await page.getByRole('button',{name:'Examiner les fraudes non détectées'}).click();
  await expect(page.locator('#main-content')).toHaveAttribute('data-page','fraud');
  await expect(page.getByRole('tab',{name:'Alertes'})).toHaveAttribute('aria-selected','true');
- await page.goto('/');
+ await page.goto('/?classic=1');
  await page.getByRole('button',{name:'Examiner la calibration du modèle de fraude'}).click();
  await expect(page.locator('#main-content')).toHaveAttribute('data-page','models');
  await expect(page.getByText('Score moyen · test')).toBeVisible();
- await page.goto('/');
+ await page.goto('/?classic=1');
  await page.getByRole('button',{name:'Consulter la provenance des données'}).click();
  await expect(page.locator('#main-content')).toHaveAttribute('data-page','quality');
 });
 
 test('Mobile : dock fixe, aucun dépassement horizontal, modules lisibles',async({page})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/');
+ await page.setViewportSize({width:390,height:844});await page.goto('/?classic=1');
  await expect(page.locator('.home-kpi')).toHaveCount(4);
  await expect(page.locator('.home-credit-column')).toHaveCount(5);
  const state=await page.evaluate(()=>({overflow:document.documentElement.scrollWidth-window.innerWidth,dockY:document.querySelector('.nav-dock')!.getBoundingClientRect().y}));
@@ -90,7 +90,7 @@ test('Mobile : dock fixe, aucun dépassement horizontal, modules lisibles',async
 
 test('Finition des vigilances : typographie hiérarchisée et sous-textes non tronqués sur desktop',async({page})=>{
  for(const [width,height,minTitle,minSub] of [[1672,941,14.9,12.9],[1440,900,12.4,11.4]] as const){
-  await page.setViewportSize({width,height});await page.goto('/');
+  await page.setViewportSize({width,height});await page.goto('/?classic=1');
   await expect(page.locator('.home-watch-row')).toHaveCount(3);
   const state=await page.locator('.home-watch-row').evaluateAll(nodes=>nodes.map(row=>{
    const title=row.querySelector('.home-watch-text strong') as HTMLElement;
@@ -121,7 +121,7 @@ test('Finition des vigilances : typographie hiérarchisée et sous-textes non tr
  }
 });
 test('Finition : mobile lisible sans débordement ni régression du dock',async({page})=>{
- await page.setViewportSize({width:390,height:844});await page.goto('/');
+ await page.setViewportSize({width:390,height:844});await page.goto('/?classic=1');
  await expect(page.locator('.home-watch-row')).toHaveCount(3);
  const metrics=await page.evaluate(()=>({
    overflow:document.documentElement.scrollWidth-window.innerWidth,
