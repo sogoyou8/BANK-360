@@ -53,25 +53,37 @@ test('M1 — credit matrix and monthly series remain visible at 1280×720',async
  expect(await heat.locator('button').count()).toBe(25);
 });
 
-test('M1 — details and exports open as accessible on-demand overlays, not permanent lower panels',async({page})=>{
+test('M1 — credit detail opens and closes without hiding analytics behind a permanent panel',async({page})=>{
  await page.setViewportSize({width:1280,height:720});
  await page.goto('/?view=credit');
  const details=page.locator('.grl-details-overlay');
- await expect(details).not.toHaveAttribute('open',/.+/);
- await details.locator('summary').click();
- await expect(details).toHaveAttribute('open','');
- await expect(details.locator('.grl-table-scroll')).toBeVisible();
- const popup=await details.locator('.grl-table-scroll').boundingBox();
- expect(popup).not.toBeNull();
- expect(popup!.height).toBeGreaterThan(200);
- await details.locator('summary').click();
- await expect(details).not.toHaveAttribute('open',/.+/);
+ await test.step('open aggregate detail',async()=>{
+  await details.locator('summary').click();
+  await expect(details).toHaveAttribute('open','');
+  const popup=details.locator('.grl-table-scroll');
+  await expect(popup).toBeVisible();
+  const bounds=await popup.boundingBox();
+  expect(bounds!.height).toBeGreaterThan(200);
+ });
+ await test.step('close aggregate detail',async()=>{
+  await details.locator('summary').click();
+  await expect(details).not.toHaveAttribute('open',/.+/);
+ });
+});
+
+test('M1 — evidence exports open and close without changing source selection',async({page})=>{
+ await page.setViewportSize({width:1280,height:720});
  await page.goto('/?view=evidence');
  const exports=page.locator('.grl-evidence-export-details');
- await exports.locator('summary').click();
- await expect(exports.locator('.grl-proof-exports')).toBeVisible();
- await expect(exports.getByRole('button',{name:/Exporter/})).toHaveCount(3);
- await exports.locator('summary').click();
+ await test.step('open exports',async()=>{
+  await exports.locator('summary').click();
+  await expect(exports.locator('.grl-proof-exports')).toBeVisible();
+  await expect(exports.getByRole('button',{name:/Exporter/})).toHaveCount(3);
+ });
+ await test.step('close exports',async()=>{
+  await exports.locator('summary').click();
+  await expect(exports).not.toHaveAttribute('open',/.+/);
+ });
 });
 
 test('M1 — mobile stays readable and scrollable instead of shrinking all analyses',async({page})=>{
