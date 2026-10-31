@@ -235,19 +235,37 @@ test('X1.5 — all chart text and matrix stay within their actual containers in 
 });
 
 
-test('X1.5.3 — short viewport does not show half a data row; expanded inspector restores all records',async({page})=>{
+test('X1.8 — short desktop inspector offers a complete data preview and expanded table',async({page})=>{
  await page.setViewportSize({width:1280,height:720});
  await openX1(page);
  const collapsed=page.locator('.x1-inspector:not(.x1-inspector-expanded)');
  await expect(collapsed).toBeVisible();
- await expect(collapsed.locator('.x1-inspector-table tbody')).toHaveCSS('visibility','hidden');
+ const first=collapsed.locator('.x1-inspector-table tbody tr').first();
+ await expect(first).toBeVisible();
+ await expect(first).toContainText('18-29');
+ await expect(collapsed.locator('.x1-inspector-table tbody tr').nth(1)).toBeHidden();
+ const geometry=await collapsed.evaluate(panel=>{
+  const row=panel.querySelector('.x1-inspector-table tbody tr')!.getBoundingClientRect();
+  const scroller=panel.querySelector('.x1-inspector-scroll')!.getBoundingClientRect();
+  return {top:row.top,bottom:row.bottom,visibleTop:scroller.top,visibleBottom:scroller.bottom};
+ });
+ expect(geometry.top).toBeGreaterThanOrEqual(geometry.visibleTop-1);
+ expect(geometry.bottom).toBeLessThanOrEqual(geometry.visibleBottom+1);
  await expect(collapsed.getByRole('button',{name:/Agrandir/i})).toBeVisible();
+ await expect(collapsed.locator('.x1-inspector-size span')).toBeVisible();
+ await page.screenshot({path:'test-results/x18-compact-1280x720.png',fullPage:true});
  await collapsed.getByRole('button',{name:/Agrandir/i}).click();
- const expanded=page.locator('.x1-inspector-expanded');
+ const expanded=page.getByRole('dialog',{name:'Inspecteur analytique agrandi'});
  await expect(expanded).toBeVisible();
- await expect(expanded.locator('.x1-inspector-table tbody')).toHaveCSS('visibility','visible');
- await expect(expanded.locator('.x1-inspector-table tbody tr').first()).toBeVisible();
- await page.screenshot({path:'test-results/x15-expanded-1280x720.png',fullPage:true});
+ await expect(expanded.locator('.x1-inspector-table tbody tr').nth(1)).toBeVisible();
+ const g=await expanded.evaluate(panel=>{
+  const surface=panel.getBoundingClientRect();
+  const scroll=panel.querySelector('.x1-inspector-scroll')!.getBoundingClientRect();
+  return {height:surface.height,scrollHeight:scroll.height};
+ });
+ expect(g.height).toBeGreaterThan(350);
+ expect(g.scrollHeight).toBeGreaterThan(200);
+ await page.screenshot({path:'test-results/x18-expanded-1280x720.png',fullPage:true});
 });
 
 
