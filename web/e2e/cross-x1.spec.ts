@@ -528,3 +528,21 @@ test('X2 — unified governance keeps proof, provenance and downloads in one she
  expect(noCards).toBe(true);
  await page.screenshot({path:'test-results/x2-unified-governance-1648x928.png',fullPage:true});
 });
+
+test('X2 — mobile domain titles are complete and the unified sheet stays inside the viewport',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await openX1(page);
+ const title=page.locator('.x1-credit-panel .x1-card-head h2');
+ await expect(title).toHaveText('Crédit · portefeuille et paiements');
+ await expect(page.locator('.x1-credit-panel .x1-scope-pill')).toBeHidden();
+ const metrics=await title.evaluate(el=>({
+  scroll:el.scrollWidth,client:el.clientWidth,
+  whiteSpace:getComputedStyle(el).whiteSpace,
+  ellipsis:getComputedStyle(el).textOverflow
+ }));
+ expect(metrics.scroll).toBeLessThanOrEqual(metrics.client+1);
+ expect(metrics.whiteSpace).toBe('normal');
+ expect(metrics.ellipsis).not.toBe('ellipsis');
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(3);
+ await page.screenshot({path:'test-results/x2-unified-mobile-390x844.png',fullPage:true});
+});
