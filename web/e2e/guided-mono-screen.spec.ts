@@ -22,7 +22,8 @@ test('M1 — five journeys fit fully within a desktop screen, without nested pag
      childMinTop:Math.min(...children.map(r=>r.top)),
      childMaxBottom:Math.max(...children.map(r=>r.bottom)),
      pageTop:rect.top,
-     viewportHeight:innerHeight
+     viewportHeight:innerHeight,
+     titleOverflow:Math.max(0,(el.querySelector('.grl-page-title') as HTMLElement)?.scrollHeight-(el.querySelector('.grl-page-title') as HTMLElement)?.clientHeight||0)
     };
    });
    if(metrics.screenOverflowY>3)failures.push(`${view} ${w}: page scroll +${metrics.screenOverflowY}`);
@@ -31,6 +32,7 @@ test('M1 — five journeys fit fully within a desktop screen, without nested pag
    if(metrics.childMinTop<metrics.pageTop-2||metrics.childMaxBottom>metrics.pageBottom+2)
     failures.push(`${view} ${w}: child outside page [${Math.round(metrics.childMinTop-metrics.pageTop)},${Math.round(metrics.childMaxBottom-metrics.pageBottom)}]`);
    if(metrics.pageBottom>metrics.viewportHeight)failures.push(`${view} ${w}: content below viewport`);
+   if(metrics.titleOverflow>3)failures.push(`${view} ${w}: clipped page title ${metrics.titleOverflow}px`);
    if(w===1280||w===1648)await page.screenshot({path:`test-results/mono-${view}-${w}x${h}.png`,fullPage:true});
   }
  }
