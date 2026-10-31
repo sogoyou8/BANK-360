@@ -447,3 +447,28 @@ test('X1.9 — governance avoids implying official certification and explains ev
  await expect(page.locator('.x1-gov-methods')).toContainText('validation');
  await expect(page.locator('.x1-gov-exports')).toContainText('Données agrégées à télécharger');
 });
+
+
+test('X1.9.1 — mobile KPI and comparison labels are not truncated with ellipses',async({page})=>{
+ await page.setViewportSize({width:390,height:844});
+ await openX1(page);
+ const metrics=await page.locator('.x1-summary>div small').evaluateAll(nodes=>nodes.map(el=>{
+  const css=getComputedStyle(el);
+  return {text:el.textContent||'',whiteSpace:css.whiteSpace,overflow:css.overflow,scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,scrollHeight:el.scrollHeight,clientHeight:el.clientHeight};
+ }));
+ expect(metrics).toHaveLength(4);
+ expect(metrics.every(x=>x.whiteSpace==='normal'&&x.overflow==='visible'),'all KPI labels wrap without clipping').toBe(true);
+ expect(metrics.every(x=>x.scrollWidth<=x.clientWidth+1),'all KPI texts fit horizontally').toBe(true);
+ expect(metrics.every(x=>x.scrollHeight<=x.clientHeight+1),'all KPI texts fit vertically').toBe(true);
+ const reference=page.locator('.x1-credit-panel .x1-comparison small').nth(2);
+ await expect(reference).toContainText('Référence');
+ const ref=await reference.evaluate(el=>({
+  whiteSpace:getComputedStyle(el).whiteSpace,
+  scrollWidth:el.scrollWidth,clientWidth:el.clientWidth,scrollHeight:el.scrollHeight,clientHeight:el.clientHeight
+ }));
+ expect(ref.whiteSpace).toBe('normal');
+ expect(ref.scrollWidth).toBeLessThanOrEqual(ref.clientWidth+1);
+ expect(ref.scrollHeight).toBeLessThanOrEqual(ref.clientHeight+1);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(3);
+ await page.screenshot({path:'test-results/x19-mobile-legible-390x844.png',fullPage:true});
+});
