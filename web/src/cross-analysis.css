@@ -537,3 +537,48 @@
  .x1-matrix-section .x1-matrix-mobile-help{display:inline;color:#d3e4ff;font-weight:600}
  :root[data-theme=light] .x1-matrix-section .x1-matrix-mobile-help{color:#225381}
 }
+
+/* X1.9 — approachable Aurora: strengthen legibility without moving the 2-page grid. */
+.x1-heading-copy small{font-size:12px;color:#c4d7f0;line-height:1.4}
+.x1-root .x1-filter-group label{font-size:10px;color:#becfec}
+.x1-root select{font-size:12px}
+.x1-root .x1-card-head small{font-size:10px;color:#b6c9e8}
+.x1-summary small{font-size:10px;color:#bfd4eb}
+.x1-chart h3 small,.x1-subtitle span{font-size:9px;color:#b0c7e6}
+.x1-matrix-head span{font-size:10px;color:#c3d7f2}
+.x1-bar small,.x1-day-bars small,.x1-horizontal-bars button span{font-size:9px}
+.x1-model-note{font-size:10px}
+.x1-gov-banner small,.x1-proof-row small,.x1-method-link small,.x1-export-row small,.x1-setting-row small{font-size:10px}
+.x1-proof-footer{font-size:10px;color:#b6cbeb}
+.x1-matrix-row button:not(:disabled),.x1-compare-open,.x1-model-note{cursor:pointer}
+.x1-matrix-row button:hover:not(:disabled){border-color:#a0eeff;box-shadow:0 0 0 1px #8adaff8c,0 0 12px #70b9ff40;filter:brightness(1.18)}
+.x1-compare-open:hover,.x1-compare-open:focus-visible{background:#507ad0;border-color:#a8d4ff;box-shadow:0 0 12px #6baaff63}
+.x1-model-note:hover{background:#6365a04d;border-color:#b2adfa82}
+.x1-metric-glossary{display:flex;align-items:flex-start;gap:10px;margin-top:16px;padding:14px 16px;border:1px solid #8eb2ec66;border-radius:12px;background:#1c3969c4;color:#cbe0f7}
+.x1-metric-glossary svg{flex:none;color:#85c8ff;margin-top:2px}
+.x1-metric-glossary p{font-size:12px;line-height:1.65;color:inherit;margin:0}
+.x1-metric-glossary strong{color:#f2f7ff}
+.x1-inspector-expanded .x1-compare-panel p,.x1-inspector-expanded .x1-model-inspection>p{font-size:12px;line-height:1.6}
+.x1-inspector-expanded .x1-inspector-compare-charts>div{height:clamp(210px,31vh,320px)}
+.x1-inspector-expanded .x1-inspector-compare-charts h3{font-size:14px}
+.x1-inspector-expanded .x1-model-kpis>div{min-height:95px}
+:root[data-theme=light] .x1-heading-copy small{color:#294f76}
+:root[data-theme=light] .x1-metric-glossary{background:#e1effe;color:#284c71;border-color:#92afd2}
+:root[data-theme=light] .x1-metric-glossary strong{color:#194061}
+:root[data-theme=light] .x1-root .x1-filter-group label{color:#325677}
+:root[data-theme=light] .x1-root .x1-card-head small{color:#476487}
+@media(min-width:901px) and (max-height:800px){
+ .x1-root .x1-card-head small{font-size:9.5px}
+ .x1-model-note{font-size:9px}
+ .x1-summary small{font-size:9.5px}
+ .x1-inspector-expanded .x1-inspector-compare-charts>div{height:clamp(205px,31vh,280px)}
+}
+@media(max-width:900px){
+ .x1-inspector-expanded .x1-inspector-compare-charts>div{height:195px}
+ .x1-metric-glossary{padding:11px}
+ .x1-metric-glossary p{font-size:11px}
+}
+@media(max-width:520px){
+ .x1-heading-copy small{font-size:11px}
+ .x1-root .x1-card-head small{font-size:9px}
+}
