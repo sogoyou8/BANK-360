@@ -434,3 +434,72 @@
  .x1-inspector-expanded .x1-inspector-scroll{overflow:auto}
  .x1-inspector-expanded .x1-inspector-table tbody{visibility:visible}
 }
+
+/* X1.6 — true readable light mode for the two Aurora workspaces (no layout shift). */
+:root[data-theme=light] .x1-root{color:#193656}
+:root[data-theme=light] .x1-summary,
+:root[data-theme=light] .x1-gov-banner{background:linear-gradient(145deg,#e4f1ff,#cbdff2);border-color:#8ca9ce;color:#193656}
+:root[data-theme=light] .x1-root select{background:#f7faff;border-color:#87a3ca;color:#163456}
+:root[data-theme=light] .x1-filter-group label,
+:root[data-theme=light] .x1-card-head label,
+:root[data-theme=light] .x1-root .x1-detail-actions label{color:#365774}
+:root[data-theme=light] .x1-summary small,
+:root[data-theme=light] .x1-gov-banner small,
+:root[data-theme=light] .x1-card-head small,
+:root[data-theme=light] .x1-heading-copy small{color:#39597c}
+:root[data-theme=light] .x1-gov-banner h2{color:#0a705f}
+:root[data-theme=light] .x1-comparison,
+:root[data-theme=light] .x1-month-inline,
+:root[data-theme=light] .x1-matrix-section,
+:root[data-theme=light] .x1-model-note{background:#d8e8fa;border-color:#8eacd4;color:#1c3b60}
+:root[data-theme=light] .x1-comparison small,
+:root[data-theme=light] .x1-source-axis,
+:root[data-theme=light] .x1-subtitle span,
+:root[data-theme=light] .x1-month-inline strong,
+:root[data-theme=light] .x1-month-inline span,
+:root[data-theme=light] .x1-model-note>span{color:#325676}
+:root[data-theme=light] .x1-comparison b,
+:root[data-theme=light] .x1-comparison>div:nth-child(2) b{color:#1f548e}
+:root[data-theme=light] .x1-fraud-comparison>div:first-child b{color:#923e6e}
+:root[data-theme=light] .x1-matrix-row button{color:#143458;text-shadow:none;border-color:#739ace}
+:root[data-theme=light] .x1-matrix-row button[aria-pressed=true]{color:#fff}
+:root[data-theme=light] .x1-matrix-head span,
+:root[data-theme=light] .x1-matrix-row strong{color:#284c77}
+:root[data-theme=light] .x1-chart,
+:root[data-theme=light] .x1-kpi,
+:root[data-theme=light] .x1-inspector-compare-kpis>div,
+:root[data-theme=light] .x1-model-kpis>div,
+:root[data-theme=light] .x1-decile-grid>div{background:#e9f2fc;border-color:#91afd2;color:#193958}
+:root[data-theme=light] .x1-chart h3,
+:root[data-theme=light] .x1-chart h3 small,
+:root[data-theme=light] .x1-bar b,
+:root[data-theme=light] .x1-bar small,
+:root[data-theme=light] .x1-day-bars b,
+:root[data-theme=light] .x1-day-bars small,
+:root[data-theme=light] .x1-horizontal-bars button,
+:root[data-theme=light] .x1-model-items>div,
+:root[data-theme=light] .x1-model-items>small{color:#244c74}
+:root[data-theme=light] .x1-inspector-surface{background:linear-gradient(135deg,#ebf4ff,#d4e5f7);border-color:#88a9d0;color:#16375d}
+:root[data-theme=light] .x1-inspector-tabs,
+:root[data-theme=light] .x1-inspector-data-toolbar>div,
+:root[data-theme=light] .x1-model-toolbar>div{background:#d1e1f4;border-color:#8aa9d0}
+:root[data-theme=light] .x1-inspector-tabs button:not([aria-selected=true]),
+:root[data-theme=light] .x1-inspector-data-toolbar button:not([aria-selected=true]),
+:root[data-theme=light] .x1-model-toolbar button:not([aria-selected=true]):not([aria-pressed=true]),
+:root[data-theme=light] .x1-inspector-head small,
+:root[data-theme=light] .x1-inspector-foot,
+:root[data-theme=light] .x1-inspector-evidence p,
+:root[data-theme=light] .x1-model-inspection p,
+:root[data-theme=light] .x1-compare-panel p{color:#305475}
+:root[data-theme=light] .x1-inspector-table th{background:#b8d0eb;color:#173b63}
+:root[data-theme=light] .x1-inspector-table td,
+:root[data-theme=light] .x1-proof-details em{color:#214464}
+:root[data-theme=light] .x1-proof-details strong{color:#125887}
+:root[data-theme=light] .x1-proof-row[aria-expanded=true]{background:#cadff6}
+:root[data-theme=light] .x1-proof-footer,
+:root[data-theme=light] .x1-limit-text,
+:root[data-theme=light] .x1-setting-row,
+:root[data-theme=light] .x1-setting-row small,
+:root[data-theme=light] .x1-gov-toolbar button:not([aria-pressed=true]){color:#355679}
+:root[data-theme=light] .x1-inspector-limit{background:#eef6ff;color:#23476c;border-color:#8aa8cd}
+:root[data-theme=light] .x1-selection-feedback{background:#d9edfa;color:#184668;border-color:#82b4d8}
