@@ -180,10 +180,10 @@
  .grl-frame{padding-top:5px;padding-bottom:3px}
  .grl-page{gap:5px}
  .grl-page-title h1{font-size:20px}
- .grl-page[data-testid="guided-credit"]{grid-template-rows:49px 63px 45px minmax(0,1fr) 66px}
- .grl-page[data-testid="guided-fraud"]{grid-template-rows:49px 64px 40px minmax(0,1fr) 45px 66px}
- .grl-page[data-testid="guided-models"]{grid-template-rows:49px 41px 64px minmax(0,1fr) 43px}
- .grl-page[data-testid="guided-evidence"]{grid-template-rows:49px 41px minmax(0,1fr) 75px}
+ .grl-page[data-testid="guided-credit"]{grid-template-rows:58px 63px 45px minmax(0,1fr) 66px}
+ .grl-page[data-testid="guided-fraud"]{grid-template-rows:58px 64px 40px minmax(0,1fr) 45px 66px}
+ .grl-page[data-testid="guided-models"]{grid-template-rows:58px 41px 64px minmax(0,1fr) 43px}
+ .grl-page[data-testid="guided-evidence"]{grid-template-rows:58px 41px minmax(0,1fr) 75px}
  .grl-figure strong{font-size:25px}
  .grl-figure span{font-size:9px}
  .grl-stage{padding:8px 10px}
@@ -213,4 +213,10 @@
  .grl-evidence-export-details[open]>summary{z-index:160!important;pointer-events:auto;isolation:isolate}
  .grl-details-overlay[open]>.grl-table-scroll,
  .grl-evidence-export-details[open]>.grl-stage{z-index:145}
+}
+
+@media(min-width:901px) and (min-height:650px) and (max-height:765px){
+ /* The page question and data disclaimer remain readable at laptop heights. */
+ .grl-page-title{padding-top:1px;padding-bottom:2px}
+ .grl-page-title p{line-height:1.15;margin-top:3px}
 }
