@@ -107,10 +107,16 @@ function Credit({go,filters,setFilters,openModel}:{go:(p:View)=>void;filters:Cre
      </div>
     </div><p className="grl-footnote">Plafond = limite de crédit, pas encours de prêt. Le taux de chaque cellule est calculé à partir des effectifs.</p>
    </section>
-   <aside className="grl-side-reading"><span className="grl-eyebrow">INTERPRÉTATION DU SEGMENT</span><h3>{selected?'Sélection active':'Portefeuille complet'}</h3><p>{filters.age==='Tout'?'Tous âges':filters.age} · {filters.limit==='Tout'?'Tous plafonds':filters.limit} · {filters.status==='Tout'?'Tous statuts':statusName(filters.status)}</p>
-    <strong>{totals.total?pct(totals.rate):'Aucun résultat'}</strong><span>{num(totals.defaults)} défauts sur {num(totals.total)} dossiers</span>
-    <div className="grl-reading-compare"><span>Référence : {ref.total?pct(ref.rate):'—'}</span><b>{difference===null?'—':(difference>0?'+':'')+decimals(difference,1)+' point(s)'}</b></div>
-    <Context>Il s'agit d'une différence descriptive, non d'un effet causal. Sélectionnez une cellule ou modifiez les filtres pour examiner la même cohorte.</Context>
+   <aside className="grl-side-reading"><span className="grl-eyebrow">{selected?'INTERPRÉTATION DU SEGMENT':'COMMENT EXPLORER'}</span>
+    {selected?<><h3>Sélection active</h3><p>{filters.age==='Tout'?'Tous âges':filters.age} · {filters.limit==='Tout'?'Tous plafonds':filters.limit} · {filters.status==='Tout'?'Tous statuts':statusName(filters.status)}</p>
+     <strong>{totals.total?pct(totals.rate):'Aucun résultat'}</strong><span>{num(totals.defaults)} défauts sur {num(totals.total)} dossiers</span>
+     <div className="grl-reading-compare"><span>Référence : {ref.total?pct(ref.rate):'—'}</span><b>{difference===null?'—':(difference>0?'+':'')+decimals(difference,1)+' pt'}</b></div>
+     <Context>L'écart est descriptif, pas causal. La référence conserve le même statut de septembre quand celui-ci est filtré.</Context>
+    </>:<><h3>Choisissez un segment</h3>
+     <p>Sélectionnez une case âge × plafond pour comparer son taux de défaut au portefeuille, puis observer les retards de ces mêmes dossiers.</p>
+     <div className="grl-reading-compare"><span>Référence sans filtre</span><b>{pct(ref.rate)}</b></div>
+     <Context>Une couleur plus forte indique un taux plus élevé, pas davantage de dossiers. Survolez une case pour connaître les effectifs.</Context>
+    </>}
    </aside>
   </div>
   <section className="grl-stage grl-monthly"><div className="grl-stage-heading"><div><h2>Retards de paiement · avril à septembre 2005</h2><p>Même cohorte filtrée sur les six mois ; les observations mensuelles ne sont pas de nouveaux clients.</p></div></div>
@@ -135,10 +141,17 @@ function Fraud({go,axis,setAxis,selection,setSelection,openModel}:{go:(p:View)=>
   <div className="grl-fraud-grid"><section className="grl-stage"><div className="grl-stage-heading"><div><h2>{axis==='day'?'Alertes par jour simulé':'Alertes par type de transaction'}</h2><p>{axis==='day'?'J25–J30 · test réservé':'CASH_OUT et TRANSFER · agrégats du test'}</p></div><small>Cliquer pour sélectionner</small></div>
    <ColumnBars unit="alertes" values={source.map(x=>({key:'day' in x?String(x.day):x.type,label:'day' in x?'J'+x.day:x.type,value:x.alerts,hint:num(x.tp)+' vraies, '+num(x.fp)+' fausses'}))}
    selected={selection} onPick={key=>setSelection(selection===key?'Tous':key)}/>
-  </section><aside className="grl-side-reading grl-fraud-reading"><span className="grl-eyebrow grl-eyebrow-pink">PÉRIMÈTRE ACTIF</span><h3>{selection==='Tous'?'Test complet':axis==='day'?'Jour simulé J'+selection:'Type '+selection}</h3>
-   <strong>{num(current.alerts)} alertes</strong><span>{num(current.tp)} vraies · {num(current.fp)} fausses · {num(current.fn)} fraudes manquées</span>
-   <div className="grl-reading-compare"><span>Précision : {precision===null?'—':pct(precision)}</span><b>Rappel : {recall===null?'—':pct(recall)}</b></div>
-   <Context>Les chiffres ci-dessus correspondent au {selection==='Tous'?'test global':axis==='day'?'jour choisi':'type choisi'}. Les métriques de classement du modèle restent globales et ne sont pas recalculées.</Context>
+  </section><aside className="grl-side-reading grl-fraud-reading"><span className="grl-eyebrow grl-eyebrow-pink">{selection==='Tous'?'COMMENT LIRE LES ALERTES':'PÉRIMÈTRE SÉLECTIONNÉ'}</span>
+   {selection==='Tous'?<><h3>Une alerte n'est pas une fraude confirmée</h3>
+    <p>Sur le test PaySim simulé, une partie des alertes du modèle est correcte ; d'autres sont de fausses alertes.</p>
+    <strong>{num(current.fn)} fraudes manquées</strong>
+    <span>Ces fraudes simulées n'ont pas déclenché d'alerte au seuil expérimental retenu.</span>
+    <Context>Sélectionnez un jour ou un type pour examiner précisément les alertes de ce groupe. Les scores de classement B4 restent globaux.</Context>
+   </>:<><h3>{axis==='day'?'Jour simulé J'+selection:'Type '+selection}</h3>
+    <strong>{num(current.alerts)} alertes</strong><span>{num(current.tp)} vraies · {num(current.fp)} fausses · {num(current.fn)} fraudes manquées</span>
+    <div className="grl-reading-compare"><span>Précision : {precision===null?'—':pct(precision)}</span><b>Rappel : {recall===null?'—':pct(recall)}</b></div>
+    <Context>Ces chiffres ne concernent que le {axis==='day'?'jour':'type'} choisi. Les métriques globales du modèle B4 restent inchangées.</Context>
+   </>}
   </aside></div>
   <Context kind="warning"><strong>Limite majeure B4.</strong> La prévalence des fraudes simulées passe de {pct(b4.prevalence_by_partition.train,2)} à l'entraînement à {pct(b4.prevalence_by_partition.test,2)} au test. La probabilité moyenne prédite ({pct(b4.test_predicted_probability_mean,2)}) sous-estime la fréquence observée : pas d'usage opérationnel des scores.</Context>
   <details className="grl-details"><summary>Voir les groupes et les erreurs <span>{source.length} groupes · agrégats du test</span></summary><div className="grl-table-scroll"><table><thead><tr><th>Groupe</th><th>Transactions</th><th>Fraudes</th><th>Alertes</th><th>VP</th><th>FP</th><th>FN</th></tr></thead><tbody>{source.map(x=><tr key={'day' in x?x.day:x.type}><td>{'day' in x?'J'+x.day:x.type}</td><td>{num(x.transactions)}</td><td>{num(x.frauds)}</td><td>{num(x.alerts)}</td><td>{num(x.tp)}</td><td>{num(x.fp)}</td><td>{num(x.fn)}</td></tr>)}</tbody></table></div></details>
@@ -158,7 +171,10 @@ function Models({go,domain,setDomain}:{go:(p:View)=>void;domain:Domain;setDomain
   <div className="grl-model-grid"><section className="grl-stage"><div className="grl-stage-heading"><div><h2>Risque observé par décile du score</h2><p>{credit?'Part des défauts dans chaque décile de test':'Part de fraudes simulées dans chaque décile de test'}</p></div></div><RankBars values={deciles}/></section>
    <section className="grl-stage"><div className="grl-stage-heading"><div><h2>Calibration · probabilité et fréquence observée</h2><p>Deux valeurs sur une même population de test ; comparaison descriptive.</p></div></div><div className="grl-calibration"><div className="grl-cal-legend"><i/> Score prédit <i/> Taux observé</div>{calibration.map(x=><div className="grl-cal-row" key={x.label}><small>{x.label}</small><div><span style={{width:Math.min(100,x.predicted*100)+'%'}}/><em style={{width:Math.min(100,x.observed*100)+'%'}}/></div><b>{pct(x.predicted,1)} / {pct(x.observed,1)}</b></div>)}</div></section>
   </div>
-  <div className="grl-model-grid grl-model-bottom"><section className="grl-stage"><div className="grl-stage-heading"><h2>Matrice de confusion · seuil gelé</h2></div><div className="grl-confusion">{[['VP · détectés',confusion.tp],['FP · fausses alertes',confusion.fp],['FN · cas manqués',confusion.fn],['VN · négatifs corrects',confusion.tn]].map(([label,n])=><div key={String(label)}><small>{label}</small><strong>{num(Number(n))}</strong></div>)}</div></section>
+  <div className="grl-model-grid grl-model-bottom"><section className="grl-stage"><div className="grl-stage-heading"><h2>Matrice de confusion · seuil gelé</h2></div><div className="grl-confusion">{(credit
+     ? [['VP · défauts repérés',confusion.tp],['FP · défauts prédits à tort',confusion.fp],['FN · défauts manqués',confusion.fn],['VN · dossiers sans défaut reconnus',confusion.tn]]
+     : [['VP · fraudes détectées',confusion.tp],['FP · fausses alertes',confusion.fp],['FN · fraudes manquées',confusion.fn],['VN · transactions non frauduleuses reconnues',confusion.tn]]
+    ).map(([label,n])=><div key={String(label)}><small>{label}</small><strong>{num(Number(n))}</strong></div>)}</div></section>
    <section className="grl-stage grl-limit"><div className="grl-stage-heading"><h2>Interprétation et limites</h2></div>{credit?<><p><strong>Seuil expérimental : {decimals(b3.protocol.threshold,2)}.</strong> Choisi sur validation avec F2, pas pour refuser un crédit.</p><p>Entraînement/test stratifiés sans validation temporelle. Les résultats ne sont pas transférables à une banque contemporaine.</p><p>Variable influente sur validation : {driverLabels[creditDrivers[0].name]||creditDrivers[0].name} — importance non causale.</p></>:<><p><strong>Dérive de prévalence importante.</strong> Train {pct(b4.prevalence_by_partition.train,2)}, test {pct(b4.prevalence_by_partition.test,2)}.</p><p>La moyenne des scores prédits est {pct(b4.test_predicted_probability_mean,2)} pour {pct(b4.test_observed_fraud_rate,2)} de fraudes observées sur le test.</p><p>Les probabilités ne sont pas calibrées pour ce test : aucun transfert possible vers la production.</p></>}
    </section></div>
   <Context>Les PR-AUC B3 et B4 concernent des populations, prévalences et protocoles différents : ne pas les classer comme deux modèles d'un même problème.</Context>
