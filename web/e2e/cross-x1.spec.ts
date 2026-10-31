@@ -265,6 +265,12 @@ test('X1.8 — short desktop inspector offers a complete data preview and expand
  });
  expect(g.height).toBeGreaterThan(350);
  expect(g.scrollHeight).toBeGreaterThan(200);
+ const visuallyOnTop=await expanded.evaluate(dialog=>{
+  const r=dialog.getBoundingClientRect();
+  const front=document.elementFromPoint(r.left+r.width/2,r.top+Math.min(180,r.height/2));
+  return !!front&&dialog.contains(front);
+ });
+ expect(visuallyOnTop,'expanded inspector must be on top of the credit/fraud panels').toBe(true);
  await page.screenshot({path:'test-results/x18-expanded-1280x720.png',fullPage:true});
 });
 
