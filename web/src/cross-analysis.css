@@ -582,3 +582,13 @@
  .x1-heading-copy small{font-size:11px}
  .x1-root .x1-card-head small{font-size:9px}
 }
+
+/* X1.9.1 — small-screen KPI labels must be readable, not ellipsized mid-concept. */
+@media(max-width:520px){
+ .x1-summary>div{align-items:flex-start;min-height:72px;padding:6px 4px}
+ .x1-summary>div svg{flex:none;margin-top:3px}
+ .x1-summary small{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35;overflow-wrap:break-word}
+ .x1-comparison{min-height:76px;align-items:center}
+ .x1-comparison small{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.25;overflow-wrap:break-word}
+ .x1-credit-panel{min-height:645px}
+}
