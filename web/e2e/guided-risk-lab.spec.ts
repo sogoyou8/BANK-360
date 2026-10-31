@@ -30,6 +30,9 @@ test('R2 — credit matrix drives one coherent UCI cohort, six monthly observati
  await page.getByText('Consulter les groupes agrégés').click();
  const rowCounts=await page.locator('.grl-table-scroll tbody tr').count();
  expect(rowCounts).toBeGreaterThan(0);
+ // On desktop the aggregate details are an overlay: close it before using the toolbar.
+ await page.locator('.grl-details-overlay > summary').click();
+ await expect(page.locator('.grl-details-overlay')).not.toHaveAttribute('open',/.+/);
  const download=page.waitForEvent('download');
  await page.getByRole('button',{name:/Exporter.*lignes/}).first().click();
  const file=await download; expect(file.suggestedFilename()).toMatch(/credit-cohortes-uci\.csv$/);
