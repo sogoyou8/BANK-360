@@ -157,7 +157,7 @@ function Fraud({go,axis,setAxis,selection,setSelection,openModel}:{go:(p:View)=>
     <div className="grl-reading-compare"><span>Précision : {precision===null?'—':pct(precision)}</span><b>Rappel : {recall===null?'—':pct(recall)}</b></div>
     <Context>Ces chiffres ne concernent que le {axis==='day'?'jour':'type'} choisi. Les métriques globales du modèle B4 restent inchangées.</Context>
    </>}
-   <div className="grl-fraud-composition" role="img" aria-label={'Répartition des '+num(current.alerts)+' alertes sélectionnées : '+num(current.tp)+' vraies alertes et '+num(current.fp)+' fausses alertes.'}>
+   <div className={'grl-fraud-composition'+(current.alerts===0?' is-empty':'')} role="img" aria-label={'Répartition des '+num(current.alerts)+' alertes sélectionnées : '+num(current.tp)+' vraies alertes et '+num(current.fp)+' fausses alertes.'}>
     <div className="grl-fraud-composition-head"><span>Répartition des alertes</span><small>{current.alerts?'Sur '+num(current.alerts)+' alertes':'Aucune alerte'}</small></div>
     <div className="grl-fraud-stack" aria-hidden="true"><i style={{width:(current.alerts?current.tp/current.alerts*100:0)+'%'}}/><em style={{width:(current.alerts?current.fp/current.alerts*100:0)+'%'}}/></div>
     <div className="grl-fraud-legend"><span><i/> Vraies (simulation) <b>{current.alerts?pct(current.tp/current.alerts):'—'}</b></span><span><i/> Fausses <b>{current.alerts?pct(current.fp/current.alerts):'—'}</b></span></div>
