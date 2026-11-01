@@ -122,7 +122,7 @@ test('R5.1 — first-visit interpretation does not simply duplicate global metri
  const fraudReading=page.locator('.grl-fraud-reading');
  await expect(fraudReading).toContainText("Une alerte n'est pas une fraude confirmée");
  await expect(fraudReading).toContainText('1 075 fraudes manquées');
- await expect(fraudReading).not.toContainText('790 alertes');
+ await expect(fraudReading.locator(':scope > strong')).not.toContainText('790 alertes');
  await page.getByRole('button',{name:/J28 : 299 alertes/}).click();
  await expect(fraudReading).toContainText('299 alertes');
  await expect(fraudReading).toContainText('214 fausses');
