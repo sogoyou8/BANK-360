@@ -44,6 +44,16 @@ La version guidée conserve les cinq vues et le format mono-écran desktop valid
 
 Les nouveaux contrôles sont dans `e2e/guided-m3-readiness.spec.ts` et la procédure de recette est dans `../docs/M3-predeploy-readiness.md`. **PR #25 reste brouillon : pas de merge, pas de déploiement.** La validation CI sur le commit de tête et la revue des nouvelles captures précèdent toute décision de publication.
 
+## M4 — Guide pour découvrir le projet
+
+**Avant de parcourir les tableaux**, cliquer sur « Comprendre le projet » depuis l'Accueil ou dans l'en-tête de chaque vue. Une aide contextuelle explique l'objectif, les filtres et les limites de chaque étude, sans nouvelle page ni changement de données.
+
+Le [dossier pédagogique PDF de 8 pages](public/bank360-guide.pdf) est également consultable dans un nouvel onglet et téléchargeable. Il présente le problème, les deux sources indépendantes (UCI historique et PaySim simulé), les cinq vues, les indicateurs, les modèles et leurs limites, ainsi que les preuves.
+
+En mode hors ligne, `npm run build && npm run standalone` incorpore le PDF dans l'aperçu HTML autonome pour permettre sa consultation sans serveur. Les scénarios M4 sont vérifiés dans `e2e/guided-m4-project-guide.spec.ts` et le contrat est détaillé dans `../docs/M4-guide-pedagogique.md`.
+
+**Rappel :** étude analytique / démonstration portfolio, non outil bancaire opérationnel. La PR reste en brouillon, sans merge ni publication.
+
 ## Navigation classique (référence B5)
 
 8 pages / 6 sections : Vue d’ensemble ; **Crédit unifié** (Portefeuille & segmentation, avec 3 perspectives internes Vue globale / Risque / Paiements) ; Détection de fraude, Analyse des alertes ; Modèles & performance, Explorateur de données ; Qualité & traçabilité ; Rapports & préférences. Les trois anciennes pages Crédit deviennent une seule page interactive : filtres communs et six modules.
