@@ -9,6 +9,7 @@ import {creditCalibration,creditDrivers,driverLabels} from './riskEvidence';
 import {exportReport,type ReportDataset,type ExportFormat} from './reportExports';
 import './guided-risk-lab.css';
 import './guided-mono-screen.css';
+import './guided-m2-composition.css';
 
 type View='overview'|'credit'|'fraud'|'models'|'evidence';
 type Domain='credit'|'fraud';
@@ -155,6 +156,11 @@ function Fraud({go,axis,setAxis,selection,setSelection,openModel}:{go:(p:View)=>
     <div className="grl-reading-compare"><span>Précision : {precision===null?'—':pct(precision)}</span><b>Rappel : {recall===null?'—':pct(recall)}</b></div>
     <Context>Ces chiffres ne concernent que le {axis==='day'?'jour':'type'} choisi. Les métriques globales du modèle B4 restent inchangées.</Context>
    </>}
+   <div className="grl-fraud-composition" role="img" aria-label={'Répartition des '+num(current.alerts)+' alertes sélectionnées : '+num(current.tp)+' vraies alertes et '+num(current.fp)+' fausses alertes.'}>
+    <div className="grl-fraud-composition-head"><span>Répartition des alertes</span><small>{current.alerts?'Sur '+num(current.alerts)+' alertes':'Aucune alerte'}</small></div>
+    <div className="grl-fraud-stack" aria-hidden="true"><i style={{width:(current.alerts?current.tp/current.alerts*100:0)+'%'}}/><em style={{width:(current.alerts?current.fp/current.alerts*100:0)+'%'}}/></div>
+    <div className="grl-fraud-legend"><span><i/> Confirmées <b>{current.alerts?pct(current.tp/current.alerts):'—'}</b></span><span><i/> Fausses <b>{current.alerts?pct(current.fp/current.alerts):'—'}</b></span></div>
+   </div>
   </aside></div>
   <Context kind="warning"><strong>Limite majeure B4.</strong> La prévalence des fraudes simulées passe de {pct(b4.prevalence_by_partition.train,2)} à l'entraînement à {pct(b4.prevalence_by_partition.test,2)} au test. La probabilité moyenne prédite ({pct(b4.test_predicted_probability_mean,2)}) sous-estime la fréquence observée : pas d'usage opérationnel des scores.</Context>
   <div className="grl-bottom-actions">
