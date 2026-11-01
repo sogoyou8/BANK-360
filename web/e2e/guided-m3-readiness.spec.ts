@@ -21,6 +21,7 @@ test('M3 — all five routes are discoverable without sideways scrolling on narr
   expect(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)).toBeLessThanOrEqual(3);
   await nav.getByRole('button',{name:/Preuves/}).click();
   await expect(page.getByTestId('guided-evidence')).toBeVisible();
+  if(width===390)await page.screenshot({path:'test-results/m3-mobile-nav-390.png',fullPage:true});
  }
 });
 
@@ -41,6 +42,7 @@ test('M3 — every real UCI cohort cell is visible and selectable on narrow phon
   expect(geometry.overflow).toBeLessThanOrEqual(3);
   await cells.last().click();
   await expect(cells.last()).toHaveAttribute('aria-pressed','true');
+  if(width===390)await page.screenshot({path:'test-results/m3-mobile-credit-390.png',fullPage:true});
  }
 });
 
@@ -60,6 +62,7 @@ test('M3 — six simulated days fit one row, and all five type categories remain
  await expect(metrics.locator('.grl-figure').nth(2).locator('strong')).toHaveText('—');
  await expect(metrics.locator('.grl-figure').nth(3).locator('strong')).toHaveText('—');
  await expect(page.locator('.grl-fraud-composition')).toContainText('Aucune alerte');
+ await page.screenshot({path:'test-results/m3-mobile-fraud-zero-alert-390.png',fullPage:true});
 });
 
 test('M3 — CSV does not turn undefined PaySim group precision or recall into a false zero',async({page})=>{
