@@ -10,6 +10,7 @@ import {exportReport,type ReportDataset,type ExportFormat} from './reportExports
 import './guided-risk-lab.css';
 import './guided-mono-screen.css';
 import './guided-m2-composition.css';
+import './guided-m3-readiness.css';
 
 type View='overview'|'credit'|'fraud'|'models'|'evidence';
 type Domain='credit'|'fraud';
@@ -41,7 +42,7 @@ const fraudDataset=(axis:FraudAxis,selection:string):ReportDataset=>{
  const rows=source.filter(x=>selection==='Tous'||('day' in x?String(x.day):x.type)===selection);
  return {name:'bank360-paysim-'+axis+'-test',columns:['group','transactions','frauds','alerts','tp','fp','fn','tn','precision','recall'],rows:rows.map(x=>({
   group:'day' in x?'J'+x.day:x.type,transactions:x.transactions,frauds:x.frauds,alerts:x.alerts,tp:x.tp,fp:x.fp,fn:x.fn,tn:x.tn,
-  precision:x.alerts?x.tp/x.alerts:0,recall:x.frauds?x.tp/x.frauds:0
+  precision:x.alerts?x.tp/x.alerts:null,recall:x.frauds?x.tp/x.frauds:null
  }))};
 };
 function Figure({label,value,detail,tone='blue'}:{label:string;value:string;detail:string;tone?:'blue'|'pink'|'neutral'}){
@@ -102,7 +103,7 @@ function Credit({go,filters,setFilters,openModel}:{go:(p:View)=>void;filters:Cre
    <button className="grl-quiet" onClick={()=>setFilters(initialFilters)}><RotateCcw size={15}/> Réinitialiser</button>
   </div>
   <div className="grl-credit-grid">
-   <section className="grl-stage"><div className="grl-stage-heading"><div><h2>Carte des défauts · âge × plafond</h2><p>Taux de défaut du mois suivant · la couleur correspond au taux, pas au volume.</p></div><small>Cliquez une cellule pour filtrer</small></div>
+   <section className="grl-stage"><div className="grl-stage-heading"><div><h2>Carte des défauts · âge × plafond</h2><p>Taux de défaut du mois suivant · la couleur correspond au taux, pas au volume.</p></div><small>Sélectionnez une cellule pour filtrer</small></div>
     <div className="grl-heat-scroll" tabIndex={0} role="region" aria-label="Matrice Crédit : défilement horizontal possible">
      <div className="grl-heat"><span className="grl-heat-axis">Âge / plafond</span>{limits.map(l=><span className="grl-heat-col" key={l}>{l}</span>)}
       {heat.map(group=><div className="grl-heat-row" key={group.age}><b>{group.age}</b>{group.cells.map(x=><button key={x.limitBand} className={filters.age===group.age&&filters.limit===x.limitBand?'is-active':''} style={{backgroundColor:'rgba(77,130,218,'+(.14+.6*x.rate/.5)+')'}} disabled={!x.total} aria-pressed={filters.age===group.age&&filters.limit===x.limitBand} onClick={()=>choose(group.age,x.limitBand)} title={group.age+' · '+x.limitBand+' : '+num(x.defaults)+' défauts / '+num(x.total)+' dossiers'}>{x.total?pct(x.rate):'—'}</button>)}</div>)}
@@ -133,7 +134,7 @@ function Credit({go,filters,setFilters,openModel}:{go:(p:View)=>void;filters:Cre
  </div>;
 }
 function Fraud({go,axis,setAxis,selection,setSelection,openModel}:{go:(p:View)=>void;axis:FraudAxis;setAxis:(axis:FraudAxis)=>void;selection:string;setSelection:(key:string)=>void;openModel:(domain:Domain)=>void}){
- const source=axis==='day'?fraudDays:fraudTypes.filter(x=>x.alerts>0);
+ const source=axis==='day'?fraudDays:fraudTypes;
  const selected=source.find(x=>('day' in x?String(x.day):x.type)===selection);
  const total={transactions:b4test.n,frauds:b4test.frauds,alerts:b4test.alerted,tp:b4test.confusion.tp,fp:b4test.confusion.fp,fn:b4test.confusion.fn};
  const current=selected||total;
@@ -142,7 +143,7 @@ function Fraud({go,axis,setAxis,selection,setSelection,openModel}:{go:(p:View)=>
   <div className="grl-page-title"><div><span className="grl-eyebrow grl-eyebrow-pink">FRAUDE · PAYSIM · SIMULATION</span><h1>Que signale le modèle sur le test ?</h1><p>Test chronologique simulé · aucune détection bancaire réelle.</p></div><button className="grl-inline-link" onClick={()=>openModel('fraud')}>Voir l'évaluation B4 <ArrowRight size={16}/></button></div>
   <div className="grl-metrics grl-fraud-metrics"><Figure tone="pink" label="Alertes · sélection" value={num(current.alerts)} detail={num(current.transactions)+' transactions test'}/><Figure tone="pink" label="Vraies / fausses alertes" value={num(current.tp)+' / '+num(current.fp)} detail="Vrais / faux positifs"/><Figure tone="pink" label="Précision" value={precision===null?'—':pct(precision)} detail="Vraies alertes / alertes"/><Figure tone="pink" label="Rappel" value={recall===null?'—':pct(recall)} detail="Fraudes détectées / fraudes du test"/></div>
   <div className="grl-axis-controls"><div role="group" aria-label="Axe d'analyse PaySim"><button className={axis==='day'?'is-active':''} aria-pressed={axis==='day'} onClick={()=>{setAxis('day');setSelection('Tous')}}>Par jour</button><button className={axis==='type'?'is-active':''} aria-pressed={axis==='type'} onClick={()=>{setAxis('type');setSelection('Tous')}}>Par type</button></div><span>Un seul axe à la fois : aucun croisement jour × type n'est disponible.</span><button className="grl-quiet" onClick={()=>setSelection('Tous')}><RotateCcw size={15}/> Tout afficher</button></div>
-  <div className="grl-fraud-grid"><section className="grl-stage"><div className="grl-stage-heading"><div><h2>{axis==='day'?'Alertes par jour simulé':'Alertes par type de transaction'}</h2><p>{axis==='day'?'J25–J30 · test réservé':'CASH_OUT et TRANSFER · agrégats du test'}</p></div><small>Cliquer pour sélectionner</small></div>
+  <div className="grl-fraud-grid" data-axis={axis}><section className="grl-stage"><div className="grl-stage-heading"><div><h2>{axis==='day'?'Alertes par jour simulé':'Alertes par type de transaction'}</h2><p>{axis==='day'?'J25–J30 · test réservé':'Tous les types du test · certaines catégories ont zéro alerte'}</p></div><small>Cliquer pour sélectionner</small></div>
    <ColumnBars unit="alertes" values={source.map(x=>({key:'day' in x?String(x.day):x.type,label:'day' in x?'J'+x.day:x.type,value:x.alerts,hint:num(x.tp)+' vraies, '+num(x.fp)+' fausses'}))}
    selected={selection} onPick={key=>setSelection(selection===key?'Tous':key)}/>
   </section><aside className="grl-side-reading grl-fraud-reading"><span className="grl-eyebrow grl-eyebrow-pink">{selection==='Tous'?'COMMENT LIRE LES ALERTES':'PÉRIMÈTRE SÉLECTIONNÉ'}</span>
@@ -159,7 +160,7 @@ function Fraud({go,axis,setAxis,selection,setSelection,openModel}:{go:(p:View)=>
    <div className="grl-fraud-composition" role="img" aria-label={'Répartition des '+num(current.alerts)+' alertes sélectionnées : '+num(current.tp)+' vraies alertes et '+num(current.fp)+' fausses alertes.'}>
     <div className="grl-fraud-composition-head"><span>Répartition des alertes</span><small>{current.alerts?'Sur '+num(current.alerts)+' alertes':'Aucune alerte'}</small></div>
     <div className="grl-fraud-stack" aria-hidden="true"><i style={{width:(current.alerts?current.tp/current.alerts*100:0)+'%'}}/><em style={{width:(current.alerts?current.fp/current.alerts*100:0)+'%'}}/></div>
-    <div className="grl-fraud-legend"><span><i/> Confirmées <b>{current.alerts?pct(current.tp/current.alerts):'—'}</b></span><span><i/> Fausses <b>{current.alerts?pct(current.fp/current.alerts):'—'}</b></span></div>
+    <div className="grl-fraud-legend"><span><i/> Vraies (simulation) <b>{current.alerts?pct(current.tp/current.alerts):'—'}</b></span><span><i/> Fausses <b>{current.alerts?pct(current.fp/current.alerts):'—'}</b></span></div>
    </div>
   </aside></div>
   <Context kind="warning"><strong>Limite majeure B4.</strong> La prévalence des fraudes simulées passe de {pct(b4.prevalence_by_partition.train,2)} à l'entraînement à {pct(b4.prevalence_by_partition.test,2)} au test. La probabilité moyenne prédite ({pct(b4.test_predicted_probability_mean,2)}) sous-estime la fréquence observée : pas d'usage opérationnel des scores.</Context>
