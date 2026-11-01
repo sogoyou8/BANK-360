@@ -1,0 +1,43 @@
+/*
+ * M3 — Mobile discoverability and export semantics hardening.
+ * Desktop M2 layout and every source aggregate remain unchanged.
+ * On narrow screens, all five routes and all 25 UCI matrix cells are visible
+ * without a hidden horizontal gesture. The six PaySim days use one chart row.
+ */
+@media(max-width:600px){
+ .grl-frame{padding:12px}
+ .grl-nav{
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;
+  overflow:visible;margin-bottom:14px;padding:0;
+ }
+ .grl-nav button{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  min-width:0;min-height:44px;padding:7px 1px;border-radius:9px;
+ }
+ .grl-nav strong{font-size:clamp(9px,2.55vw,12px);letter-spacing:-.02em;white-space:nowrap}
+ .grl-heat-scroll{overflow-x:visible;padding:0 0 7px;scrollbar-width:none}
+ .grl-heat{
+  min-width:0;width:100%;
+  grid-template-columns:minmax(38px,.85fr) repeat(5,minmax(0,1fr));
+  column-gap:3px;row-gap:4px;
+ }
+ .grl-heat-axis,.grl-heat-col{font-size:8px;line-height:1.15}
+ .grl-heat-row b{font-size:9px;line-height:1.15;overflow-wrap:anywhere}
+ .grl-heat-row button{
+  min-width:0;min-height:36px;padding:2px 0;
+  font-size:clamp(8px,2.45vw,10px);letter-spacing:-.03em;
+ }
+ .grl-fraud-grid .grl-bars{
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  align-items:stretch;gap:3px;min-height:216px;
+ }
+ .grl-fraud-grid[data-axis="type"] .grl-bars{
+  grid-template-columns:repeat(5,minmax(0,1fr));
+ }
+ .grl-fraud-grid .grl-bar{min-width:0;padding:4px 0;gap:5px}
+ .grl-fraud-grid .grl-bar b{font-size:10px}
+ .grl-fraud-grid .grl-bar small{
+  font-size:9px;line-height:1.15;max-width:100%;overflow-wrap:anywhere;
+ }
+ .grl-fraud-grid .grl-bar-track{height:145px;min-height:120px}
+}
