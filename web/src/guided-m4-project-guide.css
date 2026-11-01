@@ -1,0 +1,52 @@
+/* M4 — Contextual pedagogical assistance; leaves all data and calculations unchanged. */
+.grl-guide-top-trigger{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex:none;min-height:34px;padding:7px 11px;border-radius:9px;background:#243b63;color:#eaf4ff;border:1px solid #83a6d164;font-size:11px;font-weight:650;white-space:nowrap}
+.grl-guide-top-trigger:hover,.grl-guide-top-trigger:focus-visible{background:#315080}
+.grl-guide-dialog{position:fixed;inset:0;margin:auto;width:min(615px,calc(100vw - 28px));max-height:min(88dvh,760px);padding:24px;color:#eef5ff;background:linear-gradient(145deg,#172b4b,#0c192e);border:1px solid #7399cf;border-radius:19px;box-shadow:0 24px 90px #0009;overflow-y:auto;line-height:1.55}
+.grl-guide-dialog::backdrop{background:#040914cf;backdrop-filter:blur(8px)}
+.grl-guide-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;border-bottom:1px solid #486482;padding-bottom:15px}
+.grl-guide-dialog h2{font-size:23px;line-height:1.18;letter-spacing:-.02em;margin:0}
+.grl-guide-dialog h3{font-size:13px;color:#86dbeb;letter-spacing:.045em;margin:21px 0 13px}
+.grl-guide-dialog .grl-eyebrow{margin:0 0 7px;font-size:9px}
+.grl-guide-dialog .grl-guide-lead{color:#cee0f4;font-size:13px;line-height:1.55;margin:16px 0 0}
+.grl-guide-dialog ol{padding:0 0 0 24px;margin:0;display:grid;gap:12px}
+.grl-guide-dialog li{padding-left:6px;font-size:12px;color:#e8effa}
+.grl-guide-dialog li::marker{font-weight:800;color:#86dbeb}
+.grl-guide-caveat{background:#4d2d4740;border:1px solid #ba7d9d77;border-radius:11px;padding:13px 15px;margin:22px 0}
+.grl-guide-caveat strong{font-size:12px;color:#ffb9d6}
+.grl-guide-caveat p{font-size:11px;line-height:1.5;color:#eed1e0;margin:6px 0 0}
+.grl-guide-actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.grl-guide-actions button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 13px;min-height:42px;font-size:11px;border-radius:10px;font-weight:700}
+.grl-guide-primary{background:#9ecaff;color:#0c2343;border:1px solid #c6e7ff}
+.grl-guide-primary:hover{background:#c4e2ff}
+.grl-guide-secondary{background:#243b60;color:#e9f4ff;border:1px solid #80a7d5}
+.grl-guide-secondary:hover{background:#32517b}
+.grl-guide-close{background:#253e63;border:1px solid #779bc6;color:#f2f6fe;padding:8px 12px;border-radius:10px;font-size:11px;min-height:38px;white-space:nowrap}
+.grl-guide-dialog :focus-visible{outline:3px solid #8cddfb;outline-offset:3px}
+@media(min-width:901px) and (min-height:650px){
+ .grl-orientation{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ .grl-orientation button{min-width:0;gap:6px;padding:8px 10px}
+ .grl-orientation strong{font-size:11px}
+ .grl-orientation small{font-size:9px;line-height:1.15}
+ .grl-orientation svg{flex:none;width:18px;height:18px}
+}
+@media(max-width:900px) {
+ .grl-orientation{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .grl-orientation button:last-child{grid-column:1/-1}
+}
+@media(max-width:600px){
+ .grl-topbar{row-gap:8px}
+ .grl-guide-top-trigger{order:3;flex:1 1 100%;min-height:42px}
+ .grl-guide-dialog{padding:18px 16px;border-radius:13px}
+ .grl-guide-dialog h2{font-size:20px}
+ .grl-guide-actions button{width:100%}
+ .grl-orientation{grid-template-columns:1fr}
+ .grl-orientation button:last-child{grid-column:auto}
+}
+:root[data-theme=light] .grl-guide-top-trigger{background:#dce9fb;color:#234b7a;border-color:#8ba6cb}
+:root[data-theme=light] .grl-guide-dialog{background:linear-gradient(145deg,#f3f8ff,#e7f0fc);color:#1b3858;border-color:#9db7d8}
+:root[data-theme=light] .grl-guide-dialog .grl-guide-lead,
+:root[data-theme=light] .grl-guide-dialog li{color:#2f516e}
+:root[data-theme=light] .grl-guide-caveat{background:#fbe9f2;border-color:#daacc3}
+:root[data-theme=light] .grl-guide-caveat strong{color:#8a3e67}
+:root[data-theme=light] .grl-guide-caveat p{color:#764c65}
+:root[data-theme=light] .grl-guide-close{background:#dce9fa;color:#264e77;border-color:#9cb7d4}
