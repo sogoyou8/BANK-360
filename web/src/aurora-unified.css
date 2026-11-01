@@ -1,0 +1,552 @@
+/*
+  BANK 360 — X2 Aurora Unified
+  One calm analytical sheet. Existing X1/B5 data, semantics and controls are retained.
+  No transforms, filters, or clipping on the sheet: the expanded inspector stays viewport-fixed.
+*/
+.x2-root{gap:8px}
+.x2-surface{
+ position:relative;display:flex;flex-direction:column;min-width:0;min-height:0;flex:1;
+ border:1px solid rgba(131,164,224,.29);border-radius:23px;
+ background:
+  radial-gradient(ellipse 58% 70% at 13% 17%,rgba(55,109,181,.09),transparent 78%),
+  radial-gradient(ellipse 58% 70% at 91% 12%,rgba(127,84,183,.08),transparent 75%),
+  linear-gradient(155deg,rgba(18,32,66,.76),rgba(9,21,48,.88) 68%,rgba(13,27,54,.82));
+ box-shadow:inset 0 1px rgba(206,228,255,.13),0 18px 52px rgba(1,6,20,.22);
+ overflow:visible;
+}
+.x2-root .x1-filterrail{
+ display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr) auto;
+ gap:14px;align-items:center;padding:5px 9px;
+ border:0;box-shadow:none;border-radius:0;background:transparent;backdrop-filter:none;
+ min-height:55px;height:auto;
+}
+.x2-root .x1-filter-group{gap:8px}
+.x2-root .x1-filter-domain{font-size:10px;letter-spacing:.015em;min-width:90px}
+.x2-root .x1-filter-domain.x1-rose{min-width:113px}
+.x2-root .x1-filter-group label{gap:5px;font-size:10px}
+.x2-root .x1-filter-group select{
+ background:rgba(42,63,110,.29);border:1px solid rgba(134,171,229,.23);
+ border-radius:7px;height:31px;color:#e3eaf8;font-size:11px;
+}
+.x2-root .x1-filter-group>button{background:transparent;border-color:transparent}
+.x2-root .x1-filter-group>button:hover{border-color:rgba(147,184,238,.35)}
+.x2-source-link{
+ display:inline-flex;justify-content:center;align-items:center;gap:7px;
+ border:1px solid rgba(101,211,197,.30);border-radius:9px;
+ color:#86e2cc;background:rgba(30,102,108,.18);font-size:11px;font-weight:650;
+ padding:9px 11px;white-space:nowrap;
+}
+.x2-source-link:hover{background:rgba(35,114,114,.37)}
+.x2-root .x1-summary{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:0;flex:none;min-height:87px;max-height:87px;margin:0;
+ padding:14px 20px 9px;border:0;border-radius:0;
+ border-bottom:1px solid rgba(142,168,214,.12);
+ box-shadow:none;background:none;backdrop-filter:none;
+}
+.x2-root .x1-summary>div{
+ position:relative;justify-content:flex-start;gap:11px;min-width:0;
+ padding:6px 11px;border:0;
+}
+.x2-root .x1-summary>div:nth-child(2){border-right:1px solid rgba(147,172,220,.29);margin-right:9px}
+.x2-root .x1-summary>div:nth-child(3){padding-left:21px}
+.x2-root .x1-summary>div svg{width:18px;height:18px;opacity:.65}
+.x2-root .x1-summary b{
+ font-size:clamp(23px,2.15vw,33px);line-height:1.07;letter-spacing:-.045em;
+ font-weight:700;font-variant-numeric:tabular-nums;
+}
+.x2-root .x1-summary small{font-size:10px;color:#b3c8e8;white-space:normal;overflow:visible;line-height:1.2}
+.x2-domain-titles{
+ flex:none;display:grid;grid-template-columns:1fr 1fr;
+ min-height:23px;align-items:end;padding:1px 17px 0;gap:0;
+ color:#86b8ed;
+}
+.x2-domain-titles span{display:inline-flex;align-items:center;gap:8px;padding:0 12px;
+ font-size:9px;font-weight:700;letter-spacing:.14em}
+.x2-domain-titles span:nth-child(2){color:#d5a1dd;padding-left:21px}
+.x2-root .x1-analysis-grid{
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+ flex:1;min-height:0;gap:0;margin:0;padding:0 12px;
+}
+.x2-root .x1-analysis-grid>.x1-card{
+ min-width:0;min-height:0;padding:0 9px 4px;
+ border:0;border-radius:0;background:none;box-shadow:none;backdrop-filter:none;
+ overflow:hidden;
+}
+.x2-root .x1-analysis-grid>.x1-card:first-child{
+ border-right:1px solid rgba(134,159,205,.23);
+}
+.x2-root .x1-analysis-grid>.x1-card:nth-child(2){padding-left:16px}
+.x2-root .x1-card-head{min-height:47px;padding:7px 11px 5px}
+.x2-root .x1-card-head h2{font-size:16px;letter-spacing:-.015em;color:#eef3ff}
+.x2-root .x1-card-head small{font-size:10px;color:#a8b9d7}
+.x2-root .x1-scope-pill{
+ padding:5px 7px;border:0;border-radius:6px;
+ background:rgba(111,141,203,.10);color:#a3b7df;font-size:9px;
+}
+.x2-root .x1-comparison{
+ display:grid;grid-template-columns:minmax(0,1fr) 31px;gap:7px;
+ min-height:59px;flex:none;margin:0 8px 7px;padding:5px 4px 7px;
+ border:0;border-bottom:1px solid rgba(133,164,222,.15);border-radius:0;
+ background:transparent;
+}
+.x2-root .x1-comparison>div:first-child{display:none}
+.x2-root .x1-comparison>div:nth-child(2){padding:0;border:0}
+.x2-root .x1-comparison small{font-size:10px;color:#b3c5e5;max-width:100%}
+.x2-root .x1-comparison b{font-size:23px}
+.x2-root .x1-compare-open{
+ min-height:32px;border:0;border-radius:50%;
+ background:rgba(118,150,214,.12);color:#a5cffc;
+}
+.x2-root .x1-compare-open:hover{background:rgba(95,153,228,.35)}
+.x2-root .x1-matrix-section{
+ margin:0 6px 3px;padding:4px 6px 2px;gap:4px;
+ min-height:0;flex:1;border:0;border-radius:0;background:transparent;
+}
+.x2-root .x1-matrix-head span{color:#abbfdc}
+.x2-root .x1-matrix-row button{border-color:rgba(139,178,237,.12);border-radius:5px}
+.x2-root .x1-month-inline{
+ margin:0 6px 4px;padding:7px 8px 0;
+ min-height:31px;border:0;border-top:1px solid rgba(134,162,214,.18);
+ border-radius:0;background:transparent;
+}
+.x2-root .x1-fraud-charts{gap:0;padding:0 6px 6px}
+.x2-root .x1-chart{
+ padding:7px 8px;gap:7px;
+ background:transparent;border:0;border-radius:0;
+}
+.x2-root .x1-fraud-charts>.x1-chart:first-child{border-right:1px solid rgba(144,172,220,.16)}
+.x2-root .x1-chart h3{font-size:12px;color:#dce9fb}
+.x2-root .x1-chart h3 small{color:#9aaecb}
+.x2-root .x1-horizontal-bars button{padding:5px 3px}
+.x2-root .x1-source-axis{margin:0 12px 3px;font-size:10px}
+.x2-root .x1-model-note{
+ border:0;border-top:1px solid rgba(144,161,212,.18);
+ border-radius:0;background:transparent;
+ margin:0 7px 3px;width:calc(100% - 14px);
+ padding:8px 9px;font-size:10px;min-height:30px;
+}
+.x2-root .x1-model-note:hover{background:rgba(89,98,169,.14)}
+.x2-root .x1-inspector:not(.x1-inspector-expanded){
+ height:clamp(131px,17.5vh,151px);margin:0 15px;
+ border-top:1px solid rgba(151,174,222,.28);
+}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-surface{
+ height:100%;background:transparent;border:0;border-radius:0;
+ box-shadow:none;
+}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-head{
+ border-bottom:0;min-height:39px;padding:3px 6px 2px;
+}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-head h2{font-size:14px}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-head small{color:#91abc9;font-size:10px}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-tabs{
+ border:0;border-radius:8px;background:rgba(91,128,188,.10);padding:2px;
+}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-tabs button{padding:5px 10px}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-size{padding:6px 8px;background:rgba(67,101,163,.22)}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-data-toolbar{padding:2px 6px}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-scroll{padding:0 6px}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table th{
+ background:rgba(66,91,142,.18);padding:4px 7px;font-size:10px;
+}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table td{padding:3px 7px;font-size:10px}
+.x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-foot{font-size:9px;min-height:18px;padding:2px 7px}
+.x2-root .x1-inspector-expanded{z-index:100}
+.x2-root .x1-inspector-expanded .x1-inspector-surface{background:linear-gradient(155deg,#172e58,#0a1d40)}
+.x2-root .x1-inspector-expanded .x1-inspector-compare-charts>div{
+ border:0;border-top:1px solid rgba(144,170,219,.27);border-radius:0;background:none;
+ height:clamp(240px,37vh,390px);
+}
+.x2-root .x1-inspector-expanded .x1-inspector-compare-kpis>div,
+.x2-root .x1-inspector-expanded .x1-model-kpis>div{
+ border:0;border-bottom:1px solid rgba(152,173,226,.24);background:transparent;border-radius:0;
+}
+.x2-root .x1-metric-glossary{background:rgba(37,65,103,.38);border-color:rgba(126,162,221,.26)}
+
+/* Unified governance uses the same continuous paper, with fine rules instead of boxes. */
+.x2-governance .x1-gov-toolbar{
+ min-height:40px;padding:3px 8px;border:0;border-radius:0;background:transparent;box-shadow:none;
+}
+.x2-governance .x2-gov-surface{gap:0}
+.x2-governance .x1-gov-banner{
+ flex:none;min-height:94px;border:0;border-bottom:1px solid rgba(141,178,220,.23);
+ border-radius:0;background:transparent;box-shadow:none;padding:14px 22px;
+}
+.x2-governance .x1-gov-grid{padding:0 12px 10px;gap:0;grid-template-rows:1.18fr 1fr}
+.x2-governance .x1-gov-grid>.x1-card{
+ padding:0 10px;min-width:0;min-height:0;border:0;border-radius:0;
+ box-shadow:none;background:none;backdrop-filter:none;
+}
+.x2-governance .x1-gov-grid>.x1-card:nth-child(odd){border-right:1px solid rgba(152,177,216,.20)}
+.x2-governance .x1-gov-grid>.x1-card:nth-child(-n+2){border-bottom:1px solid rgba(152,177,216,.20)}
+.x2-governance .x1-gov-rows{gap:0;padding:4px 5px 6px}
+.x2-governance .x1-proof-row,.x2-governance .x1-method-link,.x2-governance .x1-export-row{
+ padding:8px 6px;gap:10px;background:transparent;box-shadow:none;border:0;border-radius:0;
+ border-bottom:1px solid rgba(128,166,212,.15);
+}
+.x2-governance .x1-proof-row:hover,.x2-governance .x1-method-link:hover{background:rgba(65,110,172,.14)}
+.x2-governance .x1-icon{background:rgba(92,125,194,.12);width:30px;height:30px}
+.x2-governance .x1-proof-footer{border-top:1px solid rgba(147,177,218,.13)}
+.x2-governance .x1-setting-row{border-top:1px solid rgba(142,168,218,.14)}
+.x2-governance .x1-limit-text{border-top:1px solid rgba(142,168,218,.14)}
+
+/* Harmonized application chrome in unified mode, with old B5 untouched. */
+.app:has(.x2-root) .topbar{border-color:rgba(131,161,216,.09)}
+.app:has(.x2-root) .search-trigger{border-color:rgba(131,161,216,.17);background:rgba(42,63,112,.13)}
+.app:has(.x2-root) .nav-dock{border-color:rgba(131,161,216,.16);background:linear-gradient(170deg,rgba(41,57,105,.40),rgba(18,32,66,.40))}
+.app:has(.x2-root) .view-head{padding-bottom:8px}
+
+/* Low-height desktop keeps the 25-cell heatmap and no global scrolling. */
+@media(min-width:901px) and (max-height:850px){
+ .x2-root{gap:5px}
+ .x2-root .x1-filterrail{min-height:49px;padding:3px 7px}
+ .x2-root .x1-summary{min-height:65px;max-height:65px;padding:5px 15px 2px}
+ .x2-root .x1-summary b{font-size:clamp(21px,2vw,27px)}
+ .x2-root .x1-summary small{font-size:9px}
+ .x2-domain-titles{min-height:16px}
+ .x2-root .x1-card-head{min-height:38px;padding:4px 9px 2px}
+ .x2-root .x1-comparison{min-height:42px;padding:2px 3px 4px;margin-bottom:3px}
+ .x2-root .x1-comparison b{font-size:18px}
+ .x2-root .x1-matrix-section{min-height:126px;margin:0 5px 2px;padding:2px 5px}
+ .x2-root .x1-month-inline{min-height:22px;margin-bottom:2px;padding-top:3px}
+ .x2-root .x1-model-note{min-height:25px;padding:4px 7px;margin-bottom:2px}
+ .x2-root .x1-inspector:not(.x1-inspector-expanded){height:clamp(125px,17vh,139px)}
+ .x2-root .x1-source-axis{margin-bottom:2px;font-size:9px}
+ .x2-root .x1-card-head h2{font-size:14px}
+ .x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-head{min-height:35px}
+}
+@media(min-width:901px) and (max-height:750px){
+ .x2-root .x1-summary{min-height:59px;max-height:59px}
+ .x2-root .x1-summary b{font-size:22px}
+ .x2-root .x1-matrix-section{min-height:122px}
+ .x2-root .x1-inspector:not(.x1-inspector-expanded){height:125px}
+ .x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-size span{display:inline}
+ .x2-governance .x1-gov-banner{min-height:72px;padding:7px 16px}
+}
+
+/* Mobile retains source separation, legible full-width sections and working inspector. */
+@media(max-width:900px){
+ .x2-root{height:auto;min-height:0;gap:5px}
+ .x2-root .x1-filterrail{grid-template-columns:1fr auto;gap:8px;padding:8px 12px}
+ .x2-root .x1-filter-group{grid-column:1/-1}
+ .x2-root .x2-source-link{grid-column:1/-1;justify-self:stretch}
+ .x2-surface{min-height:0;flex:none;border-radius:18px}
+ .x2-root .x1-summary{
+  grid-template-columns:repeat(2,minmax(0,1fr));min-height:0;max-height:none;
+  padding:12px 10px;row-gap:6px;
+ }
+ .x2-root .x1-summary>div{min-height:62px;padding:7px 6px}
+ .x2-root .x1-summary>div:nth-child(2){border:0;margin:0}
+ .x2-root .x1-summary>div:nth-child(3){padding-left:6px}
+ .x2-root .x1-summary b{font-size:24px}
+ .x2-domain-titles{display:none}
+ .x2-root .x1-analysis-grid{grid-template-columns:1fr;grid-auto-rows:minmax(380px,auto);padding:0 10px}
+ .x2-root .x1-analysis-grid>.x1-card{min-height:420px;padding:0 4px 8px}
+ .x2-root .x1-analysis-grid>.x1-card:first-child{border:0;border-bottom:1px solid rgba(141,169,215,.25)}
+ .x2-root .x1-analysis-grid>.x1-card:nth-child(2){padding-left:4px}
+ .x2-root .x1-card-head{min-height:49px}
+ .x2-root .x1-comparison{min-height:60px}
+ .x2-root .x1-inspector:not(.x1-inspector-expanded){height:300px;margin:0 11px}
+ .x2-governance .x2-gov-surface{padding:0 10px}
+ .x2-governance .x1-gov-grid{grid-template-columns:1fr;grid-template-rows:none;padding:0 4px}
+ .x2-governance .x1-gov-grid>.x1-card{min-height:210px;border:0!important;border-bottom:1px solid rgba(145,173,218,.21)!important}
+ .x2-governance .x1-gov-banner{flex-wrap:wrap;min-height:100px}
+}
+@media(max-width:520px){
+ .x2-root .x1-filterrail{padding:6px 10px}
+ .x2-root .x1-summary{padding:9px 7px}
+ .x2-root .x1-summary>div{gap:7px}
+ .x2-root .x1-summary>div svg{width:14px;height:14px}
+ .x2-root .x1-summary b{font-size:21px}
+ .x2-root .x1-analysis-grid>.x1-card:first-child{min-height:610px}
+ .x2-root .x1-analysis-grid>.x1-card:nth-child(2){min-height:535px}
+ .x2-root .x1-chart h3{font-size:11px}
+ .x2-root .x1-inspector:not(.x1-inspector-expanded){height:310px}
+}
+:root[data-theme=light] .x2-surface{
+ background:linear-gradient(150deg,rgba(247,251,255,.92),rgba(219,232,248,.95));
+ border-color:#a8bed9;color:#163550;
+}
+:root[data-theme=light] .x2-root .x1-filterrail,
+:root[data-theme=light] .x2-root .x1-analysis-grid>.x1-card,
+:root[data-theme=light] .x2-governance .x1-gov-grid>.x1-card{background:none;box-shadow:none}
+:root[data-theme=light] .x2-root .x1-summary{background:none}
+:root[data-theme=light] .x2-root .x1-summary small{color:#315473}
+:root[data-theme=light] .x2-root .x1-summary b{color:#193b5e}
+:root[data-theme=light] .x2-root .x1-filter-group select{background:#ebf4ff;color:#163456}
+:root[data-theme=light] .x2-root .x1-card-head h2{color:#1e4165}
+:root[data-theme=light] .x2-root .x1-comparison,
+:root[data-theme=light] .x2-root .x1-month-inline,
+:root[data-theme=light] .x2-root .x1-matrix-section,
+:root[data-theme=light] .x2-root .x1-model-note,
+:root[data-theme=light] .x2-root .x1-chart{background:none;color:#1f496c;border-color:#a7bad3}
+:root[data-theme=light] .x2-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-surface{background:none}
+:root[data-theme=light] .x2-governance .x1-gov-banner{background:none}
+:root[data-theme=light] .x2-governance .x1-proof-row,
+:root[data-theme=light] .x2-governance .x1-method-link,
+:root[data-theme=light] .x2-governance .x1-export-row{background:none}
+
+/* Keep X1.9 readability contract on compact desktop heights. */
+@media(min-width:901px) and (max-height:850px){.x2-root .x1-summary small{font-size:9.5px}}
+
+/* X2 mobile polish: source scope is already explained in KPI/header, so let domain titles breathe. */
+@media(max-width:520px){
+ .x2-root .x1-analysis-grid .x1-card-head{min-height:55px;align-items:center}
+ .x2-root .x1-analysis-grid .x1-card-head h2{font-size:13px;line-height:1.25;white-space:normal;overflow:visible;text-overflow:clip}
+ .x2-root .x1-analysis-grid .x1-scope-pill{display:none}
+}
+
+
+/* X2.1 — Cockpit stage: hierarchy is domain → hero metric → controls → evidence.
+   Move existing semantic controls; no changes to cohorts, calculations or exports. */
+.x21-root{gap:2px}
+.x21-surface{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+ grid-template-rows:29px 94px 58px minmax(0,1fr) 135px;
+ column-gap:0;row-gap:0;isolation:isolate;
+ border-color:rgba(115,144,193,.20);border-radius:18px;
+ background:
+  radial-gradient(ellipse 38% 70% at 12% 44%,rgba(48,104,191,.105),transparent 88%),
+  radial-gradient(ellipse 44% 85% at 84% 44%,rgba(140,65,167,.07),transparent 84%),
+  linear-gradient(160deg,#09162d 3%,#0d1933 52%,#10172f 100%);
+}
+.x21-surface>.x1-filterrail,
+.x21-surface>.x1-summary,
+.x21-surface>.x2-domain-titles,
+.x21-surface>.x1-analysis-grid{display:contents}
+.x21-surface>.x2-domain-titles>span{
+ align-self:center;display:flex;min-height:20px;
+ font-size:10px;letter-spacing:.15em;font-weight:700;
+ padding:9px 21px 0;overflow:hidden;
+}
+.x21-surface>.x2-domain-titles>span:first-child{grid-area:1/1/2/3;color:#80beff}
+.x21-surface>.x2-domain-titles>span:nth-child(2){grid-area:1/3/2/5;color:#ef8cc6;padding-left:23px}
+.x21-surface>.x1-filterrail>.x1-filter-group{
+ display:flex;justify-content:flex-start;align-items:center;min-width:0;
+ padding:5px 17px 8px;min-height:0;border:0;
+}
+.x21-surface>.x1-filterrail>.x1-filter-group:first-child{grid-area:3/1/4/3;border-right:1px solid rgba(155,181,229,.13)}
+.x21-surface>.x1-filterrail>.x1-filter-group:nth-child(2){grid-area:3/3/4/5;padding-left:22px}
+.x21-surface>.x1-filterrail>.x1-filter-group .x1-filter-domain{display:none}
+.x21-surface>.x1-filterrail>.x1-filter-group label{font-size:10px;min-width:0;flex:1;max-width:225px;line-height:1.1}
+.x21-surface>.x1-filterrail>.x1-filter-group label select{
+ min-width:0;width:100%;background:rgba(67,95,144,.16);border-color:rgba(129,161,213,.18);
+ padding:0 8px;font-size:11px;height:31px;
+}
+.x21-surface>.x1-filterrail>.x2-source-link{
+ position:absolute;right:16px;top:9px;z-index:2;
+ padding:5px 9px;border:0;background:transparent;color:#8ccfbd;font-size:10px;
+}
+.x21-surface>.x1-filterrail>.x2-source-link:hover{background:rgba(96,178,175,.13)}
+.x21-surface>.x1-summary>div{
+ border:0!important;margin:0!important;min-height:0;min-width:0;padding:9px 15px 5px!important;
+ background:transparent;align-self:stretch;display:flex;align-items:center;gap:7px;
+}
+.x21-surface>.x1-summary>div:nth-child(1){grid-area:2/2/3/3;justify-content:flex-end;padding-right:23px!important}
+.x21-surface>.x1-summary>div:nth-child(2){grid-area:2/1/3/2;padding-left:24px!important}
+.x21-surface>.x1-summary>div:nth-child(3){grid-area:2/4/3/5;justify-content:flex-end;padding-right:20px!important}
+.x21-surface>.x1-summary>div:nth-child(4){grid-area:2/3/3/4;padding-left:25px!important}
+.x21-surface>.x1-summary>div svg{display:none}
+.x21-surface>.x1-summary>div span{display:flex;flex-direction:column;gap:6px;min-width:0}
+.x21-surface>.x1-summary>div:nth-child(2) b,
+.x21-surface>.x1-summary>div:nth-child(4) b{
+ font-size:clamp(42px,3.6vw,61px);line-height:.98;letter-spacing:-.07em;
+ color:#e7f1ff;font-weight:760;
+ text-shadow:0 0 36px rgba(109,163,246,.13);
+}
+.x21-surface>.x1-summary>div:nth-child(4) b{color:#f3cfdf;text-shadow:0 0 35px rgba(242,115,194,.12)}
+.x21-surface>.x1-summary>div:nth-child(1) b,
+.x21-surface>.x1-summary>div:nth-child(3) b{
+ font-size:clamp(19px,2vw,28px);color:#90b5de;letter-spacing:-.03em;
+}
+.x21-surface>.x1-summary small{font-size:11px!important;color:#a4b7d6;line-height:1.3;max-width:210px}
+.x21-surface>.x1-summary>div:nth-child(1) small,
+.x21-surface>.x1-summary>div:nth-child(3) small{font-size:10px!important}
+.x21-surface>.x1-analysis-grid>.x1-card{
+ align-self:stretch;min-height:0;min-width:0;display:flex;flex-direction:column;
+ border:0;box-shadow:none;background:transparent;overflow:hidden;
+ padding:0 14px 4px;
+}
+.x21-surface>.x1-analysis-grid>.x1-card:first-child{
+ grid-area:4/1/5/3;border-right:1px solid rgba(150,176,222,.18);
+}
+.x21-surface>.x1-analysis-grid>.x1-card:nth-child(2){
+ grid-area:4/3/5/5;padding-left:19px;
+}
+.x21-root .x1-card-head{
+ min-height:37px;padding:1px 7px 2px;align-items:center;
+}
+.x21-root .x1-card-head h2{font-size:15px;color:#cce0ff;font-weight:650;letter-spacing:-.015em}
+.x21-root .x1-fraud-panel .x1-card-head h2{color:#f3cce6}
+.x21-root .x1-card-head small{font-size:10px;color:#839dbd}
+.x21-root .x1-scope-pill{display:none}
+.x21-root .x1-comparison{
+ position:relative;display:flex;gap:8px;align-items:center;justify-content:space-between;
+ margin:0 7px 2px;padding:1px 4px 3px;min-height:33px;
+ border:0;border-bottom:1px solid rgba(134,163,209,.11);background:transparent;
+}
+.x21-root .x1-comparison>div:first-child{display:none}
+.x21-root .x1-comparison>div:nth-child(2){display:flex;flex-direction:row;align-items:center;gap:10px;padding:0;border:0;min-width:0}
+.x21-root .x1-comparison>div:nth-child(2) small:first-child{display:none}
+.x21-root .x1-comparison>div:nth-child(2) b{font-size:16px;white-space:nowrap;color:#98cefe}
+.x21-root .x1-fraud-comparison>div:nth-child(2) b{color:#eba3d7}
+.x21-root .x1-comparison small{font-size:10px;color:#a6b9d8;overflow:hidden;text-overflow:ellipsis}
+.x21-root .x1-compare-open{width:30px;min-height:28px;flex:none;background:transparent;color:#9caeca}
+.x21-root .x1-matrix-section{flex:1;min-height:0;gap:5px;padding:8px 7px 4px;margin:0 4px 2px}
+.x21-root .x1-subtitle h3{font-size:13px;color:#dbeaff}
+.x21-root .x1-matrix-section .x1-subtitle span{font-size:10px;color:#91afce}
+.x21-root .x1-matrix-head{height:26px}
+.x21-root .x1-matrix-head span{font-size:10px;color:#91b0d9}
+.x21-root .x1-matrix-row{gap:5px}
+.x21-root .x1-matrix-row button{
+ border-radius:4px;font-size:11px;font-weight:700;
+ background-color:rgba(69,114,205,.24);
+ border:1px solid rgba(139,182,235,.08);
+ transition:filter .12s ease,box-shadow .12s ease;
+}
+.x21-root .x1-matrix-row button:not(:disabled):hover{box-shadow:0 0 0 1px #78c8f4}
+.x21-root .x1-month-inline{margin:0 4px 2px;min-height:31px;border-color:rgba(153,173,220,.16)}
+.x21-root .x1-source-axis{padding-left:6px;margin:2px 7px 1px;font-size:10px;color:#8ca9ca}
+.x21-root .x1-fraud-charts{flex:1;min-height:0;padding:1px 7px 5px;gap:6px}
+.x21-root .x1-chart{padding:7px 6px;background:none}
+.x21-root .x1-chart h3{font-size:13px}
+.x21-root .x1-fraud-charts>.x1-chart:first-child{border-right:1px solid rgba(149,165,217,.13)}
+.x21-root .x1-model-note{margin:0 7px 4px;min-height:33px;padding:5px 7px}
+.x21-surface>.x1-inspector{
+ grid-area:5/1/6/5;min-width:0;align-self:stretch;
+ margin:0 19px 9px!important;height:auto!important;min-height:0;
+ border-top:1px solid rgba(135,169,220,.19);
+}
+.x21-surface>.x1-inspector:not(.x1-inspector-expanded) .x1-inspector-head{
+ min-height:36px;padding:2px 6px;
+}
+.x21-surface>.x1-inspector:not(.x1-inspector-expanded) .x1-inspector-data-toolbar{padding:0 7px}
+.x21-surface>.x1-inspector:not(.x1-inspector-expanded) .x1-inspector-foot{min-height:17px;font-size:9px;padding:1px 7px}
+.x21-surface>.x1-inspector.x1-inspector-expanded{
+ position:fixed;inset:0;z-index:100;height:100dvh!important;max-height:none;
+ margin:0!important;
+}
+
+/* Desktop mono-screen density is controlled by the stage, not many cards. */
+@media(min-width:901px) and (max-height:850px){
+ .x21-surface{grid-template-rows:23px 69px 51px minmax(0,1fr) 132px}
+ .x21-surface>.x1-summary>div:nth-child(2) b,
+ .x21-surface>.x1-summary>div:nth-child(4) b{font-size:clamp(36px,3.3vw,49px)}
+ .x21-surface>.x1-summary small{font-size:10px!important}
+ .x21-surface>.x1-filterrail>.x1-filter-group{padding-top:2px;padding-bottom:4px}
+ .x21-root .x1-card-head{min-height:30px}
+ .x21-root .x1-comparison{min-height:27px}
+ .x21-root .x1-matrix-section{min-height:122px;padding:3px 5px 1px}
+ .x21-root .x1-matrix-head{height:18px}
+ .x21-root .x1-month-inline{min-height:22px}
+ .x21-root .x1-model-note{min-height:25px}
+ .x21-root .x1-source-axis{font-size:9px}
+}
+@media(min-width:901px) and (max-height:750px){
+ .x21-surface{grid-template-rows:20px 57px 45px minmax(0,1fr) 131px}
+ .x21-surface>.x1-summary>div:nth-child(2) b,
+ .x21-surface>.x1-summary>div:nth-child(4) b{font-size:38px}
+ .x21-surface>.x1-summary>div{padding-top:2px!important;padding-bottom:0!important}
+ .x21-root .x1-matrix-row button{font-size:10px}
+ .x21-root .x1-matrix-section{min-height:117px}
+}
+/* Touch: stacked domain journeys in source order, with their own numbers and controls. */
+@media(max-width:900px){
+ .x21-root{height:auto;min-height:0}
+ .x21-surface{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-rows:25px 74px 65px minmax(465px,auto) 25px 74px 65px minmax(420px,auto) 285px;
+  height:auto;min-height:0;flex:none;
+ }
+ .x21-surface>.x2-domain-titles>span:first-child{grid-area:1/1/2/3}
+ .x21-surface>.x2-domain-titles>span:nth-child(2){grid-area:5/1/6/3;border-top:1px solid rgba(145,177,224,.2)}
+ .x21-surface>.x1-summary>div:nth-child(2){grid-area:2/1/3/2}
+ .x21-surface>.x1-summary>div:nth-child(1){grid-area:2/2/3/3}
+ .x21-surface>.x1-summary>div:nth-child(4){grid-area:6/1/7/2}
+ .x21-surface>.x1-summary>div:nth-child(3){grid-area:6/2/7/3}
+ .x21-surface>.x1-filterrail>.x1-filter-group:first-child{grid-area:3/1/4/3;border:0}
+ .x21-surface>.x1-filterrail>.x1-filter-group:nth-child(2){grid-area:7/1/8/3;padding-left:14px}
+ .x21-surface>.x1-filterrail>.x2-source-link{position:absolute;right:10px;top:3px}
+ .x21-surface>.x1-analysis-grid>.x1-card:first-child{grid-area:4/1/5/3;border:0}
+ .x21-surface>.x1-analysis-grid>.x1-card:nth-child(2){grid-area:8/1/9/3;padding-left:14px;border:0}
+ .x21-surface>.x1-inspector{grid-area:9/1/10/3;margin:0 12px 8px!important;height:auto!important}
+ .x21-surface>.x1-summary>div:nth-child(2) b,.x21-surface>.x1-summary>div:nth-child(4) b{font-size:42px}
+ .x21-surface>.x1-summary>div:nth-child(1),.x21-surface>.x1-summary>div:nth-child(3){justify-content:flex-end;padding-right:16px!important}
+ .x21-root .x1-analysis-grid>.x1-card{min-height:0!important}
+ .x21-root .x1-summary>div{min-height:0!important}
+}
+@media(max-width:520px){
+ .x21-surface{
+  grid-template-rows:27px 71px 97px minmax(575px,auto) 27px 71px 83px minmax(535px,auto) 285px;
+ }
+ .x21-surface>.x1-filterrail>.x1-filter-group{padding:4px 12px 8px;flex-wrap:wrap}
+ .x21-surface>.x1-filterrail>.x1-filter-group label{flex:1 1 30%;min-width:0}
+ .x21-surface>.x1-filterrail>.x1-filter-group:nth-child(2){padding-left:12px}
+ .x21-surface>.x1-summary>div:nth-child(2) b,
+ .x21-surface>.x1-summary>div:nth-child(4) b{font-size:34px}
+ .x21-surface>.x1-summary>div:nth-child(1) b,
+ .x21-surface>.x1-summary>div:nth-child(3) b{font-size:20px}
+ .x21-surface>.x1-summary small{font-size:9.5px!important}
+ .x21-root .x1-matrix-row{gap:3px}
+}
+:root[data-theme=light] .x21-surface{
+ background:linear-gradient(145deg,#f0f6ff,#e1edfc 55%,#e9edf9);border-color:#a1b6d2;
+}
+:root[data-theme=light] .x21-surface>.x1-summary>div:nth-child(2) b{color:#1c426c;text-shadow:none}
+:root[data-theme=light] .x21-surface>.x1-summary>div:nth-child(4) b{color:#92346d;text-shadow:none}
+:root[data-theme=light] .x21-surface>.x1-summary small{color:#3a5576}
+:root[data-theme=light] .x21-root .x1-comparison small,
+:root[data-theme=light] .x21-root .x1-card-head small{color:#436382}
+:root[data-theme=light] .x21-root .x1-card-head h2,
+:root[data-theme=light] .x21-root .x1-subtitle h3{color:#214972}
+
+/* X2.1 mobile: the reference and scope must wrap rather than become an ellipsis. */
+@media(max-width:520px){
+ .x21-root .x1-comparison{min-height:60px;align-items:start;padding-top:5px}
+ .x21-root .x1-comparison>div:nth-child(2){flex-wrap:wrap;gap:3px 8px;align-items:flex-start}
+ .x21-root .x1-comparison>div:nth-child(2) small{
+  width:100%;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.3;overflow-wrap:break-word;
+ }
+}
+
+/* X2.1 visual review: PaySim daily pattern is the main evidence, payment types form a compact footer. */
+.x21-root .x1-fraud-charts{
+ display:grid;grid-template-columns:minmax(0,1fr);
+ grid-template-rows:minmax(0,1fr) 88px;gap:0;
+}
+.x21-root .x1-fraud-charts>.x1-chart:nth-child(2){
+ grid-area:1/1/2/2;min-height:0;
+ padding:7px 12px 9px;
+}
+.x21-root .x1-fraud-charts>.x1-chart:first-child{
+ grid-area:2/1/3/2;min-height:0;
+ padding:7px 12px 4px;border:0;border-top:1px solid rgba(141,164,211,.17);
+}
+.x21-root .x1-fraud-charts .x1-day-bars{gap:9px}
+.x21-root .x1-fraud-charts .x1-day-bars button>span{width:72%}
+.x21-root .x1-fraud-charts .x1-day-bars i{max-width:54px;border-radius:7px 7px 0 0}
+.x21-root .x1-fraud-charts .x1-horizontal-bars{flex-direction:row;align-items:center;gap:14px}
+.x21-root .x1-fraud-charts .x1-horizontal-bars button{
+ flex:1;min-width:0;display:grid;
+ grid-template-columns:65px minmax(0,1fr) 28px;
+ align-items:center;padding:3px 2px;
+}
+.x21-root .x1-fraud-charts .x1-horizontal-bars button>i{height:8px}
+@media(min-width:901px) and (max-height:750px){
+ .x21-root .x1-fraud-charts{grid-template-rows:minmax(0,1fr) 70px}
+ .x21-root .x1-fraud-charts>.x1-chart:first-child{padding:3px 8px}
+ .x21-root .x1-fraud-charts>.x1-chart:nth-child(2){padding:2px 8px 3px}
+}
+@media(max-width:520px){
+ .x21-root .x1-fraud-charts{grid-template-rows:minmax(215px,1fr) 100px}
+ .x21-root .x1-fraud-charts>.x1-chart:first-child{padding:8px 2px}
+ .x21-root .x1-fraud-charts>.x1-chart:nth-child(2){padding:8px 2px}
+ .x21-root .x1-fraud-charts .x1-horizontal-bars{gap:4px}
+ .x21-root .x1-fraud-charts .x1-horizontal-bars button{grid-template-columns:54px minmax(0,1fr) 23px;gap:3px}
+}
+
+/* Visual review: never show a half-cut second aggregate row in the compact desktop dock. */
+@media(min-width:901px){
+ .x21-root .x1-inspector:not(.x1-inspector-expanded) .x1-inspector-table tbody tr:not(:first-child){display:none}
+}

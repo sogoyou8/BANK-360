@@ -2,7 +2,7 @@ import {test,expect,type Page} from '@playwright/test';
 import {readFile} from 'node:fs/promises';
 
 async function openReports(page:Page){
- await page.goto('/');
+ await page.goto('/?classic=1');
  await page.getByRole('button',{name:'Rapports',exact:true}).click();
  await expect(page.getByTestId('reports-workspace')).toBeVisible();
 }
@@ -86,7 +86,7 @@ test('C6 — real XLSX is a ZIP Open XML spreadsheet, with source cell values',a
  expect(bytes.length).toBeGreaterThan(1000);
 });
 test('C6 — UCI credit filter changes report rows and reset restores original selection',async({page})=>{
- await page.goto('/');
+ await page.goto('/?classic=1');
  await page.getByRole('button',{name:'Crédit',exact:true}).click();
  await page.locator('#filter-age').selectOption('18-29');
  await page.getByRole('button',{name:'Rapports',exact:true}).click();

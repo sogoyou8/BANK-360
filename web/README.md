@@ -14,7 +14,47 @@ npm run dev
 
 Le rendu est disponible sur `http://127.0.0.1:5173`. Pour les tests de navigateur : `npx playwright install chromium` puis `npm run test:e2e` (ou via GitHub Actions).
 
-## Navigation
+## Navigation R0–R5 — BANK 360 Risk Analytics Lab
+
+**Branche de revue :** `feature/r0-r5-guided-risk-lab` · PR #25 en brouillon. Aucun déploiement ni fusion.
+
+L'ouverture par défaut est une expérience guidée à **cinq vues**, conçue autour de deux études distinctes et de leurs preuves, plutôt qu'un cockpit simultané Crédit + Fraude.
+
+| URL | Vue / usage |
+|---|---|
+| `/` | Accueil / découverte des deux études |
+| `/?view=credit` | Crédit historique UCI, cohortes âge × plafond × statut, retards mensuels |
+| `/?view=fraud` | Alertes PaySim simulées, sélection exclusive par jour OU par type |
+| `/?view=models` | Évaluation de test B3 / B4, diagnostics et limites non filtrés |
+| `/?view=evidence` | Provenance, contrôles, méthodologies et exports agrégés CSV/XLSX |
+| `/?classic=1` | Interface classique B5 à six pages, conservée sans changement |
+| `/?x1=1` | Ancien cockpit X1/X2, conservé comme référence historique |
+| `/?view=governance` | Ancienne page Gouvernance X1/X2 |
+
+Les URLs sont actualisables et compatibles avec le bouton précédent/suivant du navigateur.
+Les filtres UCI ne modifient jamais PaySim ; les métriques modèles restent celles de leurs tests globaux.
+Ne jamais interpréter les deux sources comme les données d'une même clientèle bancaire.
+
+Les nouveaux composants sont `src/GuidedRiskLab.tsx` et `src/guided-risk-lab.css` ; leurs tests sont `e2e/guided-risk-lab.spec.ts`.
+Le contrat de refonte et les critères de recette sont dans `../docs/R0-R5-guided-risk-analytics-delivery.md`.
+
+## Pré-déploiement M3 — dernière finition
+
+La version guidée conserve les cinq vues et le format mono-écran desktop validé en M2. La passe M3 améliore la navigation mobile (les cinq vues visibles), l'accès à l'ensemble des 25 cellules Crédit et le graphique des six jours PaySim sur une seule rangée. Les cinq types PaySim sont inspectables ; lorsqu'aucune alerte/fraude n'existe, la précision/le rappel sont non définis (export vide), pas 0 %. Aucune donnée ni métrique de modèle n'a été recalculée ou remplacée.
+
+Les nouveaux contrôles sont dans `e2e/guided-m3-readiness.spec.ts` et la procédure de recette est dans `../docs/M3-predeploy-readiness.md`. **PR #25 reste brouillon : pas de merge, pas de déploiement.** La validation CI sur le commit de tête et la revue des nouvelles captures précèdent toute décision de publication.
+
+## M4 — Guide pour découvrir le projet
+
+**Avant de parcourir les tableaux**, cliquer sur « Comprendre le projet » depuis l'Accueil ou dans l'en-tête de chaque vue. Une aide contextuelle explique l'objectif, les filtres et les limites de chaque étude, sans nouvelle page ni changement de données.
+
+Le [dossier pédagogique PDF de 8 pages](public/bank360-guide.pdf) est également consultable dans un nouvel onglet et téléchargeable. Il présente le problème, les deux sources indépendantes (UCI historique et PaySim simulé), les cinq vues, les indicateurs, les modèles et leurs limites, ainsi que les preuves.
+
+En mode hors ligne, `npm run build && npm run standalone` incorpore le PDF dans l'aperçu HTML autonome pour permettre sa consultation sans serveur. Les scénarios M4 sont vérifiés dans `e2e/guided-m4-project-guide.spec.ts` et le contrat est détaillé dans `../docs/M4-guide-pedagogique.md`.
+
+**Rappel :** étude analytique / démonstration portfolio, non outil bancaire opérationnel. La PR reste en brouillon, sans merge ni publication.
+
+## Navigation classique (référence B5)
 
 8 pages / 6 sections : Vue d’ensemble ; **Crédit unifié** (Portefeuille & segmentation, avec 3 perspectives internes Vue globale / Risque / Paiements) ; Détection de fraude, Analyse des alertes ; Modèles & performance, Explorateur de données ; Qualité & traçabilité ; Rapports & préférences. Les trois anciennes pages Crédit deviennent une seule page interactive : filtres communs et six modules.
 

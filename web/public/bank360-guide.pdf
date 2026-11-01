@@ -1,0 +1,410 @@
+%PDF-1.4
+%âãÏÓ
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R 11 0 R 13 0 R 15 0 R 17 0 R 19 0 R] /Count 8 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 2030 >>
+stream
+q 0.037 0.071 0.140 rg 0 0 595 842 re f Q
+q 0.095 0.165 0.280 rg 450 697 190 190 re f Q
+q 0.045 0.085 0.160 rg 470 717 154 154 re f Q
+BT /F2 13 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 799 Tm (BANK 360) Tj ET
+BT /F2 8 Tf 0.550 0.700 1.000 rg 1 0 0 1 142 800 Tm (RISK ANALYTICS LAB) Tj ET
+q 0.180 0.290 0.410 rg 43 783 510 1 re f Q
+BT /F2 9 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 753 Tm (GUIDE PÉDAGOGIQUE · NOVEMBRE 2026) Tj ET
+BT /F1 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 32 Tm (GUIDE DE LECTURE  •  ÉTUDE NON OPÉRATIONNELLE) Tj ET
+BT /F2 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 513 32 Tm (1 / 8) Tj ET
+BT /F2 58 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 642 Tm (BANK) Tj ET
+BT /F2 79 Tf 0.550 0.700 1.000 rg 1 0 0 1 43 575 Tm (360) Tj ET
+q 0.380 0.820 0.910 rg 43 545 510 2 re f Q
+BT /F2 23 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 502 Tm (Comprendre le risque bancaire) Tj ET
+BT /F2 23 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 472 Tm (par la donnée.) Tj ET
+BT /F1 12 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 405 Tm (Deux études indépendantes pour comprendre les défauts) Tj ET
+BT /F1 12 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 386 Tm (de crédit et les alertes de fraude simulée.) Tj ET
+q 0.078 0.137 0.235 rg 43 216 242 133 re f Q
+q 0.550 0.700 1.000 rg 43 347 242 2 re f Q
+BT /F2 9 Tf 0.550 0.700 1.000 rg 1 0 0 1 58 322 Tm (CRÉDIT HISTORIQUE) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 58 285 Tm (30 000 dossiers) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 58 238 Tm (UCI • Taïwan, 2005) Tj ET
+q 0.078 0.137 0.235 rg 298 216 255 133 re f Q
+q 0.930 0.620 0.790 rg 298 347 255 2 re f Q
+BT /F2 9 Tf 0.930 0.620 0.790 rg 1 0 0 1 313 322 Tm (FRAUDE SIMULÉE) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 313 285 Tm (100 353 opérations) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 313 238 Tm (Test chronologique PaySim) Tj ET
+BT /F1 11 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 158 Tm (8 pages : contexte, méthodes, résultats, limites et preuves.) Tj ET
+BT /F1 11 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 138 Tm (Pour recruteurs, analystes et lecteurs non spécialistes.) Tj ET
+
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 3101 >>
+stream
+q 0.037 0.071 0.140 rg 0 0 595 842 re f Q
+q 0.095 0.165 0.280 rg 450 697 190 190 re f Q
+q 0.045 0.085 0.160 rg 470 717 154 154 re f Q
+BT /F2 13 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 799 Tm (BANK 360) Tj ET
+BT /F2 8 Tf 0.550 0.700 1.000 rg 1 0 0 1 142 800 Tm (RISK ANALYTICS LAB) Tj ET
+q 0.180 0.290 0.410 rg 43 783 510 1 re f Q
+BT /F2 9 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 753 Tm (01 / POURQUOI BANK 360 ?) Tj ET
+BT /F2 25 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 709 Tm (Une question, deux études) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 684 Tm (Observer des risques sans prétendre construire un outil bancaire réel.) Tj ET
+BT /F1 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 32 Tm (GUIDE DE LECTURE  •  ÉTUDE NON OPÉRATIONNELLE) Tj ET
+BT /F2 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 513 32 Tm (2 / 8) Tj ET
+q 0.078 0.137 0.235 rg 43 470 244 139 re f Q
+q 0.550 0.700 1.000 rg 43 607 244 2 re f Q
+BT /F2 9 Tf 0.550 0.700 1.000 rg 1 0 0 1 58 582 Tm (QUESTION CRÉDIT) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 58 545 Tm (Où sont les défauts ?) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 58 492 Tm (Comparer des cohortes et retards) Tj ET
+q 0.078 0.137 0.235 rg 299 470 254 139 re f Q
+q 0.930 0.620 0.790 rg 299 607 254 2 re f Q
+BT /F2 9 Tf 0.930 0.620 0.790 rg 1 0 0 1 314 582 Tm (QUESTION FRAUDE) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 314 545 Tm (Quelles alertes ?) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 314 492 Tm (Évaluer les erreurs du modèle) Tj ET
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 435 Tm (LA CHAÎNE ANALYTIQUE) Tj ET
+q 0.078 0.137 0.235 rg 43 345 94 69 re f Q
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 54 380 Tm (01) Tj ET
+BT /F2 8 Tf 0.940 0.970 1.000 rg 1 0 0 1 54 359 Tm (SOURCES) Tj ET
+q 0.078 0.137 0.235 rg 146 345 94 69 re f Q
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 157 380 Tm (02) Tj ET
+BT /F2 8 Tf 0.940 0.970 1.000 rg 1 0 0 1 157 359 Tm (QUALITÉ) Tj ET
+q 0.078 0.137 0.235 rg 249 345 94 69 re f Q
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 260 380 Tm (03) Tj ET
+BT /F2 8 Tf 0.940 0.970 1.000 rg 1 0 0 1 260 359 Tm (ANALYSES) Tj ET
+q 0.078 0.137 0.235 rg 352 345 94 69 re f Q
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 363 380 Tm (04) Tj ET
+BT /F2 8 Tf 0.940 0.970 1.000 rg 1 0 0 1 363 359 Tm (MODÈLES) Tj ET
+q 0.078 0.137 0.235 rg 455 345 94 69 re f Q
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 466 380 Tm (05) Tj ET
+BT /F2 8 Tf 0.940 0.970 1.000 rg 1 0 0 1 466 359 Tm (PREUVES) Tj ET
+q 0.078 0.137 0.235 rg 43 164 510 153 re f Q
+BT /F2 10 Tf 0.530 0.840 0.730 rg 1 0 0 1 61 287 Tm (CE QUE LE PROJET DÉMONTRE) Tj ET
+BT /F1 11 Tf 0.940 0.970 1.000 rg 1 0 0 1 61 261 Tm (Réconcilier des agrégats, décrire des cohortes,) Tj ET
+BT /F1 11 Tf 0.940 0.970 1.000 rg 1 0 0 1 61 242 Tm (évaluer des modèles et rendre les résultats auditables.) Tj ET
+BT /F2 10 Tf 0.930 0.620 0.790 rg 1 0 0 1 61 205 Tm (CE QU'IL NE DÉMONTRE PAS) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 61 181 Tm (Aucune décision de crédit ni surveillance de fraude réelle.) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 61 165 Tm (Pas de relation construite entre les deux populations.) Tj ET
+
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 10 0 R >>
+endobj
+10 0 obj
+<< /Length 2374 >>
+stream
+q 0.037 0.071 0.140 rg 0 0 595 842 re f Q
+q 0.095 0.165 0.280 rg 450 697 190 190 re f Q
+q 0.045 0.085 0.160 rg 470 717 154 154 re f Q
+BT /F2 13 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 799 Tm (BANK 360) Tj ET
+BT /F2 8 Tf 0.550 0.700 1.000 rg 1 0 0 1 142 800 Tm (RISK ANALYTICS LAB) Tj ET
+q 0.180 0.290 0.410 rg 43 783 510 1 re f Q
+BT /F2 9 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 753 Tm (02 / LES SOURCES) Tj ET
+BT /F2 25 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 709 Tm (Deux univers distincts) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 684 Tm (Toujours lire un chiffre avec sa population, sa période et sa nature.) Tj ET
+BT /F1 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 32 Tm (GUIDE DE LECTURE  •  ÉTUDE NON OPÉRATIONNELLE) Tj ET
+BT /F2 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 513 32 Tm (3 / 8) Tj ET
+q 0.078 0.137 0.235 rg 43 460 244 153 re f Q
+q 0.550 0.700 1.000 rg 43 611 244 2 re f Q
+BT /F2 9 Tf 0.550 0.700 1.000 rg 1 0 0 1 58 586 Tm (UCI HISTORIQUE) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 58 549 Tm (30 000 dossiers) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 58 482 Tm (6 636 défauts • 22,12 %) Tj ET
+q 0.078 0.137 0.235 rg 299 460 254 153 re f Q
+q 0.930 0.620 0.790 rg 299 611 254 2 re f Q
+BT /F2 9 Tf 0.930 0.620 0.790 rg 1 0 0 1 314 586 Tm (PAYSIM SIMULÉ) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 314 549 Tm (6 362 620) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 314 482 Tm (8 213 fraudes simulées) Tj ET
+q 0.078 0.137 0.235 rg 43 315 510 117 re f Q
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 62 398 Tm (POURQUOI AUCUNE JOINTURE ?) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 372 Tm (Les données UCI décrivent des cartes de crédit à Taïwan) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 354 Tm (en 2005. PaySim simule des paiements mobiles.) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 336 Tm (Aucune clé ou population commune n'est disponible.) Tj ET
+q 0.078 0.137 0.235 rg 43 165 510 122 re f Q
+BT /F2 10 Tf 0.930 0.620 0.790 rg 1 0 0 1 62 254 Tm (PRÉCISION IMPORTANTE SUR LE TEST PAYSIM) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 62 226 Tm (100 353 transactions, dont 1 488 fraudes simulées.) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 62 209 Tm (Sa prévalence diffère fortement de la source complète.) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 62 192 Tm (Les deux jeux ne représentent pas une banque française.) Tj ET
+
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 12 0 R >>
+endobj
+12 0 obj
+<< /Length 2534 >>
+stream
+q 0.037 0.071 0.140 rg 0 0 595 842 re f Q
+q 0.095 0.165 0.280 rg 450 697 190 190 re f Q
+q 0.045 0.085 0.160 rg 470 717 154 154 re f Q
+BT /F2 13 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 799 Tm (BANK 360) Tj ET
+BT /F2 8 Tf 0.550 0.700 1.000 rg 1 0 0 1 142 800 Tm (RISK ANALYTICS LAB) Tj ET
+q 0.180 0.290 0.410 rg 43 783 510 1 re f Q
+BT /F2 9 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 753 Tm (03 / PARCOURS DANS LE DASHBOARD) Tj ET
+BT /F2 25 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 709 Tm (Cinq vues, cinq questions) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 684 Tm (Un guide pour lire les chiffres plutôt que les regarder sans contexte.) Tj ET
+BT /F1 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 32 Tm (GUIDE DE LECTURE  •  ÉTUDE NON OPÉRATIONNELLE) Tj ET
+BT /F2 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 513 32 Tm (4 / 8) Tj ET
+q 0.078 0.137 0.235 rg 43 568 510 81 re f Q
+q 0.130 0.220 0.360 rg 57 584 48 48 re f Q
+BT /F2 17 Tf 0.380 0.820 0.910 rg 1 0 0 1 70 603 Tm (01) Tj ET
+BT /F2 12 Tf 0.940 0.970 1.000 rg 1 0 0 1 124 616 Tm (ACCUEIL) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 124 594 Tm (Situer les deux études indépendantes.) Tj ET
+q 0.078 0.137 0.235 rg 43 466 510 81 re f Q
+q 0.130 0.220 0.360 rg 57 482 48 48 re f Q
+BT /F2 17 Tf 0.380 0.820 0.910 rg 1 0 0 1 70 501 Tm (02) Tj ET
+BT /F2 12 Tf 0.940 0.970 1.000 rg 1 0 0 1 124 514 Tm (CRÉDIT) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 124 492 Tm (Filtrer la matrice 5 × 5 et les six mois.) Tj ET
+q 0.078 0.137 0.235 rg 43 364 510 81 re f Q
+q 0.130 0.220 0.360 rg 57 380 48 48 re f Q
+BT /F2 17 Tf 0.380 0.820 0.910 rg 1 0 0 1 70 399 Tm (03) Tj ET
+BT /F2 12 Tf 0.940 0.970 1.000 rg 1 0 0 1 124 412 Tm (FRAUDE) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 124 390 Tm (Explorer par jour OU par type, pas par les deux.) Tj ET
+q 0.078 0.137 0.235 rg 43 262 510 81 re f Q
+q 0.130 0.220 0.360 rg 57 278 48 48 re f Q
+BT /F2 17 Tf 0.380 0.820 0.910 rg 1 0 0 1 70 297 Tm (04) Tj ET
+BT /F2 12 Tf 0.940 0.970 1.000 rg 1 0 0 1 124 310 Tm (MODÈLES) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 124 288 Tm (Lire le classement, la calibration et les erreurs.) Tj ET
+q 0.078 0.137 0.235 rg 43 160 510 81 re f Q
+q 0.130 0.220 0.360 rg 57 176 48 48 re f Q
+BT /F2 17 Tf 0.380 0.820 0.910 rg 1 0 0 1 70 195 Tm (05) Tj ET
+BT /F2 12 Tf 0.940 0.970 1.000 rg 1 0 0 1 124 208 Tm (PREUVES) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 124 186 Tm (Retrouver sources, contrôles et exports.) Tj ET
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 85 Tm (Lisez le PDF puis vérifiez les valeurs dans les vues.) Tj ET
+
+endstream
+endobj
+13 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 14 0 R >>
+endobj
+14 0 obj
+<< /Length 3450 >>
+stream
+q 0.037 0.071 0.140 rg 0 0 595 842 re f Q
+q 0.095 0.165 0.280 rg 450 697 190 190 re f Q
+q 0.045 0.085 0.160 rg 470 717 154 154 re f Q
+BT /F2 13 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 799 Tm (BANK 360) Tj ET
+BT /F2 8 Tf 0.550 0.700 1.000 rg 1 0 0 1 142 800 Tm (RISK ANALYTICS LAB) Tj ET
+q 0.180 0.290 0.410 rg 43 783 510 1 re f Q
+BT /F2 9 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 753 Tm (04 / ANALYSE CRÉDIT) Tj ET
+BT /F2 25 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 709 Tm (Du portefeuille à la cohorte) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 684 Tm (Taux de défaut = somme des défauts / somme des dossiers.) Tj ET
+BT /F1 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 32 Tm (GUIDE DE LECTURE  •  ÉTUDE NON OPÉRATIONNELLE) Tj ET
+BT /F2 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 513 32 Tm (5 / 8) Tj ET
+q 0.078 0.137 0.235 rg 43 468 243 142 re f Q
+q 0.550 0.700 1.000 rg 43 608 243 2 re f Q
+BT /F2 9 Tf 0.550 0.700 1.000 rg 1 0 0 1 58 583 Tm (TAUX GLOBAL) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 58 546 Tm (22,12 %) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 58 490 Tm (6 636 défauts / 30 000) Tj ET
+q 0.078 0.137 0.235 rg 299 468 254 142 re f Q
+q 0.380 0.820 0.910 rg 299 608 254 2 re f Q
+BT /F2 9 Tf 0.380 0.820 0.910 rg 1 0 0 1 314 583 Tm (MATRICE INTERACTIVE) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 314 546 Tm (25 cellules) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 314 490 Tm (5 âges × 5 plafonds) Tj ET
+BT /F2 11 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 423 Tm (COMMENT LIRE LA MATRICE ?) Tj ET
+q 0.166 0.240 0.382 rg 43 370 50 27 re f Q
+q 0.201 0.265 0.402 rg 102 370 50 27 re f Q
+q 0.225 0.283 0.416 rg 161 370 50 27 re f Q
+q 0.194 0.260 0.398 rg 220 370 50 27 re f Q
+q 0.180 0.250 0.390 rg 279 370 50 27 re f Q
+q 0.201 0.265 0.402 rg 43 335 50 27 re f Q
+q 0.225 0.283 0.416 rg 102 335 50 27 re f Q
+q 0.257 0.305 0.434 rg 161 335 50 27 re f Q
+q 0.201 0.265 0.402 rg 220 335 50 27 re f Q
+q 0.183 0.253 0.392 rg 279 335 50 27 re f Q
+q 0.183 0.253 0.392 rg 43 300 50 27 re f Q
+q 0.254 0.302 0.432 rg 102 300 50 27 re f Q
+q 0.236 0.290 0.422 rg 161 300 50 27 re f Q
+q 0.191 0.258 0.396 rg 220 300 50 27 re f Q
+q 0.222 0.280 0.414 rg 279 300 50 27 re f Q
+q 0.194 0.260 0.398 rg 43 265 50 27 re f Q
+q 0.232 0.287 0.420 rg 102 265 50 27 re f Q
+q 0.208 0.270 0.406 rg 161 265 50 27 re f Q
+q 0.261 0.307 0.436 rg 220 265 50 27 re f Q
+q 0.173 0.245 0.386 rg 279 265 50 27 re f Q
+q 0.211 0.273 0.408 rg 43 230 50 27 re f Q
+q 0.208 0.270 0.406 rg 102 230 50 27 re f Q
+q 0.261 0.307 0.436 rg 161 230 50 27 re f Q
+q 0.243 0.295 0.426 rg 220 230 50 27 re f Q
+q 0.198 0.263 0.400 rg 279 230 50 27 re f Q
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 361 362 Tm (1. Filtrer un statut) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 361 337 Tm (2. Choisir âge + plafond) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 361 312 Tm (3. Lire le dénominateur) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 361 287 Tm (4. Comparer à la référence) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 361 262 Tm (5. Voir les six mois) Tj ET
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 168 Tm (RÈGLE DE MÉTHODE) Tj ET
+BT /F1 11 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 142 Tm (Ne jamais moyenner simplement les taux des cellules.) Tj ET
+BT /F1 11 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 124 Tm (Les six mois répètent les mêmes dossiers : pas six clientèles.) Tj ET
+BT /F1 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 87 Tm (Matrice de couleur illustrative : pas de taux fictifs affichés.) Tj ET
+
+endstream
+endobj
+15 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 16 0 R >>
+endobj
+16 0 obj
+<< /Length 2721 >>
+stream
+q 0.037 0.071 0.140 rg 0 0 595 842 re f Q
+q 0.095 0.165 0.280 rg 450 697 190 190 re f Q
+q 0.045 0.085 0.160 rg 470 717 154 154 re f Q
+BT /F2 13 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 799 Tm (BANK 360) Tj ET
+BT /F2 8 Tf 0.550 0.700 1.000 rg 1 0 0 1 142 800 Tm (RISK ANALYTICS LAB) Tj ET
+q 0.180 0.290 0.410 rg 43 783 510 1 re f Q
+BT /F2 9 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 753 Tm (05 / ANALYSE FRAUDE) Tj ET
+BT /F2 25 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 709 Tm (Une alerte n'est pas une fraude) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 684 Tm (Mesures sur le test chronologique PaySim : données simulées uniquement.) Tj ET
+BT /F1 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 32 Tm (GUIDE DE LECTURE  •  ÉTUDE NON OPÉRATIONNELLE) Tj ET
+BT /F2 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 513 32 Tm (6 / 8) Tj ET
+q 0.078 0.137 0.235 rg 43 478 162 130 re f Q
+q 0.930 0.620 0.790 rg 43 606 162 2 re f Q
+BT /F2 9 Tf 0.930 0.620 0.790 rg 1 0 0 1 58 581 Tm (ALERTES) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 58 544 Tm (790) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 58 500 Tm (100 353 opérations) Tj ET
+q 0.078 0.137 0.235 rg 217 478 160 130 re f Q
+q 0.930 0.620 0.790 rg 217 606 160 2 re f Q
+BT /F2 9 Tf 0.930 0.620 0.790 rg 1 0 0 1 232 581 Tm (PRÉCISION) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 232 544 Tm (52,28 %) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 232 500 Tm (Vraies / alertes) Tj ET
+q 0.078 0.137 0.235 rg 389 478 164 130 re f Q
+q 0.380 0.820 0.910 rg 389 606 164 2 re f Q
+BT /F2 9 Tf 0.380 0.820 0.910 rg 1 0 0 1 404 581 Tm (RAPPEL) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 404 544 Tm (27,76 %) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 404 500 Tm (Détectées / fraudes) Tj ET
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 442 Tm (COMPOSITION RÉELLE DES ALERTES) Tj ET
+q 0.380 0.820 0.910 rg 43 397 266.62025316455697 32 re f Q
+q 0.930 0.620 0.790 rg 309.62025316455697 397 243.37974683544303 32 re f Q
+BT /F2 11 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 368 Tm (413 vraies alertes) Tj ET
+BT /F2 11 Tf 0.930 0.620 0.790 rg 1 0 0 1 313 368 Tm (377 fausses alertes) Tj ET
+q 0.078 0.137 0.235 rg 43 238 510 103 re f Q
+BT /F2 10 Tf 0.930 0.620 0.790 rg 1 0 0 1 62 309 Tm (FRAUDES MANQUÉES) Tj ET
+BT /F2 20 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 275 Tm (1 075 fraudes simulées) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 62 254 Tm (N'ont pas déclenché d'alerte au seuil choisi.) Tj ET
+BT /F2 10 Tf 0.930 0.620 0.790 rg 1 0 0 1 43 197 Tm (LIMITE MAJEURE : DÉRIVE DE PRÉVALENCE) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 172 Tm (Train : 0,0886 % de fraudes. Test : 1,4828 %.) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 155 Tm (Aucun transfert direct des probabilités en production.) Tj ET
+
+endstream
+endobj
+17 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 18 0 R >>
+endobj
+18 0 obj
+<< /Length 2599 >>
+stream
+q 0.037 0.071 0.140 rg 0 0 595 842 re f Q
+q 0.095 0.165 0.280 rg 450 697 190 190 re f Q
+q 0.045 0.085 0.160 rg 470 717 154 154 re f Q
+BT /F2 13 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 799 Tm (BANK 360) Tj ET
+BT /F2 8 Tf 0.550 0.700 1.000 rg 1 0 0 1 142 800 Tm (RISK ANALYTICS LAB) Tj ET
+q 0.180 0.290 0.410 rg 43 783 510 1 re f Q
+BT /F2 9 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 753 Tm (06 / ÉVALUER LES MODÈLES) Tj ET
+BT /F2 25 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 709 Tm (Comparer avec prudence) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 684 Tm (Les deux modèles ne résolvent pas le même problème ni la même distribution.) Tj ET
+BT /F1 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 32 Tm (GUIDE DE LECTURE  •  ÉTUDE NON OPÉRATIONNELLE) Tj ET
+BT /F2 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 513 32 Tm (7 / 8) Tj ET
+q 0.078 0.137 0.235 rg 43 467 243 142 re f Q
+q 0.550 0.700 1.000 rg 43 607 243 2 re f Q
+BT /F2 9 Tf 0.550 0.700 1.000 rg 1 0 0 1 58 582 Tm (B3 CRÉDIT • PR-AUC) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 58 545 Tm (0,5486) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 58 489 Tm (6 000 dossiers de test UCI) Tj ET
+q 0.078 0.137 0.235 rg 299 467 254 142 re f Q
+q 0.930 0.620 0.790 rg 299 607 254 2 re f Q
+BT /F2 9 Tf 0.930 0.620 0.790 rg 1 0 0 1 314 582 Tm (B4 FRAUDE • PR-AUC) Tj ET
+BT /F2 21 Tf 0.940 0.970 1.000 rg 1 0 0 1 314 545 Tm (0,3651) Tj ET
+BT /F1 9 Tf 0.660 0.750 0.860 rg 1 0 0 1 314 489 Tm (100 353 transactions PaySim) Tj ET
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 428 Tm (LE PETIT LEXIQUE) Tj ET
+BT /F2 11 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 394 Tm (PR-AUC) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 166 394 Tm (Mesure du classement des cas positifs.) Tj ET
+BT /F2 11 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 344 Tm (ROC-AUC) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 166 344 Tm (Discrimination entre classes, selon le seuil.) Tj ET
+BT /F2 11 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 294 Tm (Brier) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 166 294 Tm (Erreur de probabilité : plus faible est meilleur.) Tj ET
+BT /F2 11 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 244 Tm (Calibration) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 166 244 Tm (Accord entre scores et fréquences observées.) Tj ET
+q 0.078 0.137 0.235 rg 43 139 510 91 re f Q
+BT /F2 10 Tf 0.930 0.620 0.790 rg 1 0 0 1 62 202 Tm (EXEMPLE PAYSim : LA CALIBRATION EST INSUFFISANTE) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 175 Tm (Moyenne prédite : 0,2459 % ; fraude test : 1,4828 %.) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 158 Tm (Un bon classement ne garantit pas une probabilité fiable.) Tj ET
+
+endstream
+endobj
+19 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 20 0 R >>
+endobj
+20 0 obj
+<< /Length 2452 >>
+stream
+q 0.037 0.071 0.140 rg 0 0 595 842 re f Q
+q 0.095 0.165 0.280 rg 450 697 190 190 re f Q
+q 0.045 0.085 0.160 rg 470 717 154 154 re f Q
+BT /F2 13 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 799 Tm (BANK 360) Tj ET
+BT /F2 8 Tf 0.550 0.700 1.000 rg 1 0 0 1 142 800 Tm (RISK ANALYTICS LAB) Tj ET
+q 0.180 0.290 0.410 rg 43 783 510 1 re f Q
+BT /F2 9 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 753 Tm (07 / SOURCES & CONCLUSIONS) Tj ET
+BT /F2 25 Tf 0.940 0.970 1.000 rg 1 0 0 1 43 709 Tm (Des chiffres aux preuves) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 684 Tm (Une démonstration de compétences et de rigueur, pas une certification.) Tj ET
+BT /F1 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 32 Tm (GUIDE DE LECTURE  •  ÉTUDE NON OPÉRATIONNELLE) Tj ET
+BT /F2 8 Tf 0.660 0.750 0.860 rg 1 0 0 1 513 32 Tm (8 / 8) Tj ET
+q 0.078 0.137 0.235 rg 43 405 510 211 re f Q
+BT /F2 11 Tf 0.530 0.840 0.730 rg 1 0 0 1 62 584 Tm (COMPÉTENCES ILLUSTRÉES) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 550 Tm (•  Préparation et réconciliation des données) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 520 Tm (•  Cohortes, ratios et retards de paiement) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 490 Tm (•  Tests séparés de modèles expérimentaux) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 460 Tm (•  Graphiques interactifs et exports CSV/XLSX) Tj ET
+BT /F1 10 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 430 Tm (•  Limites, traçabilité et non-invention) Tj ET
+BT /F2 10 Tf 0.380 0.820 0.910 rg 1 0 0 1 43 369 Tm (QUATRE RÉFLEXES POUR LE LECTEUR) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 341 Tm (1. Lire le périmètre du chiffre.) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 318 Tm (2. Comparer uniquement des populations compatibles.) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 295 Tm (3. Distinguer classement et probabilité fiable.) Tj ET
+BT /F1 10 Tf 0.660 0.750 0.860 rg 1 0 0 1 43 272 Tm (4. Identifier ce que les données ne permettent pas de dire.) Tj ET
+q 0.078 0.137 0.235 rg 43 147 510 84 re f Q
+BT /F2 10 Tf 0.530 0.840 0.730 rg 1 0 0 1 62 208 Tm (SOURCES DE RÉFÉRENCE) Tj ET
+BT /F1 9 Tf 0.940 0.970 1.000 rg 1 0 0 1 62 184 Tm (archive.ics.uci.edu/dataset/350   |   kaggle.com/datasets/ealaxi/paysim1) Tj ET
+BT /F1 9 Tf 0.550 0.700 1.000 rg 1 0 0 1 62 163 Tm (github.com/sogoyou8/BANK-360  •  Rapports B3 et B4) Tj ET
+BT /F2 10 Tf 0.930 0.620 0.790 rg 1 0 0 1 43 102 Tm (Aucune opération bancaire réelle ni décision individuelle.) Tj ET
+
+endstream
+endobj
+xref
+0 21
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000168 00000 n 
+0000000265 00000 n 
+0000000367 00000 n 
+0000000503 00000 n 
+0000002585 00000 n 
+0000002721 00000 n 
+0000005874 00000 n 
+0000006011 00000 n 
+0000008438 00000 n 
+0000008576 00000 n 
+0000011163 00000 n 
+0000011301 00000 n 
+0000014804 00000 n 
+0000014942 00000 n 
+0000017716 00000 n 
+0000017854 00000 n 
+0000020506 00000 n 
+0000020644 00000 n 
+trailer
+<< /Size 21 /Root 1 0 R >>
+startxref
+23149
+%%EOF
