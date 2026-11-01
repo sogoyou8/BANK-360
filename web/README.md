@@ -16,7 +16,7 @@ Le rendu est disponible sur `http://127.0.0.1:5173`. Pour les tests de navigateu
 
 ## Navigation R0–R5 — BANK 360 Risk Analytics Lab
 
-**Branche de revue :** `feature/r0-r5-guided-risk-lab` · PR #25 en brouillon. Aucun déploiement ni fusion.
+**Version M4 publiée** : [dashboard BANK 360](https://bank-360.vercel.app/) · [guide PDF de huit pages](https://bank-360.vercel.app/bank360-guide.pdf). La [PR #25](https://github.com/sogoyou8/BANK-360/pull/25) est fusionnée dans `main` ; les versions B5 et X1 restent accessibles.
 
 L'ouverture par défaut est une expérience guidée à **cinq vues**, conçue autour de deux études distinctes et de leurs preuves, plutôt qu'un cockpit simultané Crédit + Fraude.
 
@@ -42,7 +42,7 @@ Le contrat de refonte et les critères de recette sont dans `../docs/R0-R5-guide
 
 La version guidée conserve les cinq vues et le format mono-écran desktop validé en M2. La passe M3 améliore la navigation mobile (les cinq vues visibles), l'accès à l'ensemble des 25 cellules Crédit et le graphique des six jours PaySim sur une seule rangée. Les cinq types PaySim sont inspectables ; lorsqu'aucune alerte/fraude n'existe, la précision/le rappel sont non définis (export vide), pas 0 %. Aucune donnée ni métrique de modèle n'a été recalculée ou remplacée.
 
-Les nouveaux contrôles sont dans `e2e/guided-m3-readiness.spec.ts` et la procédure de recette est dans `../docs/M3-predeploy-readiness.md`. **PR #25 reste brouillon : pas de merge, pas de déploiement.** La validation CI sur le commit de tête et la revue des nouvelles captures précèdent toute décision de publication.
+Les nouveaux contrôles sont dans `e2e/guided-m3-readiness.spec.ts` et la procédure de recette est dans `../docs/M3-predeploy-readiness.md`. **Historique M3 :** cette barrière était applicable avant la validation et la publication de M4. La validation CI sur le commit de tête et la revue des nouvelles captures précèdent toute décision de publication.
 
 ## M4 — Guide pour découvrir le projet
 
@@ -52,7 +52,7 @@ Le [dossier pédagogique PDF de 8 pages](public/bank360-guide.pdf) est égalemen
 
 En mode hors ligne, `npm run build && npm run standalone` incorpore le PDF dans l'aperçu HTML autonome pour permettre sa consultation sans serveur. Les scénarios M4 sont vérifiés dans `e2e/guided-m4-project-guide.spec.ts` et le contrat est détaillé dans `../docs/M4-guide-pedagogique.md`.
 
-**Rappel :** étude analytique / démonstration portfolio, non outil bancaire opérationnel. La PR reste en brouillon, sans merge ni publication.
+**Rappel :** étude analytique / démonstration portfolio, non outil bancaire opérationnel. M4 est publié sur Vercel avec le guide, sans données individuelles ni modèle opérationnel.
 
 ## Navigation classique (référence B5)
 
