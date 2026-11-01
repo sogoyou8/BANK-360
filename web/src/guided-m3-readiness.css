@@ -41,3 +41,9 @@
  }
  .grl-fraud-grid .grl-bar-track{height:145px;min-height:120px}
 }
+
+/* Zero-alert groups must never display transitional fragments of another group's bars. */
+.grl-fraud-composition.is-empty .grl-fraud-stack i,
+.grl-fraud-composition.is-empty .grl-fraud-stack em{
+ width:0%!important;transition:none!important;
+}
