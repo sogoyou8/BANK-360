@@ -38,6 +38,12 @@ Ne jamais interpréter les deux sources comme les données d'une même clientèl
 Les nouveaux composants sont `src/GuidedRiskLab.tsx` et `src/guided-risk-lab.css` ; leurs tests sont `e2e/guided-risk-lab.spec.ts`.
 Le contrat de refonte et les critères de recette sont dans `../docs/R0-R5-guided-risk-analytics-delivery.md`.
 
+## Pré-déploiement M3 — dernière finition
+
+La version guidée conserve les cinq vues et le format mono-écran desktop validé en M2. La passe M3 améliore la navigation mobile (les cinq vues visibles), l'accès à l'ensemble des 25 cellules Crédit et le graphique des six jours PaySim sur une seule rangée. Les cinq types PaySim sont inspectables ; lorsqu'aucune alerte/fraude n'existe, la précision/le rappel sont non définis (export vide), pas 0 %. Aucune donnée ni métrique de modèle n'a été recalculée ou remplacée.
+
+Les nouveaux contrôles sont dans `e2e/guided-m3-readiness.spec.ts` et la procédure de recette est dans `../docs/M3-predeploy-readiness.md`. **PR #25 reste brouillon : pas de merge, pas de déploiement.** La validation CI sur le commit de tête et la revue des nouvelles captures précèdent toute décision de publication.
+
 ## Navigation classique (référence B5)
 
 8 pages / 6 sections : Vue d’ensemble ; **Crédit unifié** (Portefeuille & segmentation, avec 3 perspectives internes Vue globale / Risque / Paiements) ; Détection de fraude, Analyse des alertes ; Modèles & performance, Explorateur de données ; Qualité & traçabilité ; Rapports & préférences. Les trois anciennes pages Crédit deviennent une seule page interactive : filtres communs et six modules.
