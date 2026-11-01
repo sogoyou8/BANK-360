@@ -1,6 +1,6 @@
 # BANK 360 — Banking Intelligence & Risk Analytics
 
-**DATA 05 — B0 / B1 / B2 / B3 / B4 / B5** · actualisé le 30 octobre 2026
+**DATA 05 — B0 à B6 achevés** · publication du 1er novembre 2026
 
 ## Situation réelle
 
@@ -10,8 +10,8 @@
 - [x] **B2 — Power BI Credit Risk : TERMINÉ ET RECETTÉ (28/10/2026)**. PBIP/PBIR/TMDL, 4 pages, 13 mesures DAX, agrégats UCI officiels, CI réussie et validation visuelle/interactive Power BI Desktop sur captures et vidéos. Les indicateurs sectoriels EBA restent un chantier distinct.
 - [x] **B3 — Credit Risk Analytics : TERMINÉ (28/10/2026)**. Étude de prédiction de défaut historique, trois approches comparées, train/validation/test 18k/6k/6k, audit de biais descriptifs et résultats agrégés ; aucun scoring bancaire réel.
 - [x] **B4 — Fraud Analytics : TERMINÉ (28/10/2026), simulation PaySim uniquement**. 6 362 620 transactions simulées, modèles comparés, validation chronologique, métriques, contrôles de fuite, déciles et audits d'alertes. Aucune décision, aucun scoring réel ou déploiement.
-- [x] **B5 — Cockpit Web React : LES 6 PAGES VALIDÉES ET GELÉES (30/10/2026)**. Architecture **6 pages / 6 sections** : 01 Vue d'ensemble, 02 Portefeuille & segmentation, 03 Fraude & alertes, 04 Modèles & explorateur, 05 Qualité & traçabilité, 06 Rapports & préférences. Les PR [#19](https://github.com/sogoyou8/BANK-360/pull/19), [#20](https://github.com/sogoyou8/BANK-360/pull/20), [#21](https://github.com/sogoyou8/BANK-360/pull/21) et [#22](https://github.com/sogoyou8/BANK-360/pull/22) sont fusionnées dans `main` ; **89/89 tests Chromium réussis après fusion C6** ([Actions](https://github.com/sogoyou8/BANK-360/actions/runs/41055392969)). Aucun déploiement public lancé. Voir le [registre officiel de gel 01–06](docs/B5-gel-pages-01-06.md).
-- [ ] B6 : finalisation et portfolio
+- [x] **B5 — Cockpit Web React : LES 6 PAGES VALIDÉES ET GELÉES (30/10/2026)**. Architecture **6 pages / 6 sections** : 01 Vue d'ensemble, 02 Portefeuille & segmentation, 03 Fraude & alertes, 04 Modèles & explorateur, 05 Qualité & traçabilité, 06 Rapports & préférences. Les PR [#19](https://github.com/sogoyou8/BANK-360/pull/19), [#20](https://github.com/sogoyou8/BANK-360/pull/20), [#21](https://github.com/sogoyou8/BANK-360/pull/21) et [#22](https://github.com/sogoyou8/BANK-360/pull/22) sont fusionnées dans `main` ; **89/89 tests Chromium réussis après fusion C6** ([Actions](https://github.com/sogoyou8/BANK-360/actions/runs/41055392969)). La version B5 demeure accessible depuis le cockpit guidé public via `?classic=1`. Voir le [registre officiel de gel 01–06](docs/B5-gel-pages-01-06.md).
+- [x] **B6 — Publication et portfolio (01/11/2026)** : [BANK 360 en ligne](https://bank-360.vercel.app/) · [guide pédagogique PDF](https://bank-360.vercel.app/bank360-guide.pdf) · cinq vues guidées M4 avec contrôles B1/B3 et 144 tests Chromium validés. Les données UCI historiques et la simulation PaySim sont strictement distinctes. Application de démonstration, jamais un outil opérationnel bancaire.
 
 ### Recette B1 sur données historiques réelles
 
