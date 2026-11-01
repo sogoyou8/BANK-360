@@ -1,4 +1,4 @@
-import {useEffect,useMemo,useState} from 'react';
+import {useEffect,useMemo,useRef,useState} from 'react';
 import {Activity,ArrowLeft,ArrowRight,BookOpen,CheckCircle2,ChevronRight,Database,Download,FileSpreadsheet,Home,Info,Layers3,Moon,RotateCcw,ShieldAlert,ShieldCheck,Sun,Target,Wallet} from 'lucide-react';
 import {
  segments,ages,limits,b3,b4,b3Deciles,b4Deciles,fraudTypes,fraudDays,
@@ -11,6 +11,7 @@ import './guided-risk-lab.css';
 import './guided-mono-screen.css';
 import './guided-m2-composition.css';
 import './guided-m3-readiness.css';
+import './guided-m4-project-guide.css';
 
 type View='overview'|'credit'|'fraud'|'models'|'evidence';
 type Domain='credit'|'fraud';
@@ -73,14 +74,14 @@ function RankBars({values}:{values:{key:string;value:number;secondary?:number;la
   <span>{x.label||x.key}</span><i><em style={{width:100*x.value/max+'%'}}/></i><b>{pct(x.value,1)}</b>{x.secondary!==undefined&&<small>n={num(x.secondary)}</small>}
  </div>)}</div>;
 }
-function Overview({go}:{go:(p:View)=>void}){
+function Overview({go,onGuide}:{go:(p:View)=>void;onGuide:()=>void}){
  return <div className="grl-page grl-overview" data-testid="guided-overview">
   <div className="grl-intro"><span className="grl-eyebrow">BANK 360 / RISK ANALYTICS LAB</span><h1>Deux études. Des données jusqu’aux preuves.</h1><p>Explorer le défaut de crédit historique et la détection de fraude sur une simulation. <strong>Les sources ne décrivent pas les mêmes personnes et ne sont jamais jointes.</strong></p></div>
   <div className="grl-paths">
    <article className="grl-path grl-path-credit"><div className="grl-path-top"><Wallet size={23}/><span>ÉTUDE 01 · HISTORIQUE</span></div><h2>Comprendre les défauts de crédit</h2><p>UCI · 30 000 dossiers taïwanais de 2005 · défaut du mois suivant.</p><div className="grl-path-metrics"><Figure label="Dossiers" value={num(creditTotals(segments).total)} detail="Échantillon historique"/><Figure label="Taux de défaut" value={pct(creditTotals(segments).rate)} detail={num(creditTotals(segments).defaults)+' dossiers'}/></div><button className="grl-primary" onClick={()=>go('credit')}>Explorer le crédit <ArrowRight size={17}/></button></article>
    <article className="grl-path grl-path-fraud"><div className="grl-path-top"><ShieldAlert size={23}/><span>ÉTUDE 02 · SIMULATION</span></div><h2>Évaluer des alertes antifraude</h2><p>PaySim · {num(b4.observed.rows)} transactions simulées · protocole chronologique.</p><div className="grl-path-metrics"><Figure tone="pink" label="Transactions du test" value={num(b4test.n)} detail="Jeu réservé"/><Figure tone="pink" label="Alertes du modèle" value={num(b4test.alerted)} detail={num(b4test.confusion.tp)+' vraies · '+num(b4test.confusion.fp)+' fausses'}/></div><button className="grl-primary grl-primary-pink" onClick={()=>go('fraud')}>Explorer la fraude <ArrowRight size={17}/></button></article>
   </div>
-  <div className="grl-orientation"><button onClick={()=>go('models')}><Target size={21}/><span><strong>Modèles expérimentaux</strong><small>Protocoles et performances B3/B4, sans décision réelle.</small></span><ChevronRight size={18}/></button><button onClick={()=>go('evidence')}><ShieldCheck size={21}/><span><strong>Sources & preuves</strong><small>Qualité, reproductibilité, limites et exports.</small></span><ChevronRight size={18}/></button></div>
+  <div className="grl-orientation"><button onClick={()=>go('models')}><Target size={21}/><span><strong>Modèles expérimentaux</strong><small>Protocoles et performances B3/B4, sans décision réelle.</small></span><ChevronRight size={18}/></button><button onClick={()=>go('evidence')}><ShieldCheck size={21}/><span><strong>Sources & preuves</strong><small>Qualité, reproductibilité, limites et exports.</small></span><ChevronRight size={18}/></button><button onClick={onGuide} data-testid="guide-overview-trigger"><BookOpen size={21}/><span><strong>Comprendre le projet</strong><small>Explications et dossier PDF en 8 pages.</small></span><ChevronRight size={18}/></button></div>
  </div>;
 }
 function Credit({go,filters,setFilters,openModel}:{go:(p:View)=>void;filters:CreditFilters;setFilters:(f:CreditFilters)=>void;openModel:(domain:Domain)=>void}){
@@ -228,8 +229,37 @@ function Evidence({filters,source,onSource,go}:{filters:CreditFilters;source:Sco
   </div>
  </div>;
 }
+
+const guidePages:Record<View,{title:string;purpose:string;how:string[];limit:string}>={
+ overview:{title:'Comprendre BANK 360',purpose:'Deux études Data indépendantes : défaut de crédit historique UCI et fraude PaySim simulée.',how:['Commencez par Crédit ou Fraude selon la question étudiée.','Explorez ensuite les modèles et la provenance des résultats.','Le dossier PDF explique le vocabulaire et les limites en huit pages.'],limit:'UCI et PaySim ne décrivent pas les mêmes personnes : aucun croisement entre leurs données.'},
+ credit:{title:'Comment lire la vue Crédit ?',purpose:'Comparer les taux de défaut de dossiers de carte de crédit historiques de Taïwan (2005).',how:['Choisissez un âge, un plafond et, si utile, un statut de septembre.','Sélectionnez une cellule : le taux repose sur les défauts et dossiers de cette cohorte.','La référence conserve le même statut ; les six mois répètent les mêmes dossiers.'],limit:'Ce sont des associations descriptives, pas des causes ni des critères d’acceptation de crédit.'},
+ fraud:{title:'Comment lire la vue Fraude ?',purpose:'Évaluer les alertes d’un modèle expérimental sur des transactions PaySim simulées.',how:['Choisissez un seul axe : par jour OU par type de transaction.','Précision = alertes correctes / alertes ; rappel = fraudes détectées / fraudes.','Une catégorie sans fraude ou sans alerte peut avoir un taux non défini (« — »).'],limit:'Ces alertes ne proviennent d’aucun dispositif bancaire réel ; les probabilités sont mal calibrées.'},
+ models:{title:'Comment lire les modèles ?',purpose:'Examiner les performances sur les ensembles de test réservés de deux problèmes différents.',how:['Sélectionnez Crédit B3 ou Fraude B4, sans comparer leurs PR-AUC entre elles.','Les déciles étudient le classement ; la calibration compare prédit et observé.','La matrice de confusion distingue VP, FP, FN et VN au seuil expérimental.'],limit:'Les tests ne constituent ni homologation, ni validation prospective, ni autorisation de production.'},
+ evidence:{title:'Comment vérifier les preuves ?',purpose:'Identifier la provenance, les contrôles techniques et les limites des agrégats affichés.',how:['Choisissez toutes les sources, Crédit ou Fraude.','Ouvrez les contrôles et les liens vers les rapports de validation.','Exportez les agrégats CSV/XLSX pour inspecter les valeurs ; aucune ligne individuelle.'],limit:'Un contrôle de cohérence réussi ne constitue pas une certification réglementaire bancaire.'}
+};
+function openBankGuidePdf(download=false){
+ const embedded=document.getElementById('bank360-guide-embedded')?.textContent?.trim();
+ let url=new URL('./bank360-guide.pdf',window.location.href).href;
+ let temporary=false;
+ if(embedded){
+  const binary=window.atob(embedded);
+  const bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'}));
+  temporary=true;
+ }
+ const a=document.createElement('a');
+ a.href=url;
+ if(download)a.download='BANK-360-Guide-du-projet.pdf';
+ else{a.target='_blank';a.rel='noopener noreferrer'}
+ document.body.appendChild(a);a.click();a.remove();
+ if(temporary)window.setTimeout(()=>URL.revokeObjectURL(url),120000);
+}
+
 export default function GuidedRiskLab(){
  const [view,setView]=useState<View>(startView);
+ const [guideOpen,setGuideOpen]=useState(false);
+ const guideDialog=useRef<HTMLDialogElement>(null);
  const [filters,setFilters]=useState<CreditFilters>(initialFilters);
  const [theme,setTheme]=useState<'dark'|'light'>('dark');
  const [proofSource,setProofSource]=useState<Scope>('all');
@@ -238,6 +268,7 @@ export default function GuidedRiskLab(){
  const [modelDomain,setModelDomain]=useState<Domain>('credit');
  useEffect(()=>{document.documentElement.dataset.theme=theme;return()=>{delete document.documentElement.dataset.theme}},[theme]);
  useEffect(()=>{const onBack=()=>setView(startView());window.addEventListener('popstate',onBack);return()=>window.removeEventListener('popstate',onBack)},[]);
+ useEffect(()=>{const el=guideDialog.current;if(!el)return;if(guideOpen&&!el.open)el.showModal();if(!guideOpen&&el.open)el.close()},[guideOpen]);
  const go=(next:View)=>{
   setView(next);
   if(window.location.protocol!=='file:'){
@@ -249,14 +280,23 @@ export default function GuidedRiskLab(){
  };
  const openModel=(domain:Domain)=>{setModelDomain(domain);go('models')};
  const chosen=views.find(x=>x.id===view)!;
- return <div className="grl-app"><header className="grl-topbar"><button className="grl-brand" onClick={()=>go('overview')} aria-label="BANK 360 — accueil"><span className="grl-orb"/><strong>BANK <em>360</em></strong></button><span className="grl-top-sub">RISK ANALYTICS LAB</span><span className="grl-top-spacer"/><span className="grl-history"><i/> Études historiques et simulées</span><button className="grl-icon-button" onClick={()=>setTheme(t=>t==='dark'?'light':'dark')} aria-label="Changer le thème">{theme==='dark'?<Sun size={18}/>:<Moon size={18}/>}</button><a className="grl-classic" href="?classic=1">Version classique B5</a></header>
+ return <div className="grl-app"><header className="grl-topbar"><button className="grl-brand" onClick={()=>go('overview')} aria-label="BANK 360 — accueil"><span className="grl-orb"/><strong>BANK <em>360</em></strong></button><span className="grl-top-sub">RISK ANALYTICS LAB</span><span className="grl-top-spacer"/><span className="grl-history"><i/> Études historiques et simulées</span><button className="grl-guide-top-trigger" data-testid="guide-top-trigger" onClick={()=>setGuideOpen(true)}><BookOpen size={15}/> Comprendre le projet</button><button className="grl-icon-button" onClick={()=>setTheme(t=>t==='dark'?'light':'dark')} aria-label="Changer le thème">{theme==='dark'?<Sun size={18}/>:<Moon size={18}/>}</button><a className="grl-classic" href="?classic=1">Version classique B5</a></header>
   <div className="grl-frame"><nav className="grl-nav" aria-label="Navigation Risk Analytics Lab">{views.map((x,i)=><button key={x.id} className={view===x.id?'is-active':''} aria-current={view===x.id?'page':undefined} onClick={()=>go(x.id)}><span className="grl-nav-count">0{i+1}</span><strong>{x.short}</strong><small>{x.summary}</small></button>)}</nav>
    <main id="guided-main" className="grl-main" data-view={view} aria-label={chosen.label}>
-    {view==='overview'&&<Overview go={go}/>}
+    {view==='overview'&&<Overview go={go} onGuide={()=>setGuideOpen(true)}/>}
     {view==='credit'&&<Credit filters={filters} setFilters={setFilters} go={go} openModel={openModel}/>}
     {view==='fraud'&&<Fraud go={go} axis={fraudAxis} setAxis={setFraudAxis} selection={fraudSelection} setSelection={setFraudSelection} openModel={openModel}/>}
     {view==='models'&&<Models go={go} domain={modelDomain} setDomain={setModelDomain}/>}
     {view==='evidence'&&<Evidence filters={filters} source={proofSource} onSource={setProofSource} go={go}/>}
-   </main></div><footer className="grl-status"><span>UCI · historique 2005</span><span>PaySim · simulation indépendante</span><span>Portfolio analytique · pas de décision réelle</span></footer>
+   </main></div>
+  <dialog ref={guideDialog} className="grl-guide-dialog" onClose={()=>setGuideOpen(false)} onCancel={()=>setGuideOpen(false)} aria-label="Comprendre BANK 360" data-testid="guide-dialog">
+   <div className="grl-guide-dialog-head"><div><span className="grl-eyebrow">MODE D'EMPLOI · BANK 360</span><h2>{guidePages[view].title}</h2></div><button className="grl-guide-close" onClick={()=>setGuideOpen(false)} aria-label="Fermer l'aide">Fermer ×</button></div>
+   <p className="grl-guide-lead">{guidePages[view].purpose}</p>
+   <h3>Comment explorer cette vue</h3>
+   <ol>{guidePages[view].how.map((step,i)=><li key={i}>{step}</li>)}</ol>
+   <div className="grl-guide-caveat"><strong>À ne pas conclure</strong><p>{guidePages[view].limit}</p></div>
+   <div className="grl-guide-actions"><button type="button" className="grl-guide-primary" onClick={()=>openBankGuidePdf(false)}><BookOpen size={17}/> Consulter le PDF · 8 pages</button><button type="button" className="grl-guide-secondary" onClick={()=>openBankGuidePdf(true)}><Download size={17}/> Télécharger le PDF</button></div>
+  </dialog>
+  <footer className="grl-status"><span>UCI · historique 2005</span><span>PaySim · simulation indépendante</span><span>Portfolio analytique · pas de décision réelle</span></footer>
  </div>;
 }
