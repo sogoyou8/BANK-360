@@ -62,6 +62,9 @@ test('M3 — six simulated days fit one row, and all five type categories remain
  await expect(metrics.locator('.grl-figure').nth(2).locator('strong')).toHaveText('—');
  await expect(metrics.locator('.grl-figure').nth(3).locator('strong')).toHaveText('—');
  await expect(page.locator('.grl-fraud-composition')).toContainText('Aucune alerte');
+ await expect(page.locator('.grl-fraud-composition')).toHaveClass(/is-empty/);
+ const zeroSlices=await page.locator('.grl-fraud-composition .grl-fraud-stack').evaluate(el=>[...el.children].map(child=>child.getBoundingClientRect().width));
+ expect(Math.max(...zeroSlices),'zero-alert scope must not show stale colored slices').toBeLessThanOrEqual(1);
  await page.screenshot({path:'test-results/m3-mobile-fraud-zero-alert-390.png',fullPage:true});
 });
 
