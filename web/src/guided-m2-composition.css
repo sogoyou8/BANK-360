@@ -94,3 +94,5 @@
 :root[data-theme=light] .grl-fraud-legend span,
 :root[data-theme=light] .grl-fraud-composition-head small{color:#4b6381}
 :root[data-theme=light] .grl-evidence-workspace>.grl-stage{background:transparent}
+
+@media(prefers-reduced-motion:reduce){.grl-fraud-stack i,.grl-fraud-stack em{transition:none}}
