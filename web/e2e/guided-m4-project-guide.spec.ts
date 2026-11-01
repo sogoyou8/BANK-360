@@ -24,7 +24,7 @@ test('M4 — help changes by view while independent analytical results remain in
  const paths:[
   string,string,string
  ][]=[
-  ['credit','Comment lire la vue Crédit ?','Les six mois'],
+  ['credit','Comment lire la vue Crédit ?','les six mois'],
   ['fraud','Comment lire la vue Fraude ?','par jour OU par type'],
   ['models','Comment lire les modèles ?','PR-AUC'],
   ['evidence','Comment vérifier les preuves ?','CSV/XLSX']
