@@ -12,6 +12,7 @@ test('M4 — overview exposes an accessible guide without replacing the five vie
  await expect(dialog).toBeVisible();
  await expect(dialog).toContainText('Deux études Data indépendantes');
  await expect(dialog.getByRole('button',{name:/Consulter le PDF/})).toBeVisible();
+ await page.screenshot({path:'test-results/m4-guide-overview-desktop.png',fullPage:true});
  await expect(dialog.getByRole('button',{name:/Télécharger le PDF/})).toBeVisible();
  await page.keyboard.press('Escape');
  await expect(dialog).not.toBeVisible();
@@ -67,4 +68,24 @@ test('M4 — standalone HTML embeds the actual PDF for offline consultation',asy
  const pdf=Buffer.from(marker![1],'base64');
  expect(pdf.subarray(0,5).toString('ascii')).toBe('%PDF-');
  expect(pdf.toString('latin1')).toContain('/Count 8');
+});
+
+test('M4 — mobile guide stays within the viewport and has reachable actions',async({page})=>{
+ for(const width of [320,390]){
+  await page.setViewportSize({width,height:844});
+  await page.goto('/?view=fraud');
+  await page.getByTestId('guide-top-trigger').click();
+  const dialog=page.getByRole('dialog',{name:'Comprendre BANK 360'});
+  await expect(dialog).toBeVisible();
+  const bounds=await dialog.boundingBox();
+  expect(bounds).not.toBeNull();
+  expect(bounds!.x).toBeGreaterThanOrEqual(0);
+  expect(bounds!.x+bounds!.width).toBeLessThanOrEqual(width+1);
+  expect(bounds!.height).toBeLessThanOrEqual(844);
+  await dialog.getByRole('button',{name:/Télécharger le PDF/}).scrollIntoViewIfNeeded();
+  await expect(dialog.getByRole('button',{name:/Télécharger le PDF/})).toBeVisible();
+  if(width===390)await page.screenshot({path:'test-results/m4-guide-fraud-mobile.png',fullPage:true});
+  await page.keyboard.press('Escape');
+  await expect(dialog).not.toBeVisible();
+ }
 });
