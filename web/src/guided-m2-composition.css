@@ -1,0 +1,95 @@
+/*
+ * BANK 360 — M2. Composition and useful occupation.
+ * Keeps R0-R5 source contracts, five pages, M1 mono-screen desktop
+ * and mobile natural reading. No hard-coded analytical measurements.
+ */
+.grl-fraud-composition{
+ display:flex;flex-direction:column;gap:8px;min-width:0;
+ padding-top:10px;border-top:1px solid rgba(224,159,216,.22);
+}
+.grl-fraud-composition-head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.grl-fraud-composition-head span{color:#edcbe5;font-size:12px;font-weight:650}
+.grl-fraud-composition-head small{color:#a7b6d4;font-size:10px}
+.grl-fraud-stack{display:flex;overflow:hidden;width:100%;height:13px;border-radius:8px;background:#25355c}
+.grl-fraud-stack i,.grl-fraud-stack em{display:block;height:100%;min-width:0;transition:width .18s ease}
+.grl-fraud-stack i{background:linear-gradient(90deg,#6dbce9,#8bcbe9)}
+.grl-fraud-stack em{background:linear-gradient(90deg,#ad76cb,#eb8ab6)}
+.grl-fraud-legend{display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap}
+.grl-fraud-legend span{display:inline-flex;gap:6px;align-items:center;color:#b9cce5;font-size:11px;white-space:nowrap}
+.grl-fraud-legend i{width:7px;height:7px;background:#83c9ec;border-radius:50%;flex:none}
+.grl-fraud-legend span:nth-child(2) i{background:#e78dbc}
+.grl-fraud-legend b{font-variant-numeric:tabular-nums;color:#edf3fd;font-size:12px}
+@media(min-width:901px) and (min-height:650px){
+ /* 01 — The content spans the full card rhythm rather than collecting at both extremes. */
+ .grl-path{justify-content:space-evenly;gap:clamp(6px,.9vh,14px)}
+ .grl-path h2{margin:0;max-width:480px}
+ .grl-path p{max-width:420px}
+ .grl-path-metrics{margin:0;align-items:center;min-height:74px;border-block:1px solid rgba(131,164,212,.13);padding:9px 0}
+ .grl-path .grl-primary{flex:none}
+ .grl-path-top{flex:none}
+ /* 02 — All 25 cells occupy the analytical plot, not just its top portion.
+    Every row uses the same available height; axes, volumes and data stay intact. */
+ .grl-credit-grid>.grl-stage:first-child{min-height:0}
+ .grl-heat-scroll{display:flex;flex-direction:column;flex:1;min-height:0;overflow-x:auto;overflow-y:hidden}
+ .grl-heat{flex:1;height:100%;min-height:0;
+  grid-template-rows:minmax(17px,.48fr) repeat(5,minmax(0,1fr));
+  align-content:stretch;row-gap:clamp(3px,.6vh,7px)}
+ .grl-heat-row button{min-height:0;height:100%;padding:3px 4px;font-size:clamp(10px,.78vw,13px)}
+ .grl-heat-row b{align-self:center}
+ .grl-footnote{flex:none;margin:5px 0 0}
+ /* 03 — Distinguish the signal (the alerts chart) from precision, errors
+    and the composition of true and false alerts in its reading panel. */
+ .grl-fraud-reading{justify-content:flex-start}
+ .grl-fraud-reading .grl-context{margin-top:0}
+ .grl-fraud-composition{margin-top:auto;gap:clamp(4px,.75vh,9px);padding-top:8px}
+ .grl-fraud-stack{height:clamp(10px,1.5vh,14px)}
+ .grl-fraud-composition-head span{font-size:11px}
+ .grl-fraud-legend{gap:7px}
+ .grl-fraud-legend span{font-size:10px}
+ .grl-fraud-legend b{font-size:11px}
+ /* 05 — Information is a continuous audit surface. Separate evidence
+    by purpose using rules instead of three blue containers. */
+ .grl-evidence-workspace{
+  grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);
+  grid-template-rows:minmax(0,1.05fr) minmax(0,.95fr);
+  column-gap:13px;row-gap:0;
+ }
+ .grl-evidence-workspace>.grl-stage{
+  background:transparent;box-shadow:none;border:0;border-radius:0;padding:9px 11px;
+ }
+ .grl-evidence-workspace>.grl-stage:first-child{
+  border-right:1px solid rgba(135,163,207,.28);
+ }
+ .grl-evidence-workspace>.grl-model-grid>.grl-stage:last-child{
+  border-top:1px solid rgba(135,163,207,.27);
+ }
+ .grl-evidence-workspace .grl-stage-heading{padding:0 0 7px;border-bottom:1px solid rgba(135,163,207,.12)}
+ .grl-evidence-workspace .grl-control-list{
+  flex:1;display:flex;flex-direction:column;justify-content:space-evenly;
+ }
+ .grl-evidence-workspace .grl-control-list details{flex:0 0 auto}
+ .grl-evidence-workspace .grl-control-list summary{padding:clamp(7px,1.4vh,13px) 2px}
+ .grl-evidence-workspace .grl-evidence-links{flex:1;display:flex;flex-direction:column;justify-content:space-evenly}
+ .grl-evidence-workspace .grl-evidence-links a{flex:0 0 auto}
+}
+@media(min-width:901px) and (min-height:650px) and (max-height:765px){
+ .grl-path{gap:5px}
+ .grl-path-metrics{min-height:66px;padding:6px 0}
+ .grl-heat{row-gap:3px;grid-template-rows:minmax(15px,.42fr) repeat(5,minmax(0,1fr))}
+ .grl-heat-row button{font-size:10px;padding:1px 3px}
+ .grl-fraud-composition{gap:4px;padding-top:6px}
+ .grl-fraud-composition-head span{font-size:10px}
+ .grl-fraud-composition-head small{font-size:9px}
+ .grl-fraud-legend span,.grl-fraud-legend b{font-size:9px}
+ .grl-evidence-workspace .grl-control-list summary{padding:6px 1px}
+}
+@media(max-width:900px){
+ .grl-fraud-composition{margin-top:12px}
+ .grl-fraud-stack{height:14px}
+}
+:root[data-theme=light] .grl-fraud-composition{border-color:#b8cada}
+:root[data-theme=light] .grl-fraud-composition-head span,
+:root[data-theme=light] .grl-fraud-legend b{color:#234767}
+:root[data-theme=light] .grl-fraud-legend span,
+:root[data-theme=light] .grl-fraud-composition-head small{color:#4b6381}
+:root[data-theme=light] .grl-evidence-workspace>.grl-stage{background:transparent}
