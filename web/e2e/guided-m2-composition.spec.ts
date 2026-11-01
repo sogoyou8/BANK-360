@@ -38,6 +38,11 @@ test('M2 — alert composition uses actual PaySim true and false positives for c
  await page.getByRole('button',{name:/J28 : 299 alertes/}).click();
  await expect(composition).toHaveAttribute('aria-label',/299 alertes sélectionnées.*85 vraies alertes.*214 fausses alertes/);
  await expect(composition).toContainText('28,4 %');
+ // The bar is animated for sighted users. Assert the settled ratio, not an intermediate frame.
+ await expect.poll(async()=>composition.evaluate(el=>{
+  const base=el.querySelector('.grl-fraud-stack')!.getBoundingClientRect().width;
+  return el.querySelector('.grl-fraud-stack i')!.getBoundingClientRect().width/base;
+ }),{timeout:4000}).toBeLessThan(.30);
  const ratio=await composition.evaluate(el=>{
   const base=el.querySelector('.grl-fraud-stack')!.getBoundingClientRect().width;
   const trueSlice=el.querySelector('.grl-fraud-stack i')!.getBoundingClientRect().width;
