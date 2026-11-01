@@ -54,7 +54,8 @@
   grid-template-rows:minmax(0,1.05fr) minmax(0,.95fr);
   column-gap:13px;row-gap:0;
  }
- .grl-evidence-workspace>.grl-stage{
+ .grl-evidence-workspace>.grl-stage,
+ .grl-evidence-workspace>.grl-model-grid>.grl-stage{
   background:transparent;box-shadow:none;border:0;border-radius:0;padding:9px 11px;
  }
  .grl-evidence-workspace>.grl-stage:first-child{
